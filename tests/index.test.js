@@ -11,7 +11,7 @@ const URI = process.env.MONGODB_URI;
 before((done) => {
     if (mongoose.connection.db) return done();
     
-    mongoose.connect(URI, {
+    mongoose.connect("mongodb+srv://Cristh:WinterHat@cluster-ct.aqcqb.mongodb.net/ct-database?retryWrites=true&w=majority", {
         useCreateIndex: true,
         useNewUrlParser: true,
         useFindAndModify: false,
