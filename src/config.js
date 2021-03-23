@@ -1,0 +1,3 @@
+export default {
+    SECRET: '3CC31B65-2AC5-5F67-9437-4B1E58F0AD13'
+}
