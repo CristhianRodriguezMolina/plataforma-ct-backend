@@ -1,7 +1,7 @@
 import dotenv from 'dotenv/config';
 import mongoose from 'mongoose'
 import './user.test';
-
+ 
 /**
  * Data base configuration
  * NoSQL MongoDB
