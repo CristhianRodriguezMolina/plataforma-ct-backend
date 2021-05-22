@@ -7,6 +7,8 @@ import path from 'path'; //To join paths
 
 // API module imports
 import userRoutes from './routes/user.routes';
+import logicSequenceRoutes from './routes/logic_sequence.routes';
+import activityRoutes from './routes/activity.routes';
 
 // App declaration
 const app = express();
@@ -29,6 +31,8 @@ app.use(express.urlencoded({ extended: false })); //Relacionado con el bodyparse
  * Se configuran las rutas de la API
  */
 app.use('/api/user', userRoutes); //Route to user administration
+app.use('/api/activity', activityRoutes); //Route to activities administration
+app.use('/api/logic_sequence', logicSequenceRoutes); //Route to logic sequence administration
 
 /**
  * express static
