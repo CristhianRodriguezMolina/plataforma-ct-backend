@@ -6,13 +6,9 @@ import cors from "cors"; //To allow different origins
 import path from "path"; //To join paths
 
 // API module imports
-<<<<<<< HEAD
 import userRoutes from './routes/user.routes';
 import logicSequenceRoutes from './routes/logic_sequence.routes';
 import activityRoutes from './routes/activity.routes';
-=======
-import userRoutes from "./routes/user.routes";
->>>>>>> 27c83436e767363a055595643165c89b7a3196fe
 
 // App declaration
 const app = express();
@@ -34,13 +30,9 @@ app.use(express.urlencoded({ extended: false })); //Relacionado con el bodyparse
  *
  * Se configuran las rutas de la API
  */
-<<<<<<< HEAD
 app.use('/api/user', userRoutes); //Route to user administration
 app.use('/api/activity', activityRoutes); //Route to activities administration
 app.use('/api/logic_sequence', logicSequenceRoutes); //Route to logic sequence administration
-=======
-app.use("/api/user", userRoutes); //Route to user administration
->>>>>>> 27c83436e767363a055595643165c89b7a3196fe
 
 /**
  * express static
