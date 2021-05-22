@@ -9,11 +9,11 @@ import * as logicSequenceCtrl from '../controllers/logic_sequence.controller';
 router.get('/', logicSequenceCtrl.getLogicSequences);
 
 //Add new activity
-router.post('/', activityCtrl.createActivity);
+router.post('/', logicSequenceCtrl.createLogicSequence);
 
 //Update an activity
-router.put('/:id', activityCtrl.updateActivityById);
+router.put('/:id', logicSequenceCtrl.updateLogicSequenceById);
 
 //Delete an activity
-router.delete('/:id', activityCtrl.deleteActivityById);
+router.delete('/:id', logicSequenceCtrl.deleteLogicSequenceById);
 export default router;
