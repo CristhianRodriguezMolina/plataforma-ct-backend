@@ -33,14 +33,12 @@ export const createActivity = async(req, res) => {
     // Save the activity in the DB
     const savedActivity = await newActivity.save();
 
-    let message; 
+    let child; 
     if(type.localeCompare("logic_sequence") == 0) {
-        message = logicSequenceCtrl.createLogicSequence(savedActivity._id);
+        child = await logicSequenceCtrl.createLogicSequence(savedActivity._id);
     }
 
-    console.log(message);
-
-    res.status(201).json({message: "The activity has been created satisfactorily", activity: savedActivity});
+    res.status(201).json({message: "The activity has been created satisfactorily", activity: savedActivity, savedChild: child});
 };
 
 //Update an activity
@@ -53,6 +51,16 @@ export const updateActivityById = async(req, res) => {
 
 //Delete an activity
 export const deleteActivityById = async(req, res) => {
-    const deletedActivity = await Activity.findByIdAndDelete(req.params.id);
-    res.status(200).json({message: "The activity has been deleted satisfactorily", deletedActivity});
+
+    const activity = await Activity.findById(req.params.id);
+    let child;
+    if(activity.type.localeCompare("logic_sequence") == 0) {
+        child = await logicSequenceCtrl.deleteLogicSequenceById(activity._id);
+    }
+
+    await Activity.deleteOne({_id: activity._id}, function(err) {
+        if (err) return handleError(err);
+    });
+
+    res.status(200).json({message: "The activity has been deleted satisfactorily", deletedActivity: activity, deletedChild: child});
 };

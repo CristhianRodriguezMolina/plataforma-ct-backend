@@ -17,21 +17,12 @@ export const createLogicSequence = async(activity_id) => {
     // Save the Logic Sequence in the DB
     const savedLogicSequence = await newLogicSequence.save();
 
-    return { message: "The Logic Sequence has been created satisfactorily" };
-};
-
-//Update an LogicSequence
-export const updateLogicSequenceById = async(req, res) => {
-    const updatedLogicSequence = await LogicSequence.findByIdAndUpdate(req.params.id, req.body, {
-        new: true
-    });
-    res.status(201).json({ message: "The Logic Sequence has been updated satisfactorily", logic_sequence: updatedLogicSequence });
+    return { message: "The Logic Sequence has been created satisfactorily", savedLogicSequence };
 };
 
 //Delete a logic sequence
-export const deleteLogicSequenceById = async(req, res) => {
-    const deletedLogicSequence = await LogicSequence.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "The Logic Sequence has been deleted satisfactorily", deletedLogicSequence });
+export const deleteLogicSequenceById = async(activity_id) => {
+    await LogicSequence.findOneAndDelete({ activity_id });
 };
 
 //Create a new Sequence card
