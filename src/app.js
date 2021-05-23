@@ -7,6 +7,7 @@ import path from "path"; //To join paths
 
 // API module imports
 import userRoutes from "./routes/user.routes";
+import courseRoutes from "./routes/course.routes";
 
 // App declaration
 const app = express();
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: false })); //Relacionado con el bodyparse
  * Se configuran las rutas de la API
  */
 app.use("/api/user", userRoutes); //Route to user administration
+app.use("/api/course", courseRoutes); //Route to course administration
 
 /**
  * express static
