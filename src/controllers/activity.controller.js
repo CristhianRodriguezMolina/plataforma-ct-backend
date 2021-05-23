@@ -2,6 +2,9 @@
 import { model } from 'mongoose';
 import Activity from '../models/Activity';
 
+//API modules imports
+import * as logicSequenceCtrl from './logic_sequence.controller';
+
 //Get all activities from DB
 export const getActivities = async(req, res) => {
     const activities = await Activity.find();
@@ -12,9 +15,12 @@ export const getActivities = async(req, res) => {
 export const createActivity = async(req, res) => {
     const { name, description, type } = req.body;
 
-    let temName = name.trim();
+    //Verifying Fields
+    if (name == undefined) {
+        return res.status(400).json({message: "Field(s) required!"})
+    }
 
-    console.log("name: ", temName, "description: ", description, "type: ", type);
+    let temName = name.trim();
 
     //Verifying Fields
     if(temName == undefined || temName.localeCompare("") == 0) {
@@ -26,6 +32,13 @@ export const createActivity = async(req, res) => {
 
     // Save the activity in the DB
     const savedActivity = await newActivity.save();
+
+    let message; 
+    if(type.localeCompare("logic_sequence") == 0) {
+        message = logicSequenceCtrl.createLogicSequence(savedActivity._id);
+    }
+
+    console.log(message);
 
     res.status(201).json({message: "The activity has been created satisfactorily", activity: savedActivity});
 };
