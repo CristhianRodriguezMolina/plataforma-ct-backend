@@ -8,9 +8,13 @@ import * as logicSequenceCtrl from '../controllers/logic_sequence.controller';
 //Get all logic sequences
 router.get('/', logicSequenceCtrl.getLogicSequences);
 
-//Update a logic sequence
-router.put('/:id', logicSequenceCtrl.updateLogicSequenceById);
+//Create a new sequence card by logic sequence id
+router.post('/sequence_card/:id', logicSequenceCtrl.createSequenceCardByLogicSequenceId);
 
-//Delete a logic sequence
-router.delete('/:id', logicSequenceCtrl.deleteLogicSequenceById);
+//Delete a sequence card by logic sequence id
+router.delete('/sequence_card/:id/:sequence_card_id', logicSequenceCtrl.deleteSequenceCardByLogicSequenceId);
+
+//Update a sequence card by logic sequence id
+router.put('/sequence_card/:id/:sequence_card_id', logicSequenceCtrl.updateSequenceCardByLogicSequenceId);
+
 export default router;

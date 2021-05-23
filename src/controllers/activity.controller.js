@@ -54,5 +54,5 @@ export const updateActivityById = async(req, res) => {
 //Delete an activity
 export const deleteActivityById = async(req, res) => {
     const deletedActivity = await Activity.findByIdAndDelete(req.params.id);
-    res.status(200).json({message: "The activity has been deleted satisfactorily", deleted_activity});
+    res.status(200).json({message: "The activity has been deleted satisfactorily", deletedActivity});
 };
