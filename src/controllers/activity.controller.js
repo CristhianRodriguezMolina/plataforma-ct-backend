@@ -8,7 +8,8 @@ import * as logicSequenceCtrl from './logic_sequence.controller';
 //Get all activities from DB
 export const getActivities = async(req, res) => {
     const activities = await Activity.find();
-    res.status(200).json({message: "Activities list request has been completed satisfactorily", activities});
+    const count = await Activity.countDocuments();
+    res.status(200).json({message: "Activities list request has been completed satisfactorily", activities, count});
 };
 
 //Create a new activity

@@ -22,7 +22,7 @@ export const createLogicSequence = async(activity_id) => {
 
 //Delete a logic sequence
 export const deleteLogicSequenceById = async(activity_id) => {
-    await LogicSequence.findOneAndDelete({ activity_id });
+    const child = await LogicSequence.findOneAndDelete({ activity_id });
 };
 
 //Create a new Sequence card
@@ -38,11 +38,16 @@ export const createSequenceCardByLogicSequenceId = async(req, res) => {
     }
     const logicSequence = await LogicSequence.findById(req.params.id);
 
-    logicSequence.sequence_cards.push({name, image});
-
-    const updatedLogicSequence = await logicSequence.save();
-
-    res.status(201).json({ message: "The new Sequence card has been created satisfatorily", updatedLogicSequence })
+    if(logicSequence != undefined){
+        logicSequence.sequence_cards.push({name, image});
+    
+        const updatedLogicSequence = await logicSequence.save();
+    
+        res.status(201).json({ message: "The new Sequence card has been created satisfatorily", updatedLogicSequence })
+    }
+    else{
+        res.status(400).json({ message: "Logic sequence not found" })
+    }
 
 }
 
@@ -93,4 +98,9 @@ export const updateSequenceCardByLogicSequenceId = async(req, res) => {
     );
     
    
+}
+
+export const getLogicSequenceIdByActivityId = async(req, res) => {
+    const logicSequence = await LogicSequence.findOne({activity_id: req.params.id}).populate("activity_id");
+    res.status(200).json(logicSequence)
 }

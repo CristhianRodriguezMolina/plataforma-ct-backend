@@ -17,4 +17,7 @@ router.put('/:id', activityCtrl.updateActivityById);
 //Delete an activity
 router.delete('/:id', activityCtrl.deleteActivityById);
 
+// Get an activity by id
+// router.get('/:id', activityCtrl.getActivityById)
+
 export default router;
