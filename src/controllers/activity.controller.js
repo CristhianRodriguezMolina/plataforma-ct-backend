@@ -36,18 +36,53 @@ export const createActivity = async(req, res) => {
 
     let child; 
     if(type.localeCompare("logic_sequence") == 0) {
-        child = await logicSequenceCtrl.createLogicSequence(savedActivity._id);
+        child = logicSequenceCtrl.createLogicSequence(savedActivity._id);
     }
 
-    res.status(201).json({message: "The activity has been created satisfactorily", activity: savedActivity, savedChild: child});
+    child.then((result) => {
+        res.status(201).json({message: "The activity has been created satisfactorily", activity: savedActivity, savedChild: result});
+    }).catch(err => {
+        console.log("ERROR found in createLogicSequence(logic_sequence.controller)")
+        console.err(err);
+        res.status(500).json({ message: "Unexpected error, try again later!"})
+    });
+
+    
 };
 
 //Update an activity
 export const updateActivityById = async(req, res) => {
-    const updatedActivity = await Activity.findByIdAndUpdate(req.params.id, req.body, {
-        new: true
+
+    const activity = await Activity.findById(req.params.id);
+    console.log("req.body.child")
+    console.log(req.body.child)
+    let child;
+    console.log("here")
+    if(activity.type.localeCompare("logic_sequence") == 0) {
+        child = logicSequenceCtrl.updateLogicSequenceByActivityId(activity._id, req.body.child);
+    }
+    
+    child.then(async(childResult) => {
+        console.log("CHILD11");
+        console.log(childResult);
+        await Activity.findByIdAndUpdate(req.params.id, req.body.activity, {
+            new: true
+        }).then(result => {
+            console.log("CHILD");
+            console.log(child);
+            res.status(201).json({ message: "The activity has been updated satisfactorily", updatedActivity: result, updatedChild: childResult });
+        }).catch(err => {
+            console.log("ERROR found in updateActivityById(activity.controller)")
+            console.err(err);
+            res.status(500).json({ message: "Unexpected error, try again later!"})
+        })
+    }).catch(err => {
+        console.log("ERROR found in updateLogicSequenceByActivityId(logic_sequence.controller)")
+        console.err(err);
+        res.status(500).json({ message: "Unexpected error, try again later!"})
     });
-    res.status(201).json({ message: "The activity has been updated satisfactorily", activity: updatedActivity });
+
+    
 };
 
 //Delete an activity

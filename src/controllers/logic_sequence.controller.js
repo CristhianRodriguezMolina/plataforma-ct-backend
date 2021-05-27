@@ -20,11 +20,6 @@ export const createLogicSequence = async(activity_id) => {
     return { message: "The Logic Sequence has been created satisfactorily", savedLogicSequence };
 };
 
-//Delete a logic sequence
-export const deleteLogicSequenceById = async(activity_id) => {
-    const child = await LogicSequence.findOneAndDelete({ activity_id });
-};
-
 //Create a new Sequence card
 export const createSequenceCardByLogicSequenceId = async(req, res) => {
     const { name, image } = req.body;
@@ -68,6 +63,7 @@ export const deleteSequenceCardByLogicSequenceId = async(req, res) => {
 
 export const updateSequenceCardByLogicSequenceId = async(req, res) => {
 
+    
     const { name, image } = req.body;
 
     if(req.params.id == undefined){
@@ -100,7 +96,36 @@ export const updateSequenceCardByLogicSequenceId = async(req, res) => {
    
 }
 
+
+//Delete a logic sequence
+export const deleteLogicSequenceById = async(activity_id) => {
+    const child = await LogicSequence.findOneAndDelete({ activity_id });
+};
+
+//Update Logic Sequence by activity Id
+export const updateLogicSequenceByActivityId = async(activity_id, sequence_cards) => {
+    console.log("data in updateLogicSequenceByActivityId")
+    console.log(sequence_cards)
+    await LogicSequence.findOneAndUpdate({ activity_id }, sequence_cards, {
+        new: true
+    }).then(result => {
+        return { message: "The Logic sequence has been updated satisfactorily", updatedLogicSequence: result };
+    }).catch(err => {
+        console.log("ERROR found in updateLogicSequenceByActivityId(logicsequence.controller)");
+        console.log(err);
+        throw "Unexpected error, try again later!";
+    });
+}
+
 export const getLogicSequenceIdByActivityId = async(req, res) => {
-    const logicSequence = await LogicSequence.findOne({activity_id: req.params.id}).populate("activity_id");
-    res.status(200).json(logicSequence)
+    await LogicSequence.findOne({activity_id: req.params.id}).populate("activity_id")
+        .then((result) => {
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            console.log("========== ERROR LOG IN LOGIC SEQUENCE CONTROLLER getLogicSequenceIdByActivityId ==========")
+            console.error(err);
+            res.status(400).json({message: "An error has been found while we trying to get the logic sequence"});
+        });
+       
 }
