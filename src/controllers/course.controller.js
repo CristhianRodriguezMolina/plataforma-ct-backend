@@ -1,3 +1,4 @@
+//DB Schema imports
 import Course from '../models/Course';
 
 export const getMyCourses = async(req, res) => {
