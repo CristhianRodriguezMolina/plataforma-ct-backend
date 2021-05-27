@@ -15,9 +15,13 @@ export const createLogicSequence = async(activity_id) => {
     const newLogicSequence = new LogicSequence({ activity_id });
 
     // Save the Logic Sequence in the DB
-    const savedLogicSequence = await newLogicSequence.save();
-
-    return { message: "The Logic Sequence has been created satisfactorily", savedLogicSequence };
+    await newLogicSequence.save((err) => {
+        if(err) {
+            console.log("ERROR in createLogicSequence (logic_sequence.controller)");
+            console.error(err)
+            throw "Unexpected error, try again later!"
+        }
+    });
 };
 
 //Create a new Sequence card
@@ -99,20 +103,24 @@ export const updateSequenceCardByLogicSequenceId = async(req, res) => {
 
 //Delete a logic sequence
 export const deleteLogicSequenceById = async(activity_id) => {
-    const child = await LogicSequence.findOneAndDelete({ activity_id });
+    LogicSequence.findOneAndDelete({ activity_id }, (err) => {
+        if(err) {
+            console.log("ERROR found in deleteLogicSequenceById(logicsequence.controller)");
+            console.error(err);
+            throw "Unexpected error, try again later!";
+        }
+    });
 };
 
 //Update Logic Sequence by activity Id
 export const updateLogicSequenceByActivityId = async(activity_id, sequence_cards) => {
-    console.log("data in updateLogicSequenceByActivityId")
-    console.log(sequence_cards)
     await LogicSequence.findOneAndUpdate({ activity_id }, sequence_cards, {
         new: true
-    }).then(result => {
-        return { message: "The Logic sequence has been updated satisfactorily", updatedLogicSequence: result };
+    }).then(() => {
+        return { message: "The Logic sequence has been updated satisfactorily" };
     }).catch(err => {
         console.log("ERROR found in updateLogicSequenceByActivityId(logicsequence.controller)");
-        console.log(err);
+        console.error(err);
         throw "Unexpected error, try again later!";
     });
 }
