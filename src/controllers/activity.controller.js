@@ -3,7 +3,7 @@ import { model } from 'mongoose';
 import Activity from '../models/Activity';
 
 //API modules imports
-import * as logicSequenceCtrl from './logic_sequence.controller';
+import * as logicSequenceCtrl from './logic-sequence.controller';
 
 //Get all activities from DB
 export const getActivities = async(req, res) => {
@@ -86,32 +86,38 @@ export const updateActivityById = async(req, res) => {
         if(err) {
             return res.status(500).json({ message: "Unexpected error, try again later!"});
         }
-        let child;
-        if(activity.type.localeCompare("logic_sequence") == 0) {
-            child = logicSequenceCtrl.updateLogicSequenceByActivityId(activity._id, req.body.child);
-        } else if(type.localeCompare("maze") == 0) {
-            console.log("maze");
-            //Do some stuff
-        } else if(type.localeCompare("questionnaire") == 0) {
-            console.log("questionnaire");
-            //Do some stuff
-        }
-        if(!child) return res.status(500).json({ message: "Unexpected error, try again later!"});
-        child.then(async() => {
-            await Activity.findByIdAndUpdate(req.params.id, req.body.activity, {
-                new: true
-            }).then(() => {
-                return res.status(201).json({ message: "The activity has been updated satisfactorily"});
-            }).catch(err => {
-                console.log("ERROR found in updateActivityById(activity.controller)");
-                console.error(err);
+        if(activity) {
+            let child;
+            if(activity.type.localeCompare("logic_sequence") == 0) {
+                child = logicSequenceCtrl.updateLogicSequenceByActivityId(activity._id, req.body.child);
+            } else if(type.localeCompare("maze") == 0) {
+                console.log("maze");
+                //Do some stuff
+            } else if(type.localeCompare("questionnaire") == 0) {
+                console.log("questionnaire");
+                //Do some stuff
+            }
+            if(!child) return res.status(500).json({ message: "Unexpected error, try again later!"});
+            child.then(async() => {
+                await Activity.findByIdAndUpdate(req.params.id, req.body.activity, {
+                    new: true
+                }).then(() => {
+                    return res.status(201).json({ message: "The activity has been updated satisfactorily"});
+                }).catch(error => {
+                    console.log("ERROR found in updateActivityById(activity.controller)");
+                    console.error(error);
+                    return res.status(500).json({ message: "Unexpected error, try again later!"});
+                })
+            }).catch(e => {
+                console.log("ERROR found in updateLogicSequenceByActivityId(logic_sequence.controller)");
+                console.error(e);
                 return res.status(500).json({ message: "Unexpected error, try again later!"});
-            })
-        }).catch(err => {
-            console.log("ERROR found in updateLogicSequenceByActivityId(logic_sequence.controller)");
-            console.error(err);
-            return res.status(500).json({ message: "Unexpected error, try again later!"});
-        });
+            });
+
+        }
+        else {
+            return res.status(400).json({ message: "Activity not found"});
+        }
     });
 
     
@@ -133,7 +139,7 @@ export const deleteActivityById = async(req, res) => {
 
         let child;
         if(activity.type.localeCompare("logic_sequence") == 0) {
-            child = logicSequenceCtrl.deleteLogicSequenceById(activity._id);
+            child = logicSequenceCtrl.deleteLogicSequenceByActivityId(activity._id);
         } else if(type.localeCompare("maze") == 0) {
             console.log("maze");
             //Do some stuff
@@ -144,17 +150,17 @@ export const deleteActivityById = async(req, res) => {
 
         if(child) {
             child.then(async() => {
-                await Activity.deleteOne({_id: activity._id}, function(err) {
-                    if(err) {
+                await Activity.deleteOne({_id: activity._id}, (error) => {
+                    if(error) {
                         console.error("ERROR when try to deleteOne in deleteActivityById (activity.controller)");
                         return res.status(500).json({ message: "Unexpected error, try again later!"})
                     }
 
                     return res.status(200).json({message: "The activity has been deleted satisfactorily"});
                 });
-            }).catch((err) => {
+            }).catch((e) => {
                 console.log("ERROR found in deleteActivityById(activity.controller)")
-                console.error(err);
+                console.error(e);
                 return res.status(500).json({ message: "Unexpected error, try again later!"})
             });
         } else {

@@ -35,7 +35,7 @@ describe('REQUEST /api/activity', () => {
                         if (err) console.error(err);
                     });
                     done();
-                })
+                });
         });
 
         it('Respond with a json containing a message for notify fields missing', done => {
@@ -49,7 +49,7 @@ describe('REQUEST /api/activity', () => {
                 .end((err) => {
                     if(err) return done(err);
                     done();
-                })
+                });
         });
 
         it('Respond with a json containing a message for notify type not accepted', done => {
@@ -68,7 +68,7 @@ describe('REQUEST /api/activity', () => {
                 .end((err) => {
                     if(err) return done(err);
                     done();
-                })
+                });
         });
 
         it('Respond with a json containing a message for notify name field is empty', done => {
@@ -87,8 +87,12 @@ describe('REQUEST /api/activity', () => {
                 .end((err) => {
                     if(err) return done(err);
                     done();
-                })
+                });
         });
+    });
+
+    describe('Running logic sequence tests', () => {
+        require('./logic-sequence.test');
     });
 
     describe('Update an activity', () => {
@@ -141,17 +145,84 @@ describe('REQUEST /api/activity', () => {
                 .end((err) => {
                     if(err) return done(err);
                     done();
-                })
+                });
         });
 
         it('Respond with a json containing a message for notify the activity Id is invalid', done => {
             request(app)
                 .put('/api/activity/genericID')
+                .set('Accept', 'application/json')
+                .send({
+                    activity: {
+                        name: "My first activity",
+                        description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+                    },
+                    child: {
+                        sequence_cards: [
+                            {
+                                name: "First",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Second",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Third",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Fourth",
+                                image: "image.jpg"
+                            }
+                        ]
+                    }
+                })
                 .expect(500)
                 .end((err) => {
                     if(err) return done(err);
                     done();
+                });
+        });
+
+        it('Respond with a json containing a message for notify the activity has been not found', done => {
+            request(app)
+                .put('/api/activity/666666666666666666666666')
+                .set('Accept', 'application/json')
+                .send({
+                    activity: {
+                        name: "My first activity",
+                        description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+                    },
+                    child: {
+                        sequence_cards: [
+                            {
+                                name: "First",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Second",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Third",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Fourth",
+                                image: "image.jpg"
+                            }
+                        ]
+                    }
                 })
+                .expect(400)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "Activity not found");
+                })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
         });
     });
 
@@ -167,9 +238,11 @@ describe('REQUEST /api/activity', () => {
                 .end((err) => {
                     if(err) return done(err);
                     done();
-                })
+                });
         });
     });
+
+    
 
     describe('Delete an activity', () => {
 
@@ -183,7 +256,20 @@ describe('REQUEST /api/activity', () => {
                 .end((err) => {
                     if(err) return done(err);
                     done();
+                });
+        });
+
+        it('Respond with a json containing a message for notify the activity has been not found', done => {
+            request(app)
+                .delete('/api/activity/666666666666666666666666')
+                .expect(400)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "Activity not found");
                 })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
         });
 
         it('Respond with a json containing a message for notify the activity Id is invalid', done => {
@@ -193,7 +279,7 @@ describe('REQUEST /api/activity', () => {
                 .end((err) => {
                     if(err) return done(err);
                     done();
-                })
+                });
         });
     });
 });
