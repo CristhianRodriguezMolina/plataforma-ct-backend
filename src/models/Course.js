@@ -7,11 +7,11 @@ const CourseSchema = new Schema({
     'creator': { ref: 'Person', type: Schema.Types.ObjectId },
     'visible': { type: Boolean },
     'image': String,
-    'actual_unit': { type: String, default: "There is no unit" },
+    'actual_unit': String,
     'due_date': Date,
     'students': { type: Number, default: 0 },
     'units': [{
-        'name': { type: String, require: true, trim: true },
+        'name': { type: String, require: true, unique: true, trim: true },
         'description': { type: String, require: true },
         'complete': Boolean,
         'visible': Boolean,
