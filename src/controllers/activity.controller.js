@@ -51,7 +51,7 @@ export const createActivity = async(req, res) => {
     const newActivity = new Activity({ name: temName, description, type })
 
     // Save the activity in the DB
-    await newActivity.save((err, savedActivity) =>{
+    await newActivity.save((err, savedActivity) => {
         if (err) return res.status(500).json({ message: "Unexpected error, try again later!"})
         let child; 
         if(type.localeCompare("logic_sequence") == 0) {
@@ -90,10 +90,10 @@ export const updateActivityById = async(req, res) => {
             let child;
             if(activity.type.localeCompare("logic_sequence") == 0) {
                 child = logicSequenceCtrl.updateLogicSequenceByActivityId(activity._id, req.body.child);
-            } else if(type.localeCompare("maze") == 0) {
+            } else if(activity.type.localeCompare("maze") == 0) {
                 console.log("maze");
                 //Do some stuff
-            } else if(type.localeCompare("questionnaire") == 0) {
+            } else if(activity.type.localeCompare("questionnaire") == 0) {
                 console.log("questionnaire");
                 //Do some stuff
             }
@@ -126,7 +126,7 @@ export const updateActivityById = async(req, res) => {
 //Delete an activity
 export const deleteActivityById = async(req, res) => {
 
-    await Activity.findById(req.params.id, (err, activity) => {
+    await Activity.findById(req.params.id, async(err, activity) => {
         if(err) {
             // console.log("ERROR when try to findById in deleteActivityById (activity.controller)");
             // console.error(err);
@@ -140,10 +140,10 @@ export const deleteActivityById = async(req, res) => {
         let child;
         if(activity.type.localeCompare("logic_sequence") == 0) {
             child = logicSequenceCtrl.deleteLogicSequenceByActivityId(activity._id);
-        } else if(type.localeCompare("maze") == 0) {
+        } else if(activity.type.localeCompare("maze") == 0) {
             console.log("maze");
             //Do some stuff
-        } else if(type.localeCompare("questionnaire") == 0) {
+        } else if(activity.type.localeCompare("questionnaire") == 0) {
             console.log("questionnaire");
             //Do some stuff
         }
@@ -164,7 +164,14 @@ export const deleteActivityById = async(req, res) => {
                 return res.status(500).json({ message: "Unexpected error, try again later!"})
             });
         } else {
-            return res.status(500).json({ message: "Unexpected error, try again later!"})
+            await Activity.deleteOne({_id: activity._id}, (error) => {
+                if(error) {
+                    console.error("ERROR when try to deleteOne in deleteActivityById (activity.controller)");
+                    return res.status(500).json({ message: "Unexpected error, try again later!"})
+                }
+
+                return res.status(200).json({message: "The activity has been deleted satisfactorily"});
+            });
         }
     });
   
