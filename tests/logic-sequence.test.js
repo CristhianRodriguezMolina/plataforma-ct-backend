@@ -40,6 +40,19 @@ describe('REQUEST /api/logic-sequence', () => {
                     done();
                 });
         });
+
+        it('Respond with a json containing the associate logic sequence', done => {
+            request(app)
+                .get(`/api/logic-sequence/666666666666666666666666`)
+                .expect(400)
+                .expect(res => {
+                    assert.strictEqual(res.body.message, "Logic Sequence not found");
+                })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
+        });
     });
     
     describe('Create a sequence card', () => {

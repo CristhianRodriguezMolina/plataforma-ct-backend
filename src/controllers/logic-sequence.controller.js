@@ -151,7 +151,10 @@ export const updateLogicSequenceByActivityId = async(activity_id, sequence_cards
 export const getLogicSequenceIdByActivityId = async(req, res) => {
     await LogicSequence.findOne({activity_id: req.params.id}).populate("activity_id")
         .then((result) => {
-            return res.status(200).json(result);
+            if(result) { 
+                return res.status(200).json(result);
+            }
+            return res.status(400).json({message: "Logic Sequence not found"});
         })
         .catch(err => {
             console.log("========== ERROR LOG IN LOGIC SEQUENCE CONTROLLER getLogicSequenceIdByActivityId ==========")
