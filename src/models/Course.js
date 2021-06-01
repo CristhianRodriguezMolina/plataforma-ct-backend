@@ -7,7 +7,7 @@ const CourseSchema = new Schema({
     'creator': { ref: 'Person', type: Schema.Types.ObjectId },
     'visible': { type: Boolean },
     'image': String,
-    'actual_unit': { type: String, default: "There is no unit" },
+    'actual_unit': String,
     'due_date': Date,
     'students': { type: Number, default: 0 },
     'units': [{
