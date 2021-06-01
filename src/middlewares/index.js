@@ -1,4 +1,4 @@
 import * as authJwt from './authJwt';
-//import * as verifySignup from './verifySignup';
+import * as verifyCreate from './verifyCreate';
 
-export { authJwt }; //Se exportan ambos modulos de autenticación
+export { authJwt, verifyCreate }; //Se exportan ambos modulos de autenticación

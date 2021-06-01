@@ -11,7 +11,7 @@ const CourseSchema = new Schema({
     'due_date': Date,
     'students': { type: Number, default: 0 },
     'units': [{
-        'name': { type: String, require: true, unique: true, trim: true },
+        'name': { type: String, require: true, trim: true },
         'description': { type: String, require: true },
         'complete': Boolean,
         'visible': Boolean,

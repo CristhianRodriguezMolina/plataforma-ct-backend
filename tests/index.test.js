@@ -1,6 +1,7 @@
 import dotenv from 'dotenv/config';
 import mongoose from 'mongoose'
 import './user.test';
+import './course.test';
  
 /**
  * Data base configuration

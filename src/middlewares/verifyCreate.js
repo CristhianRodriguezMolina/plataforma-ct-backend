@@ -14,40 +14,40 @@ export const checkRoleExisted = (req, res, next) => {
 
 //METODO QUE VERIFICA SI LOS CAMPOS RECIBIDOS EN EL req.body SON VALIDOS PARA UN REGISTRO
 export const verifyFields = async(req, res, next) => {
-    const { first_name, last_name, age, genre, id, password, confirm_password } = req.body;
+    const { first_name, last_name, birth_date, genre, id, password, confirm_password } = req.body;
     const errors = [];
 
     if (!first_name || first_name.length <= 0) {
-        errors.push({ message: 'Por favor, ingrese el nombre' });
+        return res.status(400).json({ message: 'Por favor, ingrese el nombre' });
     }
 
     if (!last_name || last_name.length <= 0) {
-        errors.push({ message: 'Por favor, ingrese el apellido' });
+        return res.status(400).json({ message: 'Por favor, ingrese el apellido' });
     }
 
-    if (!age || age.length <= 0) {
-        errors.push({ message: 'Por favor, ingrese la edad' });
+    if (!birth_date) {
+        return res.status(200).json({ message: 'Por favor, ingrese la edad' });
     }
 
     if (!genre || genre.length <= 0) {
-        errors.push({ message: 'Por favor, ingrese el genero' });
+        return res.status(200).json({ message: 'Por favor, ingrese el genero' });
     }
 
     if(password && confirm_password){
         if (password.localeCompare(confirm_password)) {
-            errors.push({ message: 'Las contraseñas no coinciden' });
+            return res.status(200).json({ message: 'Las contraseñas no coinciden' });
         }
     }
     else{
-        errors.push({ message: 'Por favor, ingrese la contraseña' });
+        return res.status(200).json({ message: 'Por favor, ingrese la contraseña' });
     }
 
     if (!id || id.length <= 0) {
-        errors.push({ message: 'Por favor, ingrese el numero de identificación' });
+        return res.status(200).json({ message: 'Por favor, ingrese el numero de identificación' });
     }
 
     if (!password || password.length < 4) {
-        errors.push({ message: 'La contraseña debe tener al menos 4 caracteres' });
+        return res.status(200).json({ message: 'La contraseña debe tener al menos 4 caracteres' });
     }
 
     if (errors.length > 0) {

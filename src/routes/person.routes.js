@@ -4,6 +4,7 @@ const router = Router();
 
 //API modules imports
 import * as personCtrl from '../controllers/person.controller';
+import { authJwt, verifyCreate } from '../middlewares';
 
 //Obtener todos los usuarios dado un rol
 router.get('/role/:role', personCtrl.getUserByRole);
@@ -12,7 +13,7 @@ router.get('/role/:role', personCtrl.getUserByRole);
 router.get('/:id', personCtrl.getUserById);
 
 //Crear un usuario
-router.post('/', personCtrl.createUser);
+router.post('/', [verifyCreate.verifyFields, verifyCreate.checkRoleExisted], personCtrl.createUser);
 
 //Actualizar un usuario por id
 router.put('/:id', personCtrl.updateUserById);

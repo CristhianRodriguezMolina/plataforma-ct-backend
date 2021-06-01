@@ -31,10 +31,10 @@ export const getUserByRole = async(req, res) => {
 //METODO QUE ELIMINA UN USUARIO 
 export const createUser = async(req, res) => {
     try {
-        const { first_name, last_name, age, genre, id, password, role } = req.body;
+        const { first_name, last_name, birth_date, genre, id, password, role } = req.body;
 
         // Creating a new person
-        const newUser = new Person({ first_name, last_name, age, genre, id, password, role });
+        const newUser = new Person({ first_name, last_name, birth_date, genre, id, password, role });
 
         // Encrypting the password
         newUser.password = await Person.encryptPassword(newUser.password);
@@ -52,9 +52,11 @@ export const createUser = async(req, res) => {
 //RUTA QUE ACTUALIZA UN USUARIO POR SU ID
 export const updateUserById = async(req, res) => {
     try {
-        const updatedUser = await Person.findByIdAndUpdate(req.params.id, req.body, {
-            new: true
-        });
+        const updatedUser = await Person.findByIdAndUpdate(req.params.id, req.body, { new: true});
+
+        if(!updatedUser){
+            res.status(400).json({ message: 'Usuario no entontrado' });            
+        }
 
         res.status(201).json({ updatedUser, message: 'Usuario actualizado con exito' });        
     } catch (error) {
@@ -67,6 +69,10 @@ export const updateUserById = async(req, res) => {
 export const deleteUserById = async(req, res) => {
     try {
         const deletedUser = await Person.findByIdAndDelete(req.params.id);
+
+        if(!deletedUser){
+            res.status(400).json({ message: 'Usuario no entontrado' });            
+        }
         
         res.status(200).json({deletedUser, message: "Usuario borrado con exito"});        
     } catch (error) {
