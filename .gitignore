@@ -3,3 +3,4 @@
 /.env
 /build
 /tests/*.txt
+/src/static_content

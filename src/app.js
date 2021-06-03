@@ -10,6 +10,7 @@ import personRoutes from "./routes/person.routes";
 import courseRoutes from "./routes/course.routes";
 import logicSequenceRoutes from './routes/logic-sequence.routes';
 import activityRoutes from './routes/activity.routes';
+import dataRoutes from './routes/data.routes';
 
 // App declaration
 const app = express();
@@ -35,11 +36,12 @@ app.use("/api/person", personRoutes); //Route to user administration
 app.use("/api/course", courseRoutes); //Route to course administration
 app.use('/api/activity', activityRoutes); //Route to activities administration
 app.use('/api/logic-sequence', logicSequenceRoutes); //Route to logic sequence administration
+app.use('/api/data', dataRoutes); //Route to data uploading administration
 
 /**
  * express static
  * Se configura la carpeta de los archivos estaticos de la aplicacion
  */
-app.use(express.static(path.join(__dirname, "static"))); //route where all user images are stored
+app.use(express.static(path.join(__dirname, "static_content"))); //route where all user images are stored
 
 module.exports = app;
