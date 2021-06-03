@@ -17,6 +17,7 @@ router.delete('/sequence-card/:id/:sequence_card_id', logicSequenceCtrl.deleteSe
 //Update a sequence card by logic sequence id
 router.put('/sequence-card/:id/:sequence_card_id', logicSequenceCtrl.updateSequenceCardByLogicSequenceId);
 
+
 //Get logic sequence by activity id
 router.get('/:id', logicSequenceCtrl.getLogicSequenceIdByActivityId);
 
