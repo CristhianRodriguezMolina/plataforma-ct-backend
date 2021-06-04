@@ -82,6 +82,19 @@ export const createActivity = async(req, res) => {
 //Update an activity
 export const updateActivityById = async(req, res) => {
 
+    const { name } = req.body.activity;
+
+    if (!name) {
+        return res.status(400).json({ message: "Field(s) required!" })
+    }
+
+    let temName = name.trim();
+
+    //Verifying Fields
+    if(temName.localeCompare("") == 0) {
+        return res.status(400).json({ message: "Field(s) required!" })
+    }
+
     await Activity.findById(req.params.id, (err, activity) => {
         if(err) {
             return res.status(500).json({ message: "Unexpected error, try again later!"});

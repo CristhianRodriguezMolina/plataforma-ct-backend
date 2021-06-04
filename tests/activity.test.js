@@ -148,6 +148,85 @@ describe('REQUEST /api/activity', () => {
                 });
         });
 
+        it('Respond with a json containing a message for notify the name field is empty', done => {
+            request(app)
+                .put(`/api/activity/${activityID}`)
+                .set('Accept', 'application/json')
+                .send({
+                    activity: {
+                        name: "   ",
+                        description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+                    },
+                    child: {
+                        sequence_cards: [
+                            {
+                                name: "First",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Second",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Third",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Fourth",
+                                image: "image.jpg"
+                            }
+                        ]
+                    }
+                })
+                .expect(400)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "Field(s) required!");
+                })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
+        });
+
+        it('Respond with a json containing a message for notify the name field is missing', done => {
+            request(app)
+                .put(`/api/activity/${activityID}`)
+                .set('Accept', 'application/json')
+                .send({
+                    activity: {
+                        description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+                    },
+                    child: {
+                        sequence_cards: [
+                            {
+                                name: "First",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Second",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Third",
+                                image: "image.jpg"
+                            },
+                            {
+                                name: "Fourth",
+                                image: "image.jpg"
+                            }
+                        ]
+                    }
+                })
+                .expect(400)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "Field(s) required!");
+                })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
+        });
+
         it('Respond with a json containing a message for notify the activity Id is invalid', done => {
             request(app)
                 .put('/api/activity/genericID')
