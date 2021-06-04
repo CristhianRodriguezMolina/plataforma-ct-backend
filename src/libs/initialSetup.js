@@ -2,7 +2,7 @@ import Person from '../models/Person';
 
 export const createAdmin = async() => {
     // check for an existing admin user
-    const user = await Person.findOne({ id: 1111111111 });
+    const user = await Person.findOne({ id: 111 });
 
     if (!user) {
         // create a new admin user
