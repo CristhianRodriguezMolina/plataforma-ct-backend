@@ -10,6 +10,7 @@ import personRoutes from "./routes/person.routes";
 import courseRoutes from "./routes/course.routes";
 import logicSequenceRoutes from './routes/logic-sequence.routes';
 import activityRoutes from './routes/activity.routes';
+import authRoutes from './routes/auth.routes';
 
 // App declaration
 const app = express();
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: false })); //Relacionado con el bodyparse
  *
  * Se configuran las rutas de la API
  */
+app.use("/api/auth", authRoutes); //Route to user administration
 app.use("/api/person", personRoutes); //Route to user administration
 app.use("/api/course", courseRoutes); //Route to course administration
 app.use('/api/activity', activityRoutes); //Route to activities administration

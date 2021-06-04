@@ -7,7 +7,7 @@ import * as courseCtrl from '../controllers/course.controller';
 //import { authJwt } from '../middlewares'
 
 // Route for get the courses of a teacher
-router.get('/', courseCtrl.getMyCourses);
+router.get('/mycourses/:id', courseCtrl.getMyCourses);
 
 // Route for get a course by id
 router.get('/:id', courseCtrl.getCoursesById);
