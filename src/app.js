@@ -12,8 +12,14 @@ import logicSequenceRoutes from './routes/logic-sequence.routes';
 import activityRoutes from './routes/activity.routes';
 import authRoutes from './routes/auth.routes';
 
+// Initial setup
+import { createAdmin } from './libs/initialSetup';
+
 // App declaration
 const app = express();
+
+// Initial setup for the server, create admin user
+createAdmin();
 
 // SETTINGS
 

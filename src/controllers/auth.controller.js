@@ -49,6 +49,7 @@ import config from '../config';
         }
     } catch (error) {
         //Captura los errores durante el proceso
+        console.log(error)
         return res.status(200).json({ message: `Error while Authenticating a User ${error}` })
     }
 };
