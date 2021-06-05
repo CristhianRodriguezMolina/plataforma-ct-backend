@@ -103,8 +103,7 @@ export const updateSequenceCardByLogicSequenceId = async(req, res) => {
          "sequence_cards._id": req.params.sequence_card_id
         }, { 
             "$set": {
-                "sequence_cards.$.name": name,
-                "sequence_cards.$.image": image,
+                "sequence_cards.$.name": name
             }
         }, {
             new: true

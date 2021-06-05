@@ -22,7 +22,7 @@ const storageImg = multer.diskStorage({
         }
     }, 
     filename: (req, file, cb) => {
-        return cb(null, uuidv4() + path.extname(file.originalname).toLowerCase()); ; //Uploaded file name for images
+        return cb(null, uuidv4() + path.extname(file.originalname).toLowerCase()); //Uploaded file name for images
     }
 });
 
