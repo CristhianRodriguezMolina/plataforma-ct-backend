@@ -3,6 +3,10 @@ import fs from 'fs';
 import path from 'path';
 
 export const uploadImg = async(req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: "The image couldn't be uploaded, make sure you are uploading an image file or check your internet connection"});
+    }
+
     await LogicSequence.findById(req.params.logic_sequence_id, async(err, oldLogicSequence) => {
         if(err) {
             return res.status(500).json({ message: "Unexpected error, try again later!"});
@@ -38,7 +42,7 @@ export const uploadImg = async(req, res) => {
                                 sequenceCard = tempSequenceCard;
                             }
                         }
-                        let filePath = path.join(__dirname, `../static_content/i/${sequenceCard.image}`);
+                        let filePath = path.join(__dirname, `../../static_content/i/${sequenceCard.image}`);
                         if (fs.existsSync(filePath)) {
                             fs.unlink(filePath, (err) => {
                                 if (err) return console.log(err);

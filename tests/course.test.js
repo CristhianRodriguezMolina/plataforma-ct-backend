@@ -31,7 +31,7 @@ var courseID = null;
                 })
                 .end((err, res) => {                    
                     if(err) return done(err);
-                    let filePath = path.join(__dirname, 'courseID.txt');
+                    let filePath = path.join(__dirname, './static_test/courseID.txt');
                     fs.writeFile(filePath, res.body.course._id, (err) => {
                         if (err) console.error(err);
                     });
@@ -42,7 +42,7 @@ var courseID = null;
 
     describe('Update a course', () => {
         before((done) => {
-            let courseIDPath = path.join(__dirname, 'courseID.txt');
+            let courseIDPath = path.join(__dirname, './static_test/courseID.txt');
             try {
                 courseID = fs.readFileSync(courseIDPath, 'utf8');
                 console.log('Course ID defined');

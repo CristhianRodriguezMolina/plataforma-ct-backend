@@ -42,6 +42,6 @@ app.use('/api/data', dataRoutes); //Route to data uploading administration
  * express static
  * Se configura la carpeta de los archivos estaticos de la aplicacion
  */
-app.use(express.static(path.join(__dirname, "static_content"))); //route where all user images are stored
+app.use(express.static(path.join(__dirname, "../static_content"))); //route where all user images are stored
 
 module.exports = app;

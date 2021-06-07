@@ -30,7 +30,7 @@ describe('REQUEST /api/activity', () => {
                 })
                 .end((err, res) => {
                     if(err) return done(err);
-                    let filePath = path.join(__dirname, 'activityID.txt');
+                    let filePath = path.join(__dirname, './static_test/activityID.txt');
                     fs.writeFile(filePath, res.body.activity_id, (err) => {
                         if (err) console.error(err);
                     });
@@ -97,7 +97,7 @@ describe('REQUEST /api/activity', () => {
 
     describe('Update an activity', () => {
         before((done) => {
-            let activityIDPath = path.join(__dirname, 'activityID.txt');
+            let activityIDPath = path.join(__dirname, './static_test/activityID.txt');
             try {
                 activityID = fs.readFileSync(activityIDPath, 'utf8');
                 console.log('Activity ID defined');

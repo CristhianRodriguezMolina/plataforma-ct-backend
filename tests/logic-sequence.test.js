@@ -15,7 +15,7 @@ var sequenceCardID = null;
 describe('REQUEST /api/logic-sequence', () => {
 
     before((done) => {
-        let activityIDPath = path.join(__dirname, 'activityID.txt');
+        let activityIDPath = path.join(__dirname, './static_test/activityID.txt');
         try {
             activityID = fs.readFileSync(activityIDPath, 'utf8');
             console.log('Activity ID defined');
@@ -33,7 +33,7 @@ describe('REQUEST /api/logic-sequence', () => {
                 .expect(200)
                 .end((err, res) => {
                     if(err) return done(err);
-                    let filePath = path.join(__dirname, 'logicSequenceID.txt');
+                    let filePath = path.join(__dirname, './static_test/logicSequenceID.txt');
                     fs.writeFile(filePath, res.body._id, (err) => {
                         if (err) console.error(err);
                     });
@@ -57,7 +57,7 @@ describe('REQUEST /api/logic-sequence', () => {
     
     describe('Create a sequence card', () => {
         before((done) => {
-            let logicSequenceIDPath = path.join(__dirname, 'logicSequenceID.txt');
+            let logicSequenceIDPath = path.join(__dirname, './static_test/logicSequenceID.txt');
             try {
                 logicSequenceID = fs.readFileSync(logicSequenceIDPath, 'utf8');
                 console.log('Logic sequence ID defined');
@@ -82,7 +82,7 @@ describe('REQUEST /api/logic-sequence', () => {
                 })
                 .end((err, res) => {
                     if(err) return done(err);
-                    let filePath = path.join(__dirname, 'sequenceCardID.txt');
+                    let filePath = path.join(__dirname, './static_test/sequenceCardID.txt');
                     fs.writeFile(filePath, res.body.updatedLogicSequence.sequence_cards[0]._id, (err) => {
                         if (err) console.error(err);
                     });
@@ -155,9 +155,13 @@ describe('REQUEST /api/logic-sequence', () => {
         });
     });
 
+    describe('Running logic data tests', () => {
+        require('./data.test');
+    });
+
     describe('Update a sequence card', () => {
         before((done) => {
-            let sequenceCardIDPath = path.join(__dirname, 'sequenceCardID.txt');
+            let sequenceCardIDPath = path.join(__dirname, './static_test/sequenceCardID.txt');
             try {
                 sequenceCardID = fs.readFileSync(sequenceCardIDPath, 'utf8');
                 console.log('Sequence card ID defined');

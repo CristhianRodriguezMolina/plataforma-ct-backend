@@ -35,7 +35,7 @@ var personID = null;
                 })
                 .end((err, res) => {
                     if(err) return done(err);
-                    let filePath = path.join(__dirname, 'personID.txt');
+                    let filePath = path.join(__dirname, './static_test/personID.txt');
                     fs.writeFile(filePath, res.body.savedUser._id, (err) => {
                         if (err) console.error(err);
                     });
@@ -84,7 +84,7 @@ var personID = null;
 
     describe('Update a person', () => {
         before((done) => {
-            let personIDPath = path.join(__dirname, 'personID.txt');
+            let personIDPath = path.join(__dirname, './static_test/personID.txt');
             try {
                 personID = fs.readFileSync(personIDPath, 'utf8');
                 console.log('Person ID defined');
