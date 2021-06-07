@@ -10,6 +10,7 @@ import personRoutes from "./routes/person.routes";
 import courseRoutes from "./routes/course.routes";
 import logicSequenceRoutes from './routes/logic-sequence.routes';
 import activityRoutes from './routes/activity.routes';
+import dataRoutes from './routes/data.routes';
 import authRoutes from './routes/auth.routes';
 
 // Initial setup
