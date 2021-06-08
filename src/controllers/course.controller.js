@@ -10,7 +10,7 @@ export const getMyCourses = async(req, res) => {
     }
 }
 
-export const getCoursesById = async(req, res) => {
+export const getCourseById = async(req, res) => {
     try {
         const course = await Course.findById(req.params.id);
 
@@ -20,6 +20,7 @@ export const getCoursesById = async(req, res) => {
 
         return res.status(200).json({ message: 'Curso hallado con exito', course });
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ message: `Hubo un error obteniendo los curso ${error}` });
     }
 }

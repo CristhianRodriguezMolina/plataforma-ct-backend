@@ -10,7 +10,7 @@ import { authJwt } from '../middlewares';
 router.get('/mycourses/:id', [authJwt.verifyToken], courseCtrl.getMyCourses);
 
 // Route for get a course by id
-router.get('/:id', [authJwt.verifyToken], courseCtrl.getCoursesById);
+router.get('/:id', [authJwt.verifyToken], courseCtrl.getCourseById);
 
 // Route for create a course
 router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createCourse);
