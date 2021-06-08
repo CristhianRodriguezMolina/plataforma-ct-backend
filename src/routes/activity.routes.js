@@ -4,20 +4,21 @@ const router = Router();
 
 //API modules imports
 import * as activityCtrl from '../controllers/activity.controller';
+import { authJwt } from '../middlewares';
 
 //Get all activities
-router.get('/', activityCtrl.getActivities);
+router.get('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], activityCtrl.getActivities);
 
 //Add new activity
-router.post('/', activityCtrl.createActivity);
+router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], activityCtrl.createActivity);
 
 //Update an activity
-router.put('/:id', activityCtrl.updateActivityById);
+router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], activityCtrl.updateActivityById);
 
 //Delete an activity
-router.delete('/:id', activityCtrl.deleteActivityById);
+router.delete('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], activityCtrl.deleteActivityById);
 
 // Get an activity by id
-// router.get('/:id', activityCtrl.getActivityById)
+// router.get('/:id', [authJwt.verifyToken], activityCtrl.getActivityById)
 
 export default router;

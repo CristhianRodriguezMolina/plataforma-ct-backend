@@ -19,6 +19,9 @@ export const verifyToken = async(req, res, next) => {
         const user = await Person.findById(req.userId);
         if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
+        req.userRole = user.role;
+        req.isActived = user.actived;
+
         next(); //Si todo esta correcto continua al siguiente metodo
     } catch (error) {
         return res.status(401).json({ message: 'No autorizado' });
@@ -26,11 +29,11 @@ export const verifyToken = async(req, res, next) => {
 }
 
 //METODO PARA VERIFICAR SI UN USUARIO TIENE EL ROL DE "teacher"
-export const isTeacher = async(req, res, next) => {
+export const isTeacher = (req, res, next) => {
     try {
-        const user = await Person.findById(req.userId);
+        const role = req.userRole;
 
-        if (user.role === "teacher") {
+        if (role === "teacher") {
             next(); //Si todo esta correcto continua al siguiente metodo
             return;
         }
@@ -42,11 +45,11 @@ export const isTeacher = async(req, res, next) => {
 }
 
 //METODO PARA VERIFICAR SI UN USUARIO TIENE EL ROL DE "admin"
-export const isStudent = async(req, res, next) => {
+export const isStudent = (req, res, next) => {
     try {
-        const user = await Person.findById(req.userId);
+        const role = req.userRole;
 
-        if (user.role === "student") {
+        if (role === "student") {
             next(); //Si todo esta correcto continua al siguiente metodo
             return;
         }
@@ -58,11 +61,11 @@ export const isStudent = async(req, res, next) => {
 }
 
 //METODO PARA VERIFICAR SI UN USUARIO TIENE EL ROL DE "admin"
-export const isAdmin = async(req, res, next) => {
+export const isAdmin = (req, res, next) => {
     try {
-        const user = await Person.findById(req.userId);
+        const role = req.userRole;
 
-        if (user.role === "admin") {
+        if (role === "admin") {
             next(); //Si todo esta correcto continua al siguiente metodo
             return;
         }
@@ -74,11 +77,11 @@ export const isAdmin = async(req, res, next) => {
 }
 
 //METODO PARA VERIFICAR SI UN USUARIO TIENE EL ROL DE "admin" o de "teacher"
-export const isAdminOrTeacher = async(req, res, next) => {
+export const isAdminOrTeacher = (req, res, next) => {
     try {
-        const user = await Person.findById(req.userId);
+        const role = req.userRole;
 
-        if (user.role === "admin" || user.role === "teacher") {
+        if (role === "admin" || role === "teacher") {
             next(); //Si todo esta correcto continua al siguiente metodo
             return;
         }
@@ -90,11 +93,11 @@ export const isAdminOrTeacher = async(req, res, next) => {
 }
 
 //METODO PARA VERIFICAR SI UN USUARIO ESTA "activo"
-export const isActive = async(req, res, next) => {
+export const isActive = (req, res, next) => {
     try {
-        const user = await Person.findById(req.userId);
+        const actived = req.isActived;
 
-        if (!user.actived) {
+        if (!actived) {
             next(); //Si todo esta correcto continua al siguiente metodo
             return;
         }
