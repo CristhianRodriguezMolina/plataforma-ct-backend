@@ -24,7 +24,8 @@ export const verifyToken = async(req, res, next) => {
 
         next(); //Si todo esta correcto continua al siguiente metodo
     } catch (error) {
-        return res.status(401).json({ message: 'No autorizado' });
+        console.log(error)
+        return res.status(401).json({ message: `No autorizado o token de acceso vencido, error: ${error}` });
     }
 }
 

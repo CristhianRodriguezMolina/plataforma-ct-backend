@@ -13,7 +13,8 @@ const PersonSchema = new Schema({
     'id': { type: String, require: true, unique: true },
     'password': { type: String, require: true },
     'actived': { type: Boolean, default: true },
-    'role': { type: String, required: true }    
+    'role': { type: String, required: true },
+    'refresh_token': { type: String, default: '' }
 });
 
 /**
