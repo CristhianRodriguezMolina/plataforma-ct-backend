@@ -1,9 +1,10 @@
 import dotenv from 'dotenv/config';
 import mongoose from 'mongoose'
+import './auth.test';
 import './user.test';
-import './activity.test';
 import './course.test';
- 
+// import './activity.test';
+
 /**
  * Data base configuration
  * NoSQL MongoDB

@@ -9,12 +9,50 @@ import path from 'path';
 import assert from "assert"; 
 
 var personID = null;
+var userToken = null;
 
 /**
  * Testing users tests
  */
  describe('REQUEST /api/person', () => {     
+    before((done) => {
+        let userTokenPath = path.join(__dirname, './static_test/userToken.txt');
+        try {
+            userToken = fs.readFileSync(userTokenPath, 'utf8');
+            console.log('User Token defined');
+            done();
+        } catch (err) {
+            console.log('User Token not found');
+            done(err);
+        }
+    });
+
     describe('Create an person', () => {
+
+        it('Respond with a json containing a message for notify the operation failed', done => {
+            request(app)
+                .post('/api/person')
+                .send({
+                    id: 111111,                         //
+                    password: "12345",                   //  PARAMETROS 
+                    confirm_password: "12345",           //  DE 
+                    first_name: "Test",                 //  LA PETICION
+                    last_name: "Test",                  //
+                    birth_date: Date.now(),                        //
+                    genre: "NB",                      //
+                    role: "teacher"
+                })
+                .set('Accept', 'application/json')
+                .expect(403)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "No token provided");
+                })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
+        });
+
         it('Respond with a json containing a message for notify the operation success', done => {
             request(app)
                 .post('/api/person')
@@ -29,6 +67,7 @@ var personID = null;
                     role: "teacher"
                 })
                 .set('Accept', 'application/json')
+                .set('x-access-token', userToken)
                 .expect(201)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Usuario creado satisfactoriamente");
@@ -47,6 +86,7 @@ var personID = null;
             request(app)
                 .post('/api/person')
                 .set('Accept', 'application/json')
+                .set('x-access-token', userToken)
                 .expect(400)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Por favor, ingrese el nombre");
@@ -70,7 +110,8 @@ var personID = null;
                     birth_date: Date.now(),                        //
                     genre: "NB",    
                     role: "bulldog"
-                })
+                })                
+                .set('x-access-token', userToken)
                 .expect(400)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "El role bulldog no existe");
@@ -95,6 +136,19 @@ var personID = null;
             }
         });
 
+        it('Respond with a json containing a message for notify the operation failed', done => {
+            request(app)
+                .put(`/api/person/${personID}`)
+                .expect(403)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "No token provided");
+                })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
+        });
+
         it('Respond with a json containing a message for notify the operation success', done => {
             request(app)
                 .put(`/api/person/${personID}`)
@@ -103,6 +157,7 @@ var personID = null;
                     first_name: "ChangeFirstNameTest",
                     last_name: "ChangeLastNameTest"
                 })
+                .set('x-access-token', userToken)
                 .expect(201)
                 .expect((res) => {                    
                     assert.strictEqual(res.body.message, "Usuario actualizado con exito");
@@ -121,6 +176,7 @@ var personID = null;
                     first_name: "ChangeFirstNameTest",
                     last_name: "ChangeLastNameTest"
                 })
+                .set('x-access-token', userToken)
                 .expect(500)
                 .end((err) => {
                     if(err) return done(err);
@@ -136,6 +192,7 @@ var personID = null;
                     first_name: "ChangeFirstNameTest",
                     last_name: "ChangeLastNameTest"
                 })
+                .set('x-access-token', userToken)
                 .expect(400)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Usuario no entontrado");
@@ -149,9 +206,23 @@ var personID = null;
 
     describe('List persons (teachers and students)', () => {
 
+        it('Respond with a json containing a message for notify the operation failed', done => {
+            request(app)
+                .get(`/api/person/role/teacher`)
+                .expect(403)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "No token provided");
+                })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
+        });
+
         it('Respond with a json containing a message for notify the operation success', done => {
             request(app)
                 .get(`/api/person/role/teacher`)
+                .set('x-access-token', userToken)
                 .expect(200)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Usuarios con role teacher obtenidos satisfactoriamente");
@@ -165,6 +236,7 @@ var personID = null;
         it('Respond with a json containing a message for notify the operation success', done => {
             request(app)
                 .get(`/api/person/role/student`)
+                .set('x-access-token', userToken)
                 .expect(200)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Usuarios con role student obtenidos satisfactoriamente");
@@ -178,6 +250,7 @@ var personID = null;
         it('Respond with a json containing a message for notify the operation success', done => {
             request(app)
                 .get(`/api/person/${personID}`)
+                .set('x-access-token', userToken)
                 .expect(200)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Usuario encontrado satisfactoriamente!");
@@ -191,6 +264,7 @@ var personID = null;
         it('Respond with a json containing a message for notify the operation success', done => {
             request(app)
                 .get(`/api/person/666666666666666666666666`)
+                .set('x-access-token', userToken)
                 .expect(404)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Usuario no encontrado o inexistente!");
@@ -204,6 +278,7 @@ var personID = null;
         it('Respond with a json containing a message for notify the operation success', done => {
             request(app)
                 .get(`/api/person/genericID`)
+                .set('x-access-token', userToken)
                 .expect(500)
                 .end((err) => {
                     if(err) return done(err);
@@ -216,9 +291,23 @@ var personID = null;
 
     describe('Delete a person', () => {
 
+        it('Respond with a json containing a message for notify the operation failed', done => {
+            request(app)
+                .delete(`/api/person/${personID}`)
+                .expect(403)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "No token provided");
+                })
+                .end((err) => {
+                    if(err) return done(err);
+                    done();
+                });
+        });
+
         it('Respond with a json containing a message for notify the operation success', done => {
             request(app)
                 .delete(`/api/person/${personID}`)
+                .set('x-access-token', userToken)
                 .expect(200)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Usuario borrado con exito");
@@ -232,6 +321,7 @@ var personID = null;
         it('Respond with a json containing a message for notify the activity has been not found', done => {
             request(app)
                 .delete('/api/person/666666666666666666666666')
+                .set('x-access-token', userToken)
                 .expect(400)
                 .expect((res) => {
                     assert.strictEqual(res.body.message, "Usuario no entontrado");
@@ -245,6 +335,7 @@ var personID = null;
         it('Respond with a json containing a message for notify the activity Id is invalid', done => {
             request(app)
                 .delete('/api/person/genericID')
+                .set('x-access-token', userToken)
                 .expect(500)
                 .end((err) => {
                     if(err) return done(err);

@@ -25,7 +25,7 @@ import config from '../config';
         const user = await Person.findOne({ id: id });
         if (!user) {
             console.log("Usuario no encontrado o inexistente!");
-            return res.status(200).json({ message: "Usuario no encontrado o inexistente!" })
+            return res.status(404).json({ message: "Usuario no encontrado o inexistente!" })
         }
 
         //Verifica que la contraseña coincida con la del usuario
@@ -39,6 +39,7 @@ import config from '../config';
             
             //Retorna los datos de inicio de sesion al cliente
             return res.status(200).json({
+                message: 'Signin correcto',
                 token: token,
                 created_at: jwt.decode(token, config.SECRET).exp,
                 user_role: user.role,
