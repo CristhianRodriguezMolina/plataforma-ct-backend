@@ -15,10 +15,18 @@ router.get('/:id', [authJwt.verifyToken], courseCtrl.getCourseById);
 // Route for create a course
 router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createCourse);
 
+// Route for create a unit
+router.post('/unit/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createUnit);
+
 // Route for delete a course
 router.delete('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.deleteCourse);
 
+// Route for delete a unit course
+router.delete('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.deleteUnit);
+
 // Route for update a course
 router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateCourseById);
+
+
 
 export default router;

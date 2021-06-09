@@ -39,6 +39,31 @@ export const createCourse = async(req, res) => {
     }
 }
 
+export const createUnit = async(req, res) => {
+    try {        
+        const { name, description } = req.body;        
+
+        if(!name || !description){
+            return res.status(400).json({ message: 'Campos requeridos para agregar unidad' })
+        }
+
+        const course = await Course.findById(req.params.id);
+
+        if(!course){
+            return res.status(404).json({ message: 'Curso no encontrado o inexistente' })
+        }
+
+        course.units.push({name, description});
+
+        const updatedCourse = await course.save();
+        
+        return res.status(201).json({ message: 'Curso actualizado satisfactoriamente', updatedCourse })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: `Hubo un error actualizando el curso ${error}` });
+    }
+}
+
 export const deleteCourse = async(req, res) => {
     try{        
         const deletedCourse = await Course.findByIdAndDelete(req.params.id);
@@ -50,6 +75,30 @@ export const deleteCourse = async(req, res) => {
         return res.status(200).json({ message: `El curso fue borrado con exito`, deletedCourse })
     }catch(error){
         return res.status(500).json({ message: `Hubo un error borrando el curso "${deleteCourse.name}" por el error ${error}` })
+    }
+}
+
+export const deleteUnit = async(req, res) => {
+    try{        
+        const course = await Course.findById(req.params.courseId);
+
+        if(!course){
+            return res.status(400).json({ message: 'Curso no encontrado' });            
+        }    
+        
+        const deletedUnit = course.units.id(req.params.unitId).remove();
+
+        if(!deletedUnit){
+            return res.status(400).json({ message: 'Unidad no encontrada' });         
+        }
+
+        const updatedCourse = await course.save()
+
+        console.log(updatedCourse);
+        
+        return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse })
+    }catch(error){
+        return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}" por el error ${error}` })
     }
 }
 

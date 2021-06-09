@@ -13,8 +13,7 @@ const CourseSchema = new Schema({
     'units': [{
         'name': { type: String, require: true, trim: true },
         'description': { type: String, require: true },
-        'complete': Boolean,
-        'visible': Boolean,
+        'visible': { type: Boolean, default: false },
         'tasks': [{
             'name': { type: String, require: true, trim: true },
             'complete': Boolean,
