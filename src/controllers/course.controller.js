@@ -1,5 +1,7 @@
 //DB Schema imports
 import Course from '../models/Course';
+import CourseStudent from '../models/CourseStudent';
+import Person from '../models/Person';
 
 export const getMyCourses = async (req, res) => {
 	try {
@@ -153,5 +155,49 @@ export const updateCourseById = async (req, res) => {
 		return res.status(201).json({ updatedCourse, message: `El curso fue actualizado con exito` })
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error actualizando un curso: "${error}"` })
+	}
+}
+
+export const addStudents = (req, res) => {
+	try {
+
+		const { students } = req.body;
+		if (students) {
+			Course.findById(req.params.id, (err, course) => {
+				if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+				if (course) {
+					students.forEach(student => {
+						Person.exists({ _id: student._id, role: "student" }, (e, exists) => {
+							if (e) {
+								console.log('error in Person.exists - add students (course.controller.js)');
+								console.log(e);
+							} else {
+								if (exists) {
+									CourseStudent.save({
+										course,
+										student
+									}, (error) => {
+										if (error) {
+											console.log('error in CourseStudent.save - add students (course.controller.js)');
+											console.log(error);
+										}
+									});
+								}
+							}
+						})
+					});
+				}
+				else {
+					return res.status(400).json({ message: "Curso no encontrado" });
+				}
+			});
+		} else {
+			return res.status(400).json({ message: "Los estudiantes no fueron encontrados" });
+		}
+
+	} catch (error) {
+		console.log('Error found in addStudents (course.controller)');
+		console.log(error);
+		return res.status(500).json({ message: "Hubo un error añdiendo estudiantes al curso" });
 	}
 }
