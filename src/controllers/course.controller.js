@@ -95,7 +95,7 @@ export const deleteUnit = async (req, res) => {
 
         unitToDelete.remove();
 
-        const updatedCourse = await course.save()
+        const updatedCourse = await course.save();
         
         return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse })
     }catch(error){
@@ -140,7 +140,6 @@ export const updateUnit = (req, res) => {
 		);
 	}
 	catch (error) {
-		console.log(error);
 		return res.status(500).json({ message: "An error has ocurred when we trying to update a unit" });
 	}
 }
