@@ -32,11 +32,11 @@ import config from '../config';
         if (await Person.matchPassword(password, user.password)) {
             //Genera un token de sesion al usuario
             const token = jwt.sign({ id: user._id }, config.SECRET, {
-                expiresIn: 60 //Tiempo de caducidad: 24 hours
+                expiresIn: 60000 //Tiempo de caducidad: 24 hours
             });
             //Genera un refreshToken de sesion al usuario
             const refreshToken = jwt.sign({ id: user._id }, config.SECRET_REFRESH, {
-                expiresIn: 3600 //Tiempo de caducidad: 24 hours
+                expiresIn: 36000 //Tiempo de caducidad: 24 hours
             });
 
             // Se guarda el refresh token en la base de datos en el documento del usuario
@@ -80,7 +80,7 @@ export const verifyRefreshToken = async(req, res) => {
 
         //Genera un token de sesion al usuario
         const token = jwt.sign({ id: user._id }, config.SECRET, {
-            expiresIn: 60 //Tiempo de caducidad: 24 hours
+            expiresIn: 60000 //Tiempo de caducidad: 24 hours
         });
  
         res.status(200).json({ message: 'ok', token });
