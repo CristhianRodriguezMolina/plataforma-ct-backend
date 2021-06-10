@@ -20,11 +20,10 @@ export const getCourseById = async (req, res) => {
 			return res.status(404).json({ message: `Curso no encontrado o inexistente!` });
 		}
 
-		return res.status(200).json({ message: 'Curso hallado con exito', course });
-	} catch (error) {
-		console.log(error)
-		return res.status(500).json({ message: `Hubo un error obteniendo los curso ${error}` });
-	}
+        return res.status(200).json({ message: 'Curso hallado con exito', course });
+    } catch (error) {
+        return res.status(500).json({ message: `Hubo un error obteniendo los curso ${error}` });
+    }
 }
 
 export const createCourse = async (req, res) => {
@@ -34,11 +33,10 @@ export const createCourse = async (req, res) => {
 
 		const savedCourse = await newCourse.save();
 
-		return res.status(201).json({ message: 'Curso creado satisfactoriamente', course: savedCourse })
-	} catch (error) {
-		console.log(error)
-		return res.status(500).json({ message: `Hubo un error creando el curso ${error}` });
-	}
+        return res.status(201).json({ message: 'Curso creado satisfactoriamente', course: savedCourse })
+    } catch (error) {
+        return res.status(500).json({ message: `Hubo un error creando el curso ${error}` });
+    }
 }
 
 export const createUnit = async (req, res) => {
@@ -57,13 +55,12 @@ export const createUnit = async (req, res) => {
 
 		course.units.push({ name, description });
 
-		const updatedCourse = await course.save();
-
-		return res.status(201).json({ message: 'Curso actualizado satisfactoriamente', updatedCourse })
-	} catch (error) {
-		console.log(error);
-		return res.status(500).json({ message: `Hubo un error actualizando el curso ${error}` });
-	}
+        const updatedCourse = await course.save();
+        
+        return res.status(201).json({ message: 'Curso actualizado satisfactoriamente', updatedCourse })
+    } catch (error) {
+        return res.status(500).json({ message: `Hubo un error actualizando el curso ${error}` });
+    }
 }
 
 export const deleteCourse = async (req, res) => {
@@ -88,18 +85,24 @@ export const deleteUnit = async (req, res) => {
 			return res.status(400).json({ message: 'Curso no encontrado' });
 		}
 
-		const deletedUnit = course.units.id(req.params.unitId).remove();
+        if(!course){
+            return res.status(404).json({ message: 'Curso no encontrado' });            
+        }    
+        
+        const unitToDelete = course.units.id(req.params.unitId);
 
-		if (!deletedUnit) {
-			return res.status(400).json({ message: 'Unidad no encontrada' });
-		}
+        if(!unitToDelete){
+            return res.status(404).json({ message: 'Unidad no encontrada' });         
+        }
 
-		const updatedCourse = await course.save();
+        unitToDelete.remove();
 
-		return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse })
-	} catch (error) {
-		return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}" por el error ${error}` })
-	}
+        const updatedCourse = await course.save()
+        
+        return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse })
+    }catch(error){
+        return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}" por el error ${error}` })
+    }
 }
 
 export const updateUnit = (req, res) => {
