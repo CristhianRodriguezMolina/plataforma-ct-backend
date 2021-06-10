@@ -24,6 +24,9 @@ router.delete('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtr
 // Route for delete a unit course
 router.delete('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.deleteUnit);
 
+// Route for update a unit course
+router.put('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateUnit);
+
 // Route for update a course
 router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateCourseById);
 
