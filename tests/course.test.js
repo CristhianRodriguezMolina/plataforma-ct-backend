@@ -9,6 +9,7 @@ import path from 'path';
 import assert from "assert"; 
 
 var courseID = null;
+var unitID = null;
 var personID = null;
 var userToken = null;
 
@@ -72,6 +73,98 @@ var userToken = null;
                     });
                     done();
                 });
+        });
+
+        describe('Create an unit in a course', () => {
+            before((done) => {
+                let courseIDPath = path.join(__dirname, './static_test/courseID.txt');
+                try {
+                    courseID = fs.readFileSync(courseIDPath, 'utf8');
+                    console.log('Course ID defined');
+                    done();
+                } catch (err) {
+                    console.log('Course ID not found');
+                    done(err);
+                }
+            });
+
+            it('Respond with a json containing a message for notify the operation success', done => {
+                request(app)
+                    .post(`/api/course/unit/${courseID}`)
+                    .send({
+                        name: "Nueva unidad test",
+                        description: "Descripción de unidad test"
+                    })
+                    .set('Accept', 'application/json')
+                    .expect(403)
+                    .expect((res) => {
+                        assert.strictEqual(res.body.message, "No token provided");
+                    })
+                    .end((err, res) => {                    
+                        if(err) return done(err);
+                        done();
+                    });
+            });
+
+            it('Respond with a json containing a message for notify the operation success', done => {
+                request(app)
+                    .post(`/api/course/unit/${courseID}`)
+                    .send({
+                        name: "Nueva unidad test",
+                        description: "Descripción de unidad test"
+                    })
+                    .set('Accept', 'application/json')
+                    .set('x-access-token', userToken)
+                    .expect(201)
+                    .expect((res) => {
+                        assert.strictEqual(res.body.message, "Curso actualizado satisfactoriamente");
+                    })
+                    .end((err, res) => {                    
+                        if(err) return done(err);
+                        let filePath = path.join(__dirname, './static_test/unitID.txt');
+                        fs.writeFile(filePath, res.body.updatedCourse.units[0]._id, (err) => {
+                            if (err) console.error(err);
+                        });
+                        done();
+                    });
+            });          
+            
+            it('Respond with a json containing a message for notify the operation failed', done => {
+                request(app)
+                    .post(`/api/course/unit/${courseID}`)
+                    .send({
+                        name: "Nueva unidad test"
+                    })
+                    .set('Accept', 'application/json')
+                    .set('x-access-token', userToken)
+                    .expect(400)
+                    .expect((res) => {
+                        assert.strictEqual(res.body.message, "Campos requeridos para agregar unidad");
+                    })
+                    .end((err, res) => {                    
+                        if(err) return done(err);
+                        done();
+                    });
+            });   
+
+            it('Respond with a json containing a message for notify the operation failed', done => {
+                request(app)
+                    .post(`/api/course/unit/666666666666666666666666`)
+                    .send({
+                        name: "Nueva unidad test",
+                        description: "Descripción de unidad test"
+                    })
+                    .set('Accept', 'application/json')
+                    .set('x-access-token', userToken)
+                    .expect(404)
+                    .expect((res) => {
+                        assert.strictEqual(res.body.message, "Curso no encontrado o inexistente");
+                    })
+                    .end((err, res) => {                    
+                        if(err) return done(err);
+                        done();
+                    });
+            });   
         });
     });
 
@@ -241,9 +334,78 @@ var userToken = null;
         });
     });
 
-    
+    // DELETE A UNIT IN A COURSE -----------------------------------------------------------------------------------------------------------------------------------------
+    describe('Delete an unit in a course', () => {
+        before((done) => {
+            let unitIDPath = path.join(__dirname, './static_test/unitID.txt');
+            try {
+                unitID = fs.readFileSync(unitIDPath, 'utf8');
+                console.log('Unit ID defined');
+                done();
+            } catch (err) {
+                console.log('Unit ID not found');
+                done(err);
+            }
+        });
 
-    describe('Delete a person', () => {
+        it('Respond with a json containing a message for notify the operation success', done => {
+            request(app)
+                .delete(`/api/course/unit/${courseID}/${unitID}`)
+                .expect(403)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "No token provided");
+                })
+                .end((err, res) => {                    
+                    if(err) return done(err);
+                    done();
+                });
+        });
+
+        it('Respond with a json containing a message for notify the operation failed', done => {
+            request(app)
+                .delete(`/api/course/unit/666666666666666666666666/${unitID}`)
+                .set('x-access-token', userToken)
+                .expect(404)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "Curso no encontrado");
+                })
+                .end((err, res) => {                 
+                    if(err) return done(err);
+                    done();
+                });
+        });   
+
+        it('Respond with a json containing a message for notify the operation failed', done => {
+            request(app)
+                .delete(`/api/course/unit/${courseID}/666666666666666666666666`)
+                .set('x-access-token', userToken)
+                .expect(404)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "Unidad no encontrada");
+                })
+                .end((err, res) => {                    
+                    if(err) return done(err);
+                    done();
+                });
+        });   
+
+        it('Respond with a json containing a message for notify the operation success', done => {
+            request(app)
+                .delete(`/api/course/unit/${courseID}/${unitID}`)
+                .set('x-access-token', userToken)
+                .expect(200)
+                .expect((res) => {
+                    assert.strictEqual(res.body.message, "La unidad fue borrada con exito");
+                })
+                .end((err, res) => {                    
+                    if(err) return done(err);
+                    done();
+                });
+        });       
+    });
+    
+    // DELETE A COURSE -------------------------------------------------------------------------------------------------------------------------------------------------------
+    describe('Delete a course', () => {
 
         it('Respond with a json containing a message for notify the operation failed', done => {
             request(app)
