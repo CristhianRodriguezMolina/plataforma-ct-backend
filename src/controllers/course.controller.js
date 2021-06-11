@@ -20,10 +20,10 @@ export const getCourseById = async (req, res) => {
 			return res.status(404).json({ message: `Curso no encontrado o inexistente!` });
 		}
 
-        return res.status(200).json({ message: 'Curso hallado con exito', course });
-    } catch (error) {
-        return res.status(500).json({ message: `Hubo un error obteniendo los curso ${error}` });
-    }
+		return res.status(200).json({ message: 'Curso hallado con exito', course });
+	} catch (error) {
+		return res.status(500).json({ message: `Hubo un error obteniendo los curso ${error}` });
+	}
 }
 
 export const createCourse = async (req, res) => {
@@ -33,10 +33,10 @@ export const createCourse = async (req, res) => {
 
 		const savedCourse = await newCourse.save();
 
-        return res.status(201).json({ message: 'Curso creado satisfactoriamente', course: savedCourse })
-    } catch (error) {
-        return res.status(500).json({ message: `Hubo un error creando el curso ${error}` });
-    }
+		return res.status(201).json({ message: 'Curso creado satisfactoriamente', course: savedCourse })
+	} catch (error) {
+		return res.status(500).json({ message: `Hubo un error creando el curso ${error}` });
+	}
 }
 
 export const createUnit = async (req, res) => {
@@ -55,12 +55,12 @@ export const createUnit = async (req, res) => {
 
 		course.units.push({ name, description });
 
-        const updatedCourse = await course.save();
-        
-        return res.status(201).json({ message: 'Curso actualizado satisfactoriamente', updatedCourse })
-    } catch (error) {
-        return res.status(500).json({ message: `Hubo un error actualizando el curso ${error}` });
-    }
+		const updatedCourse = await course.save();
+
+		return res.status(201).json({ message: 'Curso actualizado satisfactoriamente', updatedCourse })
+	} catch (error) {
+		return res.status(500).json({ message: `Hubo un error actualizando el curso ${error}` });
+	}
 }
 
 export const deleteCourse = async (req, res) => {
@@ -85,17 +85,17 @@ export const deleteUnit = async (req, res) => {
 			return res.status(400).json({ message: 'Curso no encontrado' });
 		}
 
-        if(!course){
-            return res.status(404).json({ message: 'Curso no encontrado' });            
-        }    
-        
-        const unitToDelete = course.units.id(req.params.unitId);
+		if (!course) {
+			return res.status(404).json({ message: 'Curso no encontrado' });
+		}
 
-        if(!unitToDelete){
-            return res.status(404).json({ message: 'Unidad no encontrada' });         
-        }
+		const unitToDelete = course.units.id(req.params.unitId);
 
-        unitToDelete.remove();
+		if (!unitToDelete) {
+			return res.status(404).json({ message: 'Unidad no encontrada' });
+		}
+
+		unitToDelete.remove();
 
         const updatedCourse = await course.save();
         
@@ -162,32 +162,70 @@ export const updateCourseById = async (req, res) => {
 
 export const addStudents = (req, res) => {
 	try {
-
 		const { students } = req.body;
 		if (students) {
 			Course.findById(req.params.id, (err, course) => {
 				if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
 				if (course) {
-					students.forEach(student => {
-						Person.exists({ _id: student._id, role: "student" }, (e, exists) => {
-							if (e) {
-								console.log('error in Person.exists - add students (course.controller.js)');
-								console.log(e);
-							} else {
-								if (exists) {
-									CourseStudent.save({
-										course,
-										student
-									}, (error) => {
-										if (error) {
-											console.log('error in CourseStudent.save - add students (course.controller.js)');
-											console.log(error);
-										}
-									});
+					let courseStudents = [];
+					let deniedStudents = [];
+
+					let promises = [];
+
+					students.map(async (student) => {
+
+						promises.push(verifyStudent(student));
+
+					});
+
+					//Promise for verify if a student 
+					const verifyStudent = (student) => {
+						return new Promise(async (resolve, reject) => {
+							try {
+								const studentExists = await Person.exists({ _id: student._id, role: "student" });
+								if (studentExists) {
+									const cSExists = await CourseStudent.exists({ course: req.params.id, student: student._id });
+									if (!cSExists) {
+										console.log('adding');
+										// courseStudents.push(new CourseStudent({ course: req.params.id, student: student._id }));
+										console.log('courseStudents');
+										console.log(courseStudents);
+										courseStudents.push(new CourseStudent({ course: req.params.id, student: student._id }));
+										resolve();
+									}
+									else {
+										console.log('the student is already in the course');
+										deniedStudents.push(student._id);
+										resolve();
+									}
+								}
+								else {
+									console.log('the student doesn\'t exist');
+									deniedStudents.push(student._id);
+									resolve();
 								}
 							}
+							catch (e) {
+								console.log(e);
+								console.log('error in add students (course.controller.js)');
+								reject(e);
+							}
+
+						});
+					}
+
+					Promise.all(promises)
+						.then(responses => {
+							CourseStudent.insertMany(courseStudents, (error, docs) => {
+								if (error) return res.status(500).json({ message: "No se han podido añadir los estudiantes al curso" });
+								return res.status(201).json({ message: "Estudiantes añadidos al curso satisfactoriamente", acceptedStudents: docs, deniedStudents });
+							});
 						})
-					});
+						.catch(e => {
+							console.log(e);
+							console.log('error in add students (course.controller.js)');
+							return res.status(500).json({ message: "No se han podido añadir los estudiantes al curso" });
+						});
 				}
 				else {
 					return res.status(400).json({ message: "Curso no encontrado" });
@@ -200,6 +238,6 @@ export const addStudents = (req, res) => {
 	} catch (error) {
 		console.log('Error found in addStudents (course.controller)');
 		console.log(error);
-		return res.status(500).json({ message: "Hubo un error añdiendo estudiantes al curso" });
+		return res.status(500).json({ message: "Hubo un error añadiendo estudiantes al curso" });
 	}
 }

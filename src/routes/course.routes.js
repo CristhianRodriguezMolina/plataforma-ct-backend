@@ -31,6 +31,6 @@ router.put('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTea
 router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateCourseById);
 
 // Route for update a course
-router.put('/add-students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.addStudents);
+router.post('/add-students/:id', courseCtrl.addStudents);
 
 export default router;

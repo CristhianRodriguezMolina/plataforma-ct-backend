@@ -11,7 +11,7 @@ import config from '../config';
  * @param {*} req 
  * @param {*} res 
  */
- export const signin = async(req, res) => {
+export const signin = async (req, res) => {
     try {
         const { id, password } = req.body;
 
@@ -35,8 +35,6 @@ import config from '../config';
                 expiresIn: 604800 //Tiempo de caducidad: 24 hours
             });
 
-            console.log(jwt.decode(token, config.SECRET))
-            
             //Retorna los datos de inicio de sesion al cliente
             return res.status(200).json({
                 message: 'Signin correcto',
