@@ -160,6 +160,25 @@ export const updateCourseById = async (req, res) => {
 	}
 }
 
+export const getStudents = async (req, res) => {
+	try {
+		var courseStudents = await CourseStudent.find({ course: req.params.id }).select('student -_id'); // To get just the students id
+
+		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.student);
+
+		if (courseStudents.length <= 0) {
+			return res.status(404).json({ message: 'No hay estuantes en el curso' });
+		}
+
+		const students = await Person.find({ _id: { $in: courseStudents } });
+
+		return res.status(200).json({ message: "Estudiantes obtenidos satisfactoriamente", students });
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({ message: "Hubo un error obteniendo estudiantes del curso" });
+	}
+}
+
 export const addStudents = (req, res) => {
 	try {
 		const { students } = req.body;

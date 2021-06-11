@@ -13,7 +13,7 @@ router.get('/mycourses/:id', [authJwt.verifyToken], courseCtrl.getMyCourses);
 router.get('/:id', [authJwt.verifyToken], courseCtrl.getCourseById);
 
 //
-router.get('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getCourseById);
+router.get('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudents);
 
 // Route for create a course
 router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createCourse);
