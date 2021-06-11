@@ -12,6 +12,9 @@ router.get('/mycourses/:id', [authJwt.verifyToken], courseCtrl.getMyCourses);
 // Route for get a course by id
 router.get('/:id', [authJwt.verifyToken], courseCtrl.getCourseById);
 
+//
+router.get('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getCourseById);
+
 // Route for create a course
 router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createCourse);
 
@@ -31,6 +34,6 @@ router.put('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTea
 router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateCourseById);
 
 // Route for update a course
-router.post('/add-students/:id', courseCtrl.addStudents);
+router.post('/add-students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.addStudents);
 
 export default router;
