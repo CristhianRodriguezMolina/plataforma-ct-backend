@@ -42,7 +42,7 @@ export const createCourse = async (req, res) => {
 export const createUnit = async (req, res) => {
 	try {
 		const { name, description } = req.body;
- 
+
 		if (!name || !description) {
 			return res.status(400).json({ message: 'Campos requeridos para agregar unidad' })
 		}
@@ -97,12 +97,12 @@ export const deleteUnit = async (req, res) => {
 
 		unitToDelete.remove();
 
-        const updatedCourse = await course.save();
-        
-        return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse })
-    }catch(error){
-        return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}" por el error ${error}` })
-    }
+		const updatedCourse = await course.save();
+
+		return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse })
+	} catch (error) {
+		return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}" por el error ${error}` })
+	}
 }
 
 export const updateUnit = (req, res) => {
@@ -172,12 +172,6 @@ export const addStudents = (req, res) => {
 
 					let promises = [];
 
-					students.map(async (student) => {
-
-						promises.push(verifyStudent(student));
-
-					});
-
 					//Promise for verify if a student 
 					const verifyStudent = (student) => {
 						return new Promise(async (resolve, reject) => {
@@ -214,10 +208,18 @@ export const addStudents = (req, res) => {
 						});
 					}
 
+					students.map(async (student) => {
+
+						promises.push(verifyStudent(student));
+
+					});
+
 					Promise.all(promises)
 						.then(responses => {
-							CourseStudent.insertMany(courseStudents, (error, docs) => {
+							CourseStudent.insertMany(courseStudents, async (error, docs) => {
 								if (error) return res.status(500).json({ message: "No se han podido añadir los estudiantes al curso" });
+								course.students += courseStudents.length;
+								await course.save();
 								return res.status(201).json({ message: "Estudiantes añadidos al curso satisfactoriamente", acceptedStudents: docs, deniedStudents });
 							});
 						})
