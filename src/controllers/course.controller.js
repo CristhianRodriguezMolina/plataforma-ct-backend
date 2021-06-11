@@ -40,7 +40,7 @@ export const createCourse = async (req, res) => {
 export const createUnit = async (req, res) => {
 	try {
 		const { name, description } = req.body;
-
+ 
 		if (!name || !description) {
 			return res.status(400).json({ message: 'Campos requeridos para agregar unidad' })
 		}
