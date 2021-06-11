@@ -13,7 +13,7 @@ router.get('/mycourses/:id', [authJwt.verifyToken], courseCtrl.getMyCourses);
 router.get('/:id', [authJwt.verifyToken], courseCtrl.getCourseById);
 
 //
-router.get('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getCourseById);
+router.get('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudents);
 
 // Route for create a course
 router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createCourse);
@@ -36,7 +36,7 @@ router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.u
 // Route for add students to a course
 router.post('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.addStudentsByCourseId);
 
-// Route for update a course
-router.delete('/students/:courseId/:studentId', courseCtrl.deleteStudentsByCourseId);
+// Route for update a course
+router.delete('/students/:courseId/:studentId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.removeStudentsByCourseId);
 
 export default router;
