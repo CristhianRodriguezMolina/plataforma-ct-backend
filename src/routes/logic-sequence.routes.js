@@ -20,6 +20,6 @@ router.put('/sequence-card/:id/:sequence_card_id', [authJwt.verifyToken, authJwt
 
 
 //Get logic sequence by activity id
-router.get('/:id', [authJwt.verifyToken], logicSequenceCtrl.getLogicSequenceIdByActivityId);
+router.get('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], logicSequenceCtrl.getLogicSequenceIdByActivityId);
 
 export default router;

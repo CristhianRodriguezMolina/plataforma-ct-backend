@@ -9,13 +9,45 @@ import path from 'path';
 import assert from "assert";
 
 var activityID = null;
+var userToken = null;
+
 
 /**
  * Testing activity endpoints
  */
 describe('REQUEST /api/activity', () => {
+	before(done => {
+		let userTokenPath = path.join(__dirname, './static_test/userToken.txt');
+		try {
+			userToken = fs.readFileSync(userTokenPath, 'utf8');
+			console.log('User Token defined');
+			done();
+		} catch (err) {
+			console.log('User token not found');
+			done(err);
+		}
+	});
 	describe('Create an activity', () => {
-		it('Respond with a json containing a message for notify the operation success', done => {
+
+		it('Responds with a json containing a message for notify not token provided', done => {
+			request(app)
+				.post('/api/activity')
+				.send({
+					name: "My first activity",
+					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
+					type: "logic_sequence"
+				})
+				.expect(403)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, 'No token provided');
+				})
+				.end((err, res) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+
+		it('Responds with a json containing a message for notify the operation success', done => {
 			request(app)
 				.post('/api/activity')
 				.send({
@@ -24,6 +56,7 @@ describe('REQUEST /api/activity', () => {
 					type: "logic_sequence"
 				})
 				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.expect(201)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, "The activity has been created satisfactorily");
@@ -38,10 +71,11 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Respond with a json containing a message for notify fields missing', done => {
+		it('Responds with a json containing a message for notify fields missing', done => {
 			request(app)
 				.post('/api/activity')
 				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.expect(400)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, "Field(s) required!");
@@ -52,10 +86,11 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Respond with a json containing a message for notify type not accepted', done => {
+		it('Responds with a json containing a message for notify type not accepted', done => {
 			request(app)
 				.post('/api/activity')
 				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.send({
 					name: "My first activity",
 					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
@@ -71,10 +106,11 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Respond with a json containing a message for notify name field is empty', done => {
+		it('Responds with a json containing a message for notify name field is empty', done => {
 			request(app)
 				.post('/api/activity')
 				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.send({
 					name: "   ",
 					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
@@ -111,10 +147,51 @@ describe('REQUEST /api/activity', () => {
 			}
 		});
 
-		it('Respond with a json containing a message for notify the operation success', done => {
+		it('Responds with a json containing a message for notify no token provided', done => {
 			request(app)
 				.put(`/api/activity/${activityID}`)
 				.set('Accept', 'application/json')
+				.send({
+					activity: {
+						name: "My first activity",
+						description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+					},
+					child: {
+						sequence_cards: [
+							{
+								name: "First",
+								image: "image.jpg"
+							},
+							{
+								name: "Second",
+								image: "image.jpg"
+							},
+							{
+								name: "Third",
+								image: "image.jpg"
+							},
+							{
+								name: "Fourth",
+								image: "image.jpg"
+							}
+						]
+					}
+				})
+				.expect(403)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "No token provided");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+
+		it('Responds with a json containing a message for notify the operation success', done => {
+			request(app)
+				.put(`/api/activity/${activityID}`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.send({
 					activity: {
 						name: "My first activity",
@@ -151,10 +228,11 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Respond with a json containing a message for notify the name field is empty', done => {
+		it('Responds with a json containing a message for notify the name field is empty', done => {
 			request(app)
 				.put(`/api/activity/${activityID}`)
 				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.send({
 					activity: {
 						name: "   ",
@@ -191,10 +269,11 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Respond with a json containing a message for notify the name field is missing', done => {
+		it('Responds with a json containing a message for notify the name field is missing', done => {
 			request(app)
 				.put(`/api/activity/${activityID}`)
 				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.send({
 					activity: {
 						description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
@@ -230,10 +309,11 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Respond with a json containing a message for notify the activity Id is invalid', done => {
+		it('Responds with a json containing a message for notify the activity Id is invalid', done => {
 			request(app)
 				.put('/api/activity/genericID')
 				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.send({
 					activity: {
 						name: "My first activity",
@@ -267,10 +347,11 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Respond with a json containing a message for notify the activity has been not found', done => {
+		it('Responds with a json containing a message for notify the activity has been not found', done => {
 			request(app)
 				.put('/api/activity/666666666666666666666666')
 				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.send({
 					activity: {
 						name: "My first activity",
@@ -311,9 +392,25 @@ describe('REQUEST /api/activity', () => {
 	// LIST ACTIVITIES -----------------------------------------------------------------------------------------------------------------------------------------
 	describe('List activities', () => {
 
-		it('Respond with a json containing a message for notify the operation success', done => {
+		it('Responds with a json containing a message for notify no token provided', done => {
 			request(app)
 				.get(`/api/activity`)
+				.set('Accept', 'application/json')
+				.expect(403)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "No token provided");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+
+		it('Responds with a json containing a message for notify the operation success', done => {
+			request(app)
+				.get(`/api/activity`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.expect(200)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, "Activities list request has been completed satisfactorily");
@@ -323,15 +420,32 @@ describe('REQUEST /api/activity', () => {
 					done();
 				});
 		});
+
 	});
 
 
 	// DELETE AN ACTIVITY -----------------------------------------------------------------------------------------------------------------------------------------
 	describe('Delete an activity', () => {
 
+		it('Respond with a json containing a message for notify no token provided', done => {
+			request(app)
+				.delete(`/api/activity/${activityID}`)
+				.set('Accept', 'application/json')
+				.expect(403)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "No token provided");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+
 		it('Respond with a json containing a message for notify the operation success', done => {
 			request(app)
 				.delete(`/api/activity/${activityID}`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.expect(200)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, "The activity has been deleted satisfactorily");
@@ -345,6 +459,8 @@ describe('REQUEST /api/activity', () => {
 		it('Respond with a json containing a message for notify the activity has been not found', done => {
 			request(app)
 				.delete('/api/activity/666666666666666666666666')
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.expect(400)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, "Activity not found");
@@ -358,6 +474,8 @@ describe('REQUEST /api/activity', () => {
 		it('Respond with a json containing a message for notify the activity Id is invalid', done => {
 			request(app)
 				.delete('/api/activity/genericID')
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
 				.expect(500)
 				.end((err) => {
 					if (err) return done(err);
