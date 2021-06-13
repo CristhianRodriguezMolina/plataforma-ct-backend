@@ -12,8 +12,11 @@ router.get('/mycourses/:id', [authJwt.verifyToken], courseCtrl.getMyCourses);
 // Route for get a course by id
 router.get('/:id', [authJwt.verifyToken], courseCtrl.getCourseById);
 
-//
+// Route for get the students in a specific course
 router.get('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudents);
+
+// Route for get the students in a specific course
+router.get('/not-in-course-students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudentsNotInCourse);
 
 // Route for create a course
 router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createCourse);

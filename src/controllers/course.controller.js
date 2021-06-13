@@ -164,13 +164,39 @@ export const getStudents = async (req, res) => {
 	try {
 		var courseStudents = await CourseStudent.find({ course: req.params.id }).select('student -_id'); // To get just the students id
 
+		// Convert the object array to a array just of _id's
 		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.student);
 
 		if (courseStudents.length <= 0) {
 			return res.status(404).json({ message: 'No hay estuantes en el curso' });
 		}
 
+		// Get the students that are in the array of _id's
 		const students = await Person.find({ _id: { $in: courseStudents } });
+
+		return res.status(200).json({ message: "Estudiantes obtenidos satisfactoriamente", students });
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({ message: "Hubo un error obteniendo estudiantes del curso" });
+	}
+}
+
+export const getStudentsNotInCourse = async (req, res) => {
+	try {
+		var courseStudents = await CourseStudent.find({ course: req.params.id }).select('student -_id'); // To get just the students id
+
+		// Convert the object array to a array just of _id's
+		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.student);
+
+		if (courseStudents.length <= 0) {
+			// In case that the course doesn't have students, just get all the students
+			const students = await Person.find({ role: 'student' });
+
+			return res.status(200).json({ message: "Estudiantes obtenidos satisfactoriamente", students });
+		}
+
+		// Get the students that are not in the array of _id's
+		const students = await Person.find({ _id: { $nin: courseStudents }, role: "student" });
 
 		return res.status(200).json({ message: "Estudiantes obtenidos satisfactoriamente", students });
 	} catch (error) {
