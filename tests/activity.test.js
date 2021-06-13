@@ -10,6 +10,7 @@ import assert from "assert";
 
 var activityID = null;
 var userToken = null;
+var personID = null
 
 
 /**
@@ -27,6 +28,18 @@ describe('REQUEST /api/activity', () => {
 			done(err);
 		}
 	});
+
+	before((done) => {
+		let personIDPath = path.join(__dirname, './static_test/personID.txt');
+		try {
+			personID = fs.readFileSync(personIDPath, 'utf8');
+			console.log('Person ID defined');
+			done();
+		} catch (err) {
+			console.log('Person ID not found');
+			done(err);
+		}
+	});
 	describe('Create an activity', () => {
 
 		it('Responds with a json containing a message for notify not token provided', done => {
@@ -35,7 +48,8 @@ describe('REQUEST /api/activity', () => {
 				.send({
 					name: "My first activity",
 					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
-					type: "logic_sequence"
+					type: "logic_sequence",
+					creator: `${personID}`
 				})
 				.expect(403)
 				.expect((res) => {
@@ -53,7 +67,8 @@ describe('REQUEST /api/activity', () => {
 				.send({
 					name: "My first activity",
 					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
-					type: "logic_sequence"
+					type: "logic_sequence",
+					creator: `${personID}`
 				})
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
@@ -94,7 +109,8 @@ describe('REQUEST /api/activity', () => {
 				.send({
 					name: "My first activity",
 					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
-					type: "activity"
+					type: "activity",
+					creator: `${personID}`
 				})
 				.expect(400)
 				.expect((res) => {
@@ -114,7 +130,8 @@ describe('REQUEST /api/activity', () => {
 				.send({
 					name: "   ",
 					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
-					type: "logic_sequence"
+					type: "logic_sequence",
+					creator: `${personID}`
 				})
 				.expect(400)
 				.expect((res) => {

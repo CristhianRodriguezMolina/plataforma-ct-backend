@@ -68,7 +68,7 @@ describe('REQUEST /api/logic-sequence', () => {
 				});
 		});
 
-		it('Respond with a json containing the associate logic sequence', done => {
+		it('Responds with a json containing a message for notify logic sequence not found', done => {
 			request(app)
 				.get(`/api/logic-sequence/666666666666666666666666`)
 				.set('x-access-token', userToken)

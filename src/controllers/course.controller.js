@@ -209,7 +209,7 @@ export const addStudentsByCourseId = (req, res) => {
 									}
 								}
 								else {
-									console.log('the student doesn\'t exist');
+									console.log(`the student doesn\'t exist. Student ID: ${student._id}`);
 									deniedStudents.push(student._id);
 									resolve();
 								}
