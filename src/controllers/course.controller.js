@@ -205,7 +205,7 @@ export const getStudentsNotInCourse = async (req, res) => {
 	}
 }
 
-export const addStudents = (req, res) => {
+export const addStudentsByCourseId = (req, res) => {
 	try {
 		const { students } = req.body;
 		if (students) {
@@ -225,10 +225,6 @@ export const addStudents = (req, res) => {
 								if (studentExists) {
 									const cSExists = await CourseStudent.exists({ course: req.params.id, student: student._id });
 									if (!cSExists) {
-										console.log('adding');
-										// courseStudents.push(new CourseStudent({ course: req.params.id, student: student._id }));
-										console.log('courseStudents');
-										console.log(courseStudents);
 										courseStudents.push(new CourseStudent({ course: req.params.id, student: student._id }));
 										resolve();
 									}
@@ -239,14 +235,14 @@ export const addStudents = (req, res) => {
 									}
 								}
 								else {
-									console.log('the student doesn\'t exist');
+									console.log(`the student doesn\'t exist. Student ID: ${student._id}`);
 									deniedStudents.push(student._id);
 									resolve();
 								}
 							}
 							catch (e) {
 								console.log(e);
-								console.log('error in add students (course.controller.js)');
+								console.log('error in addStudentsByCourseId (course.controller.js)');
 								reject(e);
 							}
 
@@ -270,7 +266,7 @@ export const addStudents = (req, res) => {
 						})
 						.catch(e => {
 							console.log(e);
-							console.log('error in add students (course.controller.js)');
+							console.log('error in addStudentsByCourseId (course.controller.js)');
 							return res.status(500).json({ message: "No se han podido añadir los estudiantes al curso" });
 						});
 				}
@@ -283,8 +279,31 @@ export const addStudents = (req, res) => {
 		}
 
 	} catch (error) {
-		console.log('Error found in addStudents (course.controller)');
+		console.log('Error found in addStudentsByCourseId (course.controller)');
 		console.log(error);
 		return res.status(500).json({ message: "Hubo un error añadiendo estudiantes al curso" });
+	}
+};
+
+export const removeStudentsByCourseId = async (req, res) => {
+	try {
+		CourseStudent.findOneAndDelete({ course: req.params.courseId, student: req.params.studentId }, (err, course) => {
+			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			if (course) {
+				Course.findById(req.params.courseId, async (err, course) => {
+					if (err) console.log(error);
+					course.students -= 1;
+					await course.save();
+					return res.status(201).json({ message: "Estudiante eliminado satisfactoriamente" });
+				});
+			}
+			else {
+				return res.status(400).json({ message: "Curso o estudiante no encontrado" });
+			}
+		});
+	} catch (error) {
+		console.log('Error found in deleteStudentsByCourseId (course.controller)');
+		console.log(error);
+		return res.status(500).json({ message: "Hubo un error eliminando estudiantes del curso" });
 	}
 }

@@ -3,12 +3,12 @@ import { Router } from 'express';
 
 //API modules imports
 import * as dataCtrl from '../controllers/data.controller';
-import { upload } from '../middlewares';
+import { upload, authJwt } from '../middlewares';
 
 //Router declaration
 const router = Router();
 
 //Route to upload an image from a course or a profile
-router.post('/upload-img/:logic_sequence_id/:sequence_card_id', upload.uploadImg, dataCtrl.uploadImg);
+router.post('/upload-img/:logic_sequence_id/:sequence_card_id', [authJwt.verifyToken, authJwt.isAdminOrTeacher, upload.uploadImg], dataCtrl.uploadImg);
 
 export default router;

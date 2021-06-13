@@ -4,7 +4,7 @@ import config from '../config';
 import Person from '../models/Person';
 
 //METODO PARA VERIFICAR SI EXISTE UN TOKEN Y 
-export const verifyToken = async(req, res, next) => {
+export const verifyToken = async (req, res, next) => {
 
     let token = req.headers['x-access-token'];
 
@@ -25,7 +25,7 @@ export const verifyToken = async(req, res, next) => {
         next(); //Si todo esta correcto continua al siguiente metodo
     } catch (error) {
         console.log(error)
-        return res.status(401).json({ message: `No autorizado o token de acceso vencido, error: ${error}` });
+        return res.status(401).json({ message: 'No autorizado o token de acceso vencido' });
     }
 }
 

@@ -4,4 +4,5 @@
 /build
 /tests/*.txt
 /tests/static_test/*.txt
+/tests/static_test/*.json
 /static_content
