@@ -5,16 +5,6 @@ import path from 'path';
 export const uploadImg = (req, res) => {
 
 	try {
-
-		console.log('__filename');
-		console.log(__filename);
-
-		console.log('__dirname');
-		console.log(__dirname);
-
-		console.log('req.file');
-		console.log(req.file);
-
 		if (!req.file) {
 			return res.status(400).json({ message: "The image couldn't be uploaded, make sure you are uploading an image file or check your internet connection" });
 		}
@@ -58,10 +48,8 @@ export const uploadImg = (req, res) => {
 								sequenceCard = tempSequenceCard;
 							}
 						}
-						let filePath = `${req.file.destination}/${sequenceCard.image}`;
-						console.log('filePath');
+						let filePath = path.join(__dirname, `../../static_content/i/${sequenceCard.image}`);
 
-						console.log(filePath);
 						if (fs.existsSync(filePath)) {
 							fs.unlink(filePath, (er) => {
 								if (er) return console.log(er);

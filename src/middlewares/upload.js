@@ -6,17 +6,18 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Image upload settings
 const storageImg = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const folderPath = path.join(__dirname, '../../static_content/i')
-        console.log('folderPath');
-        console.log(folderPath);
+    destination: (req, file, cb) => {
+        const folderPath = path.join(__dirname, '../../static_content/i');
+
         if (!fs.existsSync(folderPath)) {
             mkdirp(folderPath).then(made => {
                 console.log('Made directory, starting with ', made);
                 return cb(null, folderPath) //Image destination for images           
-            })
+            });
         }
-        return cb(null, folderPath) //Image destination for images
+        else {
+            return cb(null, folderPath) //Image destination for images
+        }
     },
     filename: (req, file, cb) => {
         return cb(null, uuidv4() + path.extname(file.originalname).toLowerCase()); //Uploaded file name for images

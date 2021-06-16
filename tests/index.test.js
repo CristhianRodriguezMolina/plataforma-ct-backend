@@ -111,7 +111,7 @@ before(async () => {
 				console.log('Temp students documents has been created');
 				resolve();
 			});
-		})
+		});
 
 	}).catch(e => {
 		return Promise.reject(e);
