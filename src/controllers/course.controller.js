@@ -2,13 +2,15 @@
 import Course from '../models/Course';
 import CourseStudent from '../models/CourseStudent';
 import Person from '../models/Person';
+import Activity from '../models/Activity';
+import TaskActivity from '../models/TaskActivity';
 
 export const getMyCourses = async (req, res) => {
 	try {
 		const courses = await Course.find({ creator: req.params.id }, null, { sort: { name: 1 } });
 		return res.status(200).json({ message: 'Cursos hallados con exito', courses });
 	} catch (error) {
-		return res.status(500).json({ message: `Hubo un error obteniendo los cursos ${error}` });
+		return res.status(500).json({ message: `Hubo un error obteniendo los cursos` });
 	}
 }
 
@@ -22,7 +24,7 @@ export const getCourseById = async (req, res) => {
 
 		return res.status(200).json({ message: 'Curso hallado con exito', course });
 	} catch (error) {
-		return res.status(500).json({ message: `Hubo un error obteniendo los curso ${error}` });
+		return res.status(500).json({ message: `Hubo un error obteniendo los curso` });
 	}
 }
 
@@ -35,7 +37,7 @@ export const createCourse = async (req, res) => {
 
 		return res.status(201).json({ message: 'Curso creado satisfactoriamente', course: savedCourse })
 	} catch (error) {
-		return res.status(500).json({ message: `Hubo un error creando el curso ${error}` });
+		return res.status(500).json({ message: `Hubo un error creando el curso` });
 	}
 }
 
@@ -59,7 +61,7 @@ export const createUnit = async (req, res) => {
 
 		return res.status(201).json({ message: 'Curso actualizado satisfactoriamente', updatedCourse })
 	} catch (error) {
-		return res.status(500).json({ message: `Hubo un error actualizando el curso ${error}` });
+		return res.status(500).json({ message: `Hubo un error actualizando el curso` });
 	}
 }
 
@@ -73,7 +75,7 @@ export const deleteCourse = async (req, res) => {
 
 		return res.status(200).json({ message: `El curso fue borrado con exito`, deletedCourse })
 	} catch (error) {
-		return res.status(500).json({ message: `Hubo un error borrando el curso "${deleteCourse.name}" por el error ${error}` })
+		return res.status(500).json({ message: `Hubo un error borrando el curso "${deleteCourse.name}"` })
 	}
 }
 
@@ -99,9 +101,9 @@ export const deleteUnit = async (req, res) => {
 
 		const updatedCourse = await course.save();
 
-		return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse })
+		return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse });
 	} catch (error) {
-		return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}" por el error ${error}` })
+		return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}` });
 	}
 }
 
@@ -131,7 +133,7 @@ export const updateUnit = (req, res) => {
 			new: true
 		}, (err, result) => {
 			if (err) {
-				return res.status(500).json({ message: "An error has ocurred when we trying to update the unit", error: err })
+				return res.status(500).json({ message: "An error has ocurred when we trying to update the unit" })
 			}
 			if (result) {
 				return res.status(201).json({ message: "The unit has been updated satisfatorily", updatedCourse: result })
@@ -156,7 +158,7 @@ export const updateCourseById = async (req, res) => {
 
 		return res.status(201).json({ updatedCourse, message: `El curso fue actualizado con exito` })
 	} catch (error) {
-		return res.status(500).json({ message: `Hubo un error actualizando un curso: "${error}"` })
+		return res.status(500).json({ message: "Hubo un error actualizando un curso" })
 	}
 }
 
@@ -217,7 +219,7 @@ export const addStudentsByCourseId = (req, res) => {
 
 					let promises = [];
 
-					//Promise for verify if a student 
+					//Promise for verify if a student exists
 					const verifyStudent = (student) => {
 						return new Promise(async (resolve, reject) => {
 							try {
@@ -287,9 +289,9 @@ export const addStudentsByCourseId = (req, res) => {
 
 export const removeStudentsByCourseId = async (req, res) => {
 	try {
-		CourseStudent.findOneAndDelete({ course: req.params.courseId, student: req.params.studentId }, (err, course) => {
+		CourseStudent.findOneAndDelete({ course: req.params.courseId, student: req.params.studentId }, (err, courseStudent) => {
 			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
-			if (course) {
+			if (courseStudent) {
 				Course.findById(req.params.courseId, async (err, course) => {
 					if (err) console.log(error);
 					course.students -= 1;
@@ -306,4 +308,227 @@ export const removeStudentsByCourseId = async (req, res) => {
 		console.log(error);
 		return res.status(500).json({ message: "Hubo un error eliminando estudiantes del curso" });
 	}
-}
+};
+
+export const createTask = (req, res) => {
+	try {
+		const { name, description, activities } = req.body;
+
+		if (!name) {
+			return res.status(400).json({ message: 'El nombre de la tarea es requerido' });
+		}
+
+		let tempName = name;
+
+		if (tempName.trim().localeCompare('') == 0) {
+			return res.status(400).json({ message: 'El nombre de la tarea es requerido' });
+		}
+
+		let task = { name, description };
+
+		Course.findOneAndUpdate({
+			"_id": req.params.courseId,
+			"units._id": req.params.unitId
+		}, {
+			"$push": {
+				"units.$.tasks": task
+			}
+		}, {
+			new: true
+		}, (err, result) => {
+			if (err) {
+				return res.status(500).json({ message: "An error has ocurred when we trying to create the task" })
+			}
+			if (result) {
+				return res.status(201).json({ message: "The task has been created satisfatorily", updatedCourse: result })
+			} else {
+				return res.status(400).json({ message: "course or unit not found" });
+			}
+		});
+	} catch (e) {
+		console.log('e');
+		console.log(e);
+		return res.status(500).json({ message: "Ha ocurrido un error inexperado, por favor intentelo mas tarde" });
+	};
+};
+
+export const addActivitiesToTask = (req, res) => {
+	try {
+		const { activities } = req.body;
+		if (!activities) {
+			return res.status(400).json({ message: "Los estudiantes no fueron encontrados" });
+		}
+		Course.exists({ "units.tasks._id": req.params.taskId }, (err, courseExists) => {
+			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			if (!courseExists) return res.status(400).json({ message: "Tarea no encontrada" });
+
+			let taskActivities = [];
+			let deniedTasks = [];
+
+			let promises = [];
+
+			//Promise for verify it an activity exists 
+			const verifyActivity = (activity) => {
+				return new Promise(async (resolve, reject) => {
+					try {
+						const activityExists = await Activity.exists({ _id: activity._id });
+						if (activityExists) {
+							const tAExists = await TaskActivity.exists({ task: req.params.taskId, activity: activity._id });
+							if (!tAExists) {
+								taskActivities.push(new TaskActivity({ task: req.params.taskId, activity: activity._id }));
+								resolve();
+							}
+							else {
+								console.log('the activity is already in the task');
+								deniedTasks.push(activity._id);
+								resolve();
+							}
+						}
+						else {
+							console.log(`the activity doesn\'t exist. Student ID: ${activity._id}`);
+							deniedTasks.push(activity._id);
+							resolve();
+						}
+					}
+					catch (e) {
+						console.log(e);
+						console.log('error in AddActivitiesToTask (course.controller.js)');
+						reject(e);
+					}
+
+				});
+			}
+
+			activities.map(async (activity) => {
+
+				promises.push(verifyActivity(activity));
+
+			});
+
+			Promise.all(promises)
+				.then(responses => {
+					TaskActivity.insertMany(taskActivities, (error, docs) => {
+						if (error) return res.status(500).json({ message: "No se han podido añadir los estudiantes al curso" });
+						return res.status(201).json({ message: "Estudiantes añadidos al curso satisfactoriamente", acceptedActivities: docs, deniedTasks });
+					});
+				})
+				.catch(e => {
+					console.log(e);
+					console.log('error in addStudentsByCourseId (course.controller.js)');
+					return res.status(500).json({ message: "No se han podido añadir los estudiantes al curso" });
+				});
+
+		});
+
+	} catch (error) {
+		console.log('Error found in addStudentsByCourseId (course.controller)');
+		console.log(error);
+		return res.status(500).json({ message: "Ha ocurrido un error añadiendo estudiantes al curso" });
+	}
+};
+
+
+export const updateTask = (req, res) => {
+	try {
+		const { name, description, activities } = req.body;
+
+		if (!name) {
+			return res.status(400).json({ message: 'El nombre de la tarea es requerido' });
+		}
+
+		let tempName = name;
+
+		if (tempName.trim().localeCompare('') == 0) {
+			return res.status(400).json({ message: 'El nombre de la tarea es requerido' });
+		}
+
+		Course.findOneAndUpdate({
+			"_id": req.params.courseId
+		}, {
+			"$set": {
+				"units.$[i].tasks.$[j].name": name,
+				"units.$[i].tasks.$[j].description": description
+			}
+		}, {
+			new: true,
+			arrayFilters: [{
+				"i._id": req.params.unitId
+			}, {
+				"j._id": req.params.taskId
+			}]
+		}, (err, result) => {
+			if (err) {
+				return res.status(500).json({ message: "An error has ocurred when we trying to update the task" })
+			}
+			if (result) {
+				return res.status(201).json({ message: "The task has been updated satisfatorily", updatedCourse: result })
+			} else {
+				return res.status(400).json({ message: "Course, unit or task not found" });
+			}
+		}
+		);
+
+	} catch (e) {
+		console.log('e');
+		console.log(e);
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+	};
+};
+
+export const deleteTask = (req, res) => {
+	try {
+		Course.findById(req.params.courseId, async (err, course) => {
+			if (err) {
+				console.log('err');
+				console.log(err);
+				return res.status(500).json({ message: "An error has ocurred when we trying to delete the task" })
+			}
+			if (course) {
+				const unit = course.units.id(req.params.unitId);
+				if (!unit) {
+					return res.status(400).json({ message: "Unit not found" });
+				}
+
+				const taskToDelete = unit.tasks.id(req.params.taskId);
+
+				if (!taskToDelete) {
+					return res.status(400).json({ message: 'Unidad no encontrada' });
+				}
+
+				taskToDelete.remove();
+
+				const updatedCourse = await course.save();
+
+				return res.status(201).json({ message: "The task has been deleted satisfatorily", updatedCourse })
+			} else {
+				return res.status(400).json({ message: "course not found" });
+			}
+		});
+	} catch (e) {
+		console.log('e');
+		console.log(e);
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+	};
+};
+
+export const removeActvitiesFromTask = async (req, res) => {
+	try {
+		console.log('req.params.taskId');
+		console.log(req.params.taskId);
+		console.log('req.params.activityId');
+		console.log(req.params.activityId);
+		TaskActivity.findOneAndDelete({ task: req.params.taskId, activity: req.params.activityId }, (err, taskActivity) => {
+			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			if (taskActivity) {
+				return res.status(201).json({ message: "Actividad eliminada satisfactoriamente" });
+			}
+			else {
+				return res.status(400).json({ message: "Curso o estudiante no encontrado" });
+			}
+		});
+	} catch (error) {
+		console.log('Error found in deleteStudentsByCourseId (course.controller)');
+		console.log(error);
+		return res.status(500).json({ message: "Hubo un error eliminando estudiantes del curso" });
+	}
+};

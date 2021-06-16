@@ -3,7 +3,7 @@ import mongoose, { Schema, model } from 'mongoose';
 const CourseSchema = new Schema({
     'name': { type: String, require: true, trim: true },
     'description': { type: String, require: true },
-    'topic': { type: String, require: true },    
+    'topic': { type: String, require: true },
     'creator': { ref: 'Person', type: Schema.Types.ObjectId },
     'visible': Boolean,
     'image': String,
@@ -16,10 +16,11 @@ const CourseSchema = new Schema({
         'visible': { type: Boolean, default: false },
         'tasks': [{
             'name': { type: String, require: true, trim: true },
+            'description': { type: String, default: '', trim: true },
             'complete': Boolean,
-            'visible': Boolean
+            'visible': { type: Boolean, default: false }
         }]
-    }]    
+    }]
 }, { timestamps: true });
 
 export default model('Course', CourseSchema);
