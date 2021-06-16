@@ -27,14 +27,14 @@ router.delete('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOr
 // Route for update a unit course
 router.put('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateUnit);
 
+//Route for add actvitities to a task
+router.post('/task/activity/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.addActivitiesToTask);
+
 // Route for Create a task
 router.post('/task/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createTask);
 
 //Route for Update a task
 router.put('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateTask);
-
-//Route for add actvitities to a task
-router.post('/task/activity/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.addActivitiesToTask);
 
 //Route for remove activities from task
 router.delete('/task/activity/:taskId/:activityId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.removeActvitiesFromTask);

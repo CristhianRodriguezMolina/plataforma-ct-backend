@@ -345,7 +345,7 @@ export const createTask = (req, res) => {
 			if (result) {
 				return res.status(201).json({ message: "The task has been created satisfatorily", updatedCourse: result })
 			} else {
-				return res.status(400).json({ message: "course or unit not found" });
+				return res.status(404).json({ message: "course or unit not found" });
 			}
 		});
 	} catch (e) {
@@ -466,7 +466,7 @@ export const updateTask = (req, res) => {
 			if (result) {
 				return res.status(201).json({ message: "The task has been updated satisfatorily", updatedCourse: result })
 			} else {
-				return res.status(400).json({ message: "Course, unit or task not found" });
+				return res.status(404).json({ message: "Course, unit or task not found" });
 			}
 		}
 		);
@@ -489,13 +489,13 @@ export const deleteTask = (req, res) => {
 			if (course) {
 				const unit = course.units.id(req.params.unitId);
 				if (!unit) {
-					return res.status(400).json({ message: "Unit not found" });
+					return res.status(404).json({ message: "Unit not found" });
 				}
 
 				const taskToDelete = unit.tasks.id(req.params.taskId);
 
 				if (!taskToDelete) {
-					return res.status(400).json({ message: 'Unidad no encontrada' });
+					return res.status(404).json({ message: 'Tarea no encontrada' });
 				}
 
 				taskToDelete.remove();
@@ -504,7 +504,7 @@ export const deleteTask = (req, res) => {
 
 				return res.status(201).json({ message: "The task has been deleted satisfatorily", updatedCourse })
 			} else {
-				return res.status(400).json({ message: "course not found" });
+				return res.status(404).json({ message: "Course not found" });
 			}
 		});
 	} catch (e) {
