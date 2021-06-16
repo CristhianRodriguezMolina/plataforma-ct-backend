@@ -39,7 +39,7 @@ export const signin = async (req, res) => {
 			return res.status(200).json({
 				message: 'Signin correcto',
 				token: token,
-				created_at: jwt.decode(token, config.SECRET).exp,
+				expire_at: jwt.decode(token, config.SECRET).exp,
 				user_role: user.role,
 				user_id: user._id,
 				user_image: user.image,
