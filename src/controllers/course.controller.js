@@ -127,7 +127,9 @@ export const updateUnit = (req, res) => {
 			"units._id": req.params.unitId
 		}, {
 			"$set": {
-				"units.$": unit
+				"units.$.name": unit.name,
+				"units.$.description": unit.description,
+				"units.$.visible": unit.visible
 			}
 		}, {
 			new: true
@@ -138,12 +140,13 @@ export const updateUnit = (req, res) => {
 			if (result) {
 				return res.status(201).json({ message: "The unit has been updated satisfatorily", updatedCourse: result })
 			} else {
-				return res.status(400).json({ message: "unit not found" });
+				return res.status(404).json({ message: "unit not found" });
 			}
-		}
-		);
+		});
 	}
 	catch (error) {
+		console.log('error in updateUnit (course.controller)');
+		console.log(error);
 		return res.status(500).json({ message: "An error has ocurred when we trying to update a unit" });
 	}
 }
@@ -304,7 +307,7 @@ export const removeStudentsByCourseId = async (req, res) => {
 			}
 		});
 	} catch (error) {
-		console.log('Error found in deleteStudentsByCourseId (course.controller)');
+		console.log('Error found in removeStudentsByCourseId (course.controller)');
 		console.log(error);
 		return res.status(500).json({ message: "Hubo un error eliminando estudiantes del curso" });
 	}
@@ -356,14 +359,14 @@ export const addActivitiesToTask = (req, res) => {
 	try {
 		const { activities } = req.body;
 		if (!activities) {
-			return res.status(400).json({ message: "Los estudiantes no fueron encontrados" });
+			return res.status(400).json({ message: "Las actividades no fueron encontradas" });
 		}
 		Course.exists({ "units.tasks._id": req.params.taskId }, (err, courseExists) => {
 			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
 			if (!courseExists) return res.status(400).json({ message: "Tarea no encontrada" });
 
 			let taskActivities = [];
-			let deniedTasks = [];
+			let deniedActivities = [];
 
 			let promises = [];
 
@@ -380,13 +383,13 @@ export const addActivitiesToTask = (req, res) => {
 							}
 							else {
 								console.log('the activity is already in the task');
-								deniedTasks.push(activity._id);
+								deniedActivities.push(activity._id);
 								resolve();
 							}
 						}
 						else {
 							console.log(`the activity doesn\'t exist. Student ID: ${activity._id}`);
-							deniedTasks.push(activity._id);
+							deniedActivities.push(activity._id);
 							resolve();
 						}
 					}
@@ -408,20 +411,20 @@ export const addActivitiesToTask = (req, res) => {
 			Promise.all(promises)
 				.then(responses => {
 					TaskActivity.insertMany(taskActivities, (error, docs) => {
-						if (error) return res.status(500).json({ message: "No se han podido añadir los estudiantes al curso" });
-						return res.status(201).json({ message: "Estudiantes añadidos al curso satisfactoriamente", acceptedActivities: docs, deniedTasks });
+						if (error) return res.status(500).json({ message: "No se han podido añadir las actividades a la tarea" });
+						return res.status(201).json({ message: "Actividades añadidas al curso satisfactoriamente", acceptedActivities: docs, deniedActivities });
 					});
 				})
 				.catch(e => {
 					console.log(e);
-					console.log('error in addStudentsByCourseId (course.controller.js)');
-					return res.status(500).json({ message: "No se han podido añadir los estudiantes al curso" });
+					console.log('error in addActivitiesToTask (course.controller.js)');
+					return res.status(500).json({ message: "No se han podido añadir las actividades a la tarea" });
 				});
 
 		});
 
 	} catch (error) {
-		console.log('Error found in addStudentsByCourseId (course.controller)');
+		console.log('Error found in addActivitiesToTask (course.controller)');
 		console.log(error);
 		return res.status(500).json({ message: "Ha ocurrido un error añadiendo estudiantes al curso" });
 	}
@@ -513,22 +516,18 @@ export const deleteTask = (req, res) => {
 
 export const removeActvitiesFromTask = async (req, res) => {
 	try {
-		console.log('req.params.taskId');
-		console.log(req.params.taskId);
-		console.log('req.params.activityId');
-		console.log(req.params.activityId);
 		TaskActivity.findOneAndDelete({ task: req.params.taskId, activity: req.params.activityId }, (err, taskActivity) => {
 			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
 			if (taskActivity) {
 				return res.status(201).json({ message: "Actividad eliminada satisfactoriamente" });
 			}
 			else {
-				return res.status(400).json({ message: "Curso o estudiante no encontrado" });
+				return res.status(400).json({ message: "Tarea o actividad no encontrada" });
 			}
 		});
 	} catch (error) {
-		console.log('Error found in deleteStudentsByCourseId (course.controller)');
+		console.log('Error found in removeActvitiesFromTask (course.controller)');
 		console.log(error);
-		return res.status(500).json({ message: "Hubo un error eliminando estudiantes del curso" });
+		return res.status(500).json({ message: "Hubo un error eliminando actividades de la tarea" });
 	}
 };

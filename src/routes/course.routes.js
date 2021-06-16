@@ -28,19 +28,19 @@ router.delete('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOr
 router.put('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateUnit);
 
 // Route for Create a task
-router.post('/task/:courseId/:unitId', courseCtrl.createTask);
+router.post('/task/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createTask);
 
 //Route for Update a task
-router.put('/task/:courseId/:unitId/:taskId', courseCtrl.updateTask);
+router.put('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateTask);
 
 //Route for add actvitities to a task
-router.post('/task/activity/:courseId/:unitId/:taskId', courseCtrl.addActivitiesToTask);
+router.post('/task/activity/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.addActivitiesToTask);
 
 //Route for remove activities from task
-router.delete('/task/activity/:taskId/:activityId', courseCtrl.removeActvitiesFromTask);
+router.delete('/task/activity/:taskId/:activityId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.removeActvitiesFromTask);
 
 //Route for Delete a task
-router.delete('/task/:courseId/:unitId/:taskId', courseCtrl.deleteTask);
+router.delete('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.deleteTask);
 
 // Route for get the students in a specific course
 router.get('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudents);
