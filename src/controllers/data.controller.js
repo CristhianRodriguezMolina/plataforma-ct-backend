@@ -51,6 +51,7 @@ export const uploadImg = (req, res) => {
 						}
 						let filePath = path.join(__dirname, `../../static_content/i/${sequenceCard.image}`);
 						console.log('filePath');
+
 						console.log(filePath);
 						if (fs.existsSync(filePath)) {
 							fs.unlink(filePath, (er) => {
