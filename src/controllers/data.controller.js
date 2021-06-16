@@ -6,6 +6,11 @@ export const uploadImg = (req, res) => {
 
 	try {
 
+		console.log('__filename');
+		console.log(__filename);
+
+		console.log('__dirname');
+		console.log(__dirname);
 		if (!req.file) {
 			return res.status(400).json({ message: "The image couldn't be uploaded, make sure you are uploading an image file or check your internet connection" });
 		}
