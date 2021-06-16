@@ -12,6 +12,8 @@ export const uploadImg = (req, res) => {
 
 		LogicSequence.findById(req.params.logic_sequence_id, (err, oldLogicSequence) => {
 			if (err) {
+				console.log('err');
+				console.log(err);
 				return res.status(500).json({ message: "Unexpected error, try again later!" });
 			}
 
@@ -32,6 +34,8 @@ export const uploadImg = (req, res) => {
 					new: true
 				}, (error, result) => {
 					if (error) {
+						console.log('error');
+						console.log(error);
 						return res.status(500).json({ message: "An error has ocurred when we trying to update a sequence card" });
 					}
 					if (result) {
@@ -64,7 +68,8 @@ export const uploadImg = (req, res) => {
 		});
 	}
 	catch (e) {
-		console.log(e)
+		console.log('e');
+		console.log(e);
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
 	}
 }
