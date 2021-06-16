@@ -11,6 +11,9 @@ export const uploadImg = (req, res) => {
 
 		console.log('__dirname');
 		console.log(__dirname);
+
+		console.log('req.file');
+		console.log(req.file);
 		if (!req.file) {
 			return res.status(400).json({ message: "The image couldn't be uploaded, make sure you are uploading an image file or check your internet connection" });
 		}
@@ -54,7 +57,7 @@ export const uploadImg = (req, res) => {
 								sequenceCard = tempSequenceCard;
 							}
 						}
-						let filePath = path.join(__dirname, `../../static_content/i/${sequenceCard.image}`);
+						let filePath = path.join(__dirname, `${req.file.destination}/${sequenceCard.image}`);
 						console.log('filePath');
 
 						console.log(filePath);
