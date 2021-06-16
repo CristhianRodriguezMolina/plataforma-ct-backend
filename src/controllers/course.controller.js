@@ -112,13 +112,13 @@ export const updateUnit = (req, res) => {
 		const { unit } = req.body;
 
 		if (!unit.name) {
-			return res.status(400).json({ message: "Field(s) required!" });
+			return res.status(400).json({ message: "Campos requeridos!" });
 		}
 
 		let tempName = unit.name.trim();
 
 		if (tempName.localeCompare("") == 0) {
-			return res.status(400).json({ message: "Field(s) required!" });
+			return res.status(400).json({ message: "Campos requeridos!" });
 		}
 		Course.findOneAndUpdate({
 			"_id": req.params.courseId,
@@ -131,12 +131,12 @@ export const updateUnit = (req, res) => {
 			new: true
 		}, (err, result) => {
 			if (err) {
-				return res.status(500).json({ message: "An error has ocurred when we trying to update the unit", error: err })
+				return res.status(500).json({ message: "Ha ocurrido un error cuando se actualizaba una unidad", error: err })
 			}
 			if (result) {
-				return res.status(201).json({ message: "The unit has been updated satisfatorily", updatedCourse: result })
+				return res.status(201).json({ message: "La unidad ha sido actualizada satisfactoriamente", updatedCourse: result })
 			} else {
-				return res.status(400).json({ message: "unit not found" });
+				return res.status(400).json({ message: "Unidad no encontrada" });
 			}
 		}
 		);

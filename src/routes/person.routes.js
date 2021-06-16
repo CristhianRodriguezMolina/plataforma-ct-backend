@@ -18,6 +18,9 @@ router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher, verifyCreate.ve
 //Actualizar un usuario por id
 router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], personCtrl.updateUserById);
 
+//Actualizar la contraseña de un usuario por id
+router.put('/session/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher, verifyCreate.verifySesionFields], personCtrl.updateUserPasswordById);
+
 //Borrar un usuario por id
 router.delete('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], personCtrl.deleteUserById);
 
