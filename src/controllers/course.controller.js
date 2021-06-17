@@ -363,9 +363,13 @@ export const addActivitiesToTask = (req, res) => {
 		if (!activities) {
 			return res.status(400).json({ message: "Las actividades no fueron encontradas" });
 		}
-		Course.exists({ "units.tasks._id": req.params.taskId }, (err, courseExists) => {
-			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
-			if (!courseExists) return res.status(400).json({ message: "Tarea no encontrada" });
+		Course.findOne({ "units.tasks._id": req.params.taskId }, (err, course) => {
+			if (err) {
+				console.log('err');
+				console.log(err);
+				return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			}
+			if (!course) return res.status(400).json({ message: "Tarea no encontrada" });
 
 			let taskActivities = [];
 			let deniedActivities = [];
@@ -378,9 +382,9 @@ export const addActivitiesToTask = (req, res) => {
 					try {
 						const activityExists = await Activity.exists({ _id: activity._id });
 						if (activityExists) {
-							const tAExists = await TaskActivity.exists({ task: req.params.taskId, activity: activity._id });
+							const tAExists = await TaskActivity.exists({ task: req.params.taskId, activity: activity._id, course: course._id });
 							if (!tAExists) {
-								taskActivities.push(new TaskActivity({ task: req.params.taskId, activity: activity._id }));
+								taskActivities.push(new TaskActivity({ task: req.params.taskId, activity: activity._id, course: course._id }));
 								resolve();
 							}
 							else {
@@ -413,7 +417,11 @@ export const addActivitiesToTask = (req, res) => {
 			Promise.all(promises)
 				.then(responses => {
 					TaskActivity.insertMany(taskActivities, (error, docs) => {
-						if (error) return res.status(500).json({ message: "No se han podido añadir las actividades a la tarea" });
+						if (error) {
+							console.log('error');
+							console.log(error);
+							return res.status(500).json({ message: "No se han podido añadir las actividades a la tarea" });
+						}
 						return res.status(201).json({ message: "Actividades añadidas al curso satisfactoriamente", acceptedActivities: docs, deniedActivities });
 					});
 				})
@@ -564,5 +572,23 @@ export const getTask = (req, res) => {
 		console.log('e');
 		console.log(e);
 		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
-	};
+	}
+}
+
+export const getAllActivitiesInCourse = (req, res) => {
+	try {
+		TaskActivity.find({ course: req.params.courseId }, (err, activities) => {
+			if (err) {
+				console.log('err');
+				console.log(err);
+				return res.status(500).json({ message: "An error has ocurred when we trying to get the task" })
+			}
+			if (!activities) return res.status(404).json({ message: "Activities not found" });
+			return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+		});
+	} catch (e) {
+		console.log('e');
+		console.log(e);
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+	}
 }
