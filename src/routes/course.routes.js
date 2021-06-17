@@ -42,6 +42,9 @@ router.delete('/task/activity/:taskId/:activityId', [authJwt.verifyToken, authJw
 //Route for Delete a task
 router.delete('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.deleteTask);
 
+//Route for Delete a task
+router.get('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getTask);
+
 // Route for get the students in a specific course
 router.get('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudents);
 

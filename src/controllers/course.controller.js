@@ -343,7 +343,9 @@ export const createTask = (req, res) => {
 				return res.status(500).json({ message: "An error has ocurred when we trying to create the task" })
 			}
 			if (result) {
-				return res.status(201).json({ message: "The task has been created satisfatorily", updatedCourse: result })
+				let unit = result.units.filter((unit) => unit._id.equals(req.params.unitId))[0];
+				let task = unit.tasks[unit.tasks.length - 1];
+				return res.status(201).json({ message: "The task has been created satisfatorily", task })
 			} else {
 				return res.status(404).json({ message: "course or unit not found" });
 			}
@@ -464,12 +466,13 @@ export const updateTask = (req, res) => {
 				return res.status(500).json({ message: "An error has ocurred when we trying to update the task" })
 			}
 			if (result) {
-				return res.status(201).json({ message: "The task has been updated satisfatorily", updatedCourse: result })
+				let unit = result.units.filter((unit) => unit._id.equals(req.params.unitId))[0];
+				let task = unit.tasks.filter((task) => task._id.equals(req.params.taskId))[0];
+				return res.status(201).json({ message: "The task has been updated satisfatorily", task })
 			} else {
 				return res.status(404).json({ message: "Course, unit or task not found" });
 			}
-		}
-		);
+		});
 
 	} catch (e) {
 		console.log('e');
@@ -531,3 +534,35 @@ export const removeActvitiesFromTask = async (req, res) => {
 		return res.status(500).json({ message: "Hubo un error eliminando actividades de la tarea" });
 	}
 };
+
+export const getTask = (req, res) => {
+	try {
+		Course.findById(req.params.courseId, async (err, course) => {
+			if (err) {
+				console.log('err');
+				console.log(err);
+				return res.status(500).json({ message: "An error has ocurred when we trying to get the task" })
+			}
+			if (course) {
+				const unit = course.units.id(req.params.unitId);
+				if (!unit) {
+					return res.status(404).json({ message: "Unit not found" });
+				}
+
+				const task = unit.tasks.id(req.params.taskId);
+
+				if (!task) {
+					return res.status(404).json({ message: 'Tarea no encontrada' });
+				}
+
+				return res.status(200).json({ message: "Task obtained successfully", task });
+			} else {
+				return res.status(404).json({ message: "Course not found" });
+			}
+		});
+	} catch (e) {
+		console.log('e');
+		console.log(e);
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+	};
+}
