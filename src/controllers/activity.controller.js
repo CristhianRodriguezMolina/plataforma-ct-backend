@@ -36,7 +36,14 @@ export const getMyActivities = (req, res) => {
 		Activity.find({ creator: req.params.creatorId }, null, { sort: { name: 1 } },
 			(err, activities) => {
 				if (err) return res.status(500).json({ message: "Unexpected error, try again later!" });
-				return res.status(200).json({ message: "Activities list request has been completed satisfactorily", activities });
+				Activity.countDocuments((error, count) => {
+					if (error) {
+						console.log("ERROR when we trying to get all activities");
+						console.log(error);
+						return res.status(500).json({ message: "Unexpected error, try again later!" })
+					}
+					return res.status(200).json({ message: "Activities list request has been completed satisfactorily", activities, count });
+				});
 			});
 	} catch (e) {
 		console.log(e)
