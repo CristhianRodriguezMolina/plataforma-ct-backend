@@ -52,7 +52,13 @@ router.get('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAd
 router.get('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudents);
 
 // Route for get the students in a specific course
+router.get('/tasks/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getActivities);
+
+// Route for get the students in a specific course
 router.get('/not-in-course-students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudentsNotInCourse);
+
+// Route for get the activities in a specific task
+router.get('/not-in-task-activities/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getActivitesNotInTask);
 
 // Route for update a course
 router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateCourseById);

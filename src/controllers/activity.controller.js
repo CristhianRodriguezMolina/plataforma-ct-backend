@@ -1,6 +1,7 @@
 //DB Schema imports
 import { model } from 'mongoose';
 import Activity from '../models/Activity';
+import TaskActivity from '../models/TaskActivity';
 
 //API modules imports
 import * as logicSequenceCtrl from './logic-sequence.controller';
@@ -203,7 +204,10 @@ export const deleteActivityById = (req, res) => {
 							return res.status(500).json({ message: "Unexpected error, try again later!" })
 						}
 
-						return res.status(200).json({ message: "The activity has been deleted satisfactorily" });
+						TaskActivity.deleteMany({ activity: activity._id }, (e) => {
+							if (e) return res.status(500).json({ message: "Unexpected error, try again later!" });
+							return res.status(200).json({ message: "The activity has been deleted satisfactorily" });
+						});
 					});
 				}).catch((e) => {
 					console.log("ERROR found in deleteActivityById(activity.controller)")
@@ -214,10 +218,14 @@ export const deleteActivityById = (req, res) => {
 				Activity.deleteOne({ _id: activity._id }, (error) => {
 					if (error) {
 						console.error("ERROR when try to deleteOne in deleteActivityById (activity.controller)");
-						return res.status(500).json({ message: "Unexpected error, try again later!" })
+						return res.status(500).json({ message: "Unexpected error, try again later!" });
 					}
 
-					return res.status(200).json({ message: "The activity has been deleted satisfactorily" });
+					TaskActivity.deleteMany({ activity: activity._id }, (e) => {
+						if (e) return res.status(500).json({ message: "Unexpected error, try again later!" });
+						return res.status(200).json({ message: "The activity has been deleted satisfactorily" });
+					});
+
 				});
 			}
 		});

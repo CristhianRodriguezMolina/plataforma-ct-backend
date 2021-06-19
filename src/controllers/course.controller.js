@@ -173,7 +173,7 @@ export const getStudents = async (req, res) => {
 		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.student);
 
 		if (courseStudents.length <= 0) {
-			return res.status(200).json({ message: 'No hay estuantes en el curso' });
+			return res.status(200).json({ message: 'No hay estudiantes en el curso' });
 		}
 
 		// Get the students that are in the array of _id's
@@ -207,6 +207,51 @@ export const getStudentsNotInCourse = async (req, res) => {
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Hubo un error obteniendo estudiantes del curso" });
+	}
+}
+
+export const getActivities = async (req, res) => {
+	try {
+		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id'); // To get just the activities id
+
+		// Convert the object array to a array just of _id's
+		taskActivities = Array.from(taskActivities, taskActivity => taskActivity.activity);
+
+		if (taskActivities.length <= 0) {
+			return res.status(200).json({ message: 'No hay actividades en la tarea' });
+		}
+
+		// Get the activities that are in the array of _id's
+		const activities = await Activity.find({ _id: { $in: taskActivities } });
+
+		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({ message: "Hubo un error obteniendo las actividades de la tarea" });
+	}
+}
+
+export const getActivitesNotInTask = async (req, res) => {
+	try {
+		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id'); // To get just the activities id
+
+		// Convert the object array to a array just of _id's
+		taskActivities = Array.from(taskActivities, taskActivity => taskActivity.activity);
+
+		if (taskActivities.length <= 0) {
+			// In case that the task doesn't have activities, just get all the activities
+			const activities = await Activity.find({});
+
+			return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+		}
+
+		// Get the activities that are not in the array of _id's
+		const activities = await Activity.find({ _id: { $nin: taskActivities } });
+
+		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({ message: "Hubo un error obteniendo actividades de la tarea" });
 	}
 }
 
@@ -512,6 +557,8 @@ export const deleteTask = (req, res) => {
 				taskToDelete.remove();
 
 				const updatedCourse = await course.save();
+
+				await TaskActivity.deleteMany({ task: taskId });
 
 				return res.status(201).json({ message: "The task has been deleted satisfatorily", updatedCourse })
 			} else {
