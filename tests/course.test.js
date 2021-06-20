@@ -216,7 +216,7 @@ describe('REQUEST /api/course', () => {
 						.end((err, res) => {
 							if (err) return done(err);
 							let filePath = path.join(__dirname, './static_test/taskID.txt');
-							fs.writeFile(filePath, res.body.updatedCourse.units[0].tasks[0]._id, (err) => {
+							fs.writeFile(filePath, res.body.task._id, (err) => {
 								if (err) console.error(err);
 							});
 							done();

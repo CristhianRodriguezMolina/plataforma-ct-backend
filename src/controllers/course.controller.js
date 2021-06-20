@@ -173,7 +173,7 @@ export const getStudents = async (req, res) => {
 		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.student);
 
 		if (courseStudents.length <= 0) {
-			return res.status(200).json({ message: 'No hay estuantes en el curso' });
+			return res.status(200).json({ message: 'No hay estudiantes en el curso' });
 		}
 
 		// Get the students that are in the array of _id's
@@ -207,6 +207,51 @@ export const getStudentsNotInCourse = async (req, res) => {
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Hubo un error obteniendo estudiantes del curso" });
+	}
+}
+
+export const getActivities = async (req, res) => {
+	try {
+		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id'); // To get just the activities id
+
+		// Convert the object array to a array just of _id's
+		taskActivities = Array.from(taskActivities, taskActivity => taskActivity.activity);
+
+		if (taskActivities.length <= 0) {
+			return res.status(200).json({ message: 'No hay actividades en la tarea' });
+		}
+
+		// Get the activities that are in the array of _id's
+		const activities = await Activity.find({ _id: { $in: taskActivities } });
+
+		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({ message: "Hubo un error obteniendo las actividades de la tarea" });
+	}
+}
+
+export const getActivitesNotInTask = async (req, res) => {
+	try {
+		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id'); // To get just the activities id
+
+		// Convert the object array to a array just of _id's
+		taskActivities = Array.from(taskActivities, taskActivity => taskActivity.activity);
+
+		if (taskActivities.length <= 0) {
+			// In case that the task doesn't have activities, just get all the activities
+			const activities = await Activity.find({});
+
+			return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+		}
+
+		// Get the activities that are not in the array of _id's
+		const activities = await Activity.find({ _id: { $nin: taskActivities } });
+
+		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({ message: "Hubo un error obteniendo actividades de la tarea" });
 	}
 }
 
@@ -343,7 +388,9 @@ export const createTask = (req, res) => {
 				return res.status(500).json({ message: "An error has ocurred when we trying to create the task" })
 			}
 			if (result) {
-				return res.status(201).json({ message: "The task has been created satisfatorily", updatedCourse: result })
+				let unit = result.units.filter((unit) => unit._id.equals(req.params.unitId))[0];
+				let task = unit.tasks[unit.tasks.length - 1];
+				return res.status(201).json({ message: "The task has been created satisfatorily", task })
 			} else {
 				return res.status(404).json({ message: "course or unit not found" });
 			}
@@ -361,9 +408,13 @@ export const addActivitiesToTask = (req, res) => {
 		if (!activities) {
 			return res.status(400).json({ message: "Las actividades no fueron encontradas" });
 		}
-		Course.exists({ "units.tasks._id": req.params.taskId }, (err, courseExists) => {
-			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
-			if (!courseExists) return res.status(400).json({ message: "Tarea no encontrada" });
+		Course.findOne({ "units.tasks._id": req.params.taskId }, (err, course) => {
+			if (err) {
+				console.log('err');
+				console.log(err);
+				return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			}
+			if (!course) return res.status(400).json({ message: "Tarea no encontrada" });
 
 			let taskActivities = [];
 			let deniedActivities = [];
@@ -376,9 +427,9 @@ export const addActivitiesToTask = (req, res) => {
 					try {
 						const activityExists = await Activity.exists({ _id: activity._id });
 						if (activityExists) {
-							const tAExists = await TaskActivity.exists({ task: req.params.taskId, activity: activity._id });
+							const tAExists = await TaskActivity.exists({ task: req.params.taskId, activity: activity._id, course: course._id });
 							if (!tAExists) {
-								taskActivities.push(new TaskActivity({ task: req.params.taskId, activity: activity._id }));
+								taskActivities.push(new TaskActivity({ task: req.params.taskId, activity: activity._id, course: course._id }));
 								resolve();
 							}
 							else {
@@ -411,7 +462,11 @@ export const addActivitiesToTask = (req, res) => {
 			Promise.all(promises)
 				.then(responses => {
 					TaskActivity.insertMany(taskActivities, (error, docs) => {
-						if (error) return res.status(500).json({ message: "No se han podido añadir las actividades a la tarea" });
+						if (error) {
+							console.log('error');
+							console.log(error);
+							return res.status(500).json({ message: "No se han podido añadir las actividades a la tarea" });
+						}
 						return res.status(201).json({ message: "Actividades añadidas al curso satisfactoriamente", acceptedActivities: docs, deniedActivities });
 					});
 				})
@@ -464,12 +519,13 @@ export const updateTask = (req, res) => {
 				return res.status(500).json({ message: "An error has ocurred when we trying to update the task" })
 			}
 			if (result) {
-				return res.status(201).json({ message: "The task has been updated satisfatorily", updatedCourse: result })
+				let unit = result.units.filter((unit) => unit._id.equals(req.params.unitId))[0];
+				let task = unit.tasks.filter((task) => task._id.equals(req.params.taskId))[0];
+				return res.status(201).json({ message: "The task has been updated satisfatorily", task })
 			} else {
 				return res.status(404).json({ message: "Course, unit or task not found" });
 			}
-		}
-		);
+		});
 
 	} catch (e) {
 		console.log('e');
@@ -502,6 +558,8 @@ export const deleteTask = (req, res) => {
 
 				const updatedCourse = await course.save();
 
+				await TaskActivity.deleteMany({ task: req.params.taskId });
+
 				return res.status(201).json({ message: "The task has been deleted satisfatorily", updatedCourse })
 			} else {
 				return res.status(404).json({ message: "Course not found" });
@@ -531,3 +589,53 @@ export const removeActvitiesFromTask = async (req, res) => {
 		return res.status(500).json({ message: "Hubo un error eliminando actividades de la tarea" });
 	}
 };
+
+export const getTask = (req, res) => {
+	try {
+		Course.findById(req.params.courseId, async (err, course) => {
+			if (err) {
+				console.log('err');
+				console.log(err);
+				return res.status(500).json({ message: "An error has ocurred when we trying to get the task" })
+			}
+			if (course) {
+				const unit = course.units.id(req.params.unitId);
+				if (!unit) {
+					return res.status(404).json({ message: "Unit not found" });
+				}
+
+				const task = unit.tasks.id(req.params.taskId);
+
+				if (!task) {
+					return res.status(404).json({ message: 'Tarea no encontrada' });
+				}
+
+				return res.status(200).json({ message: "Task obtained successfully", task });
+			} else {
+				return res.status(404).json({ message: "Course not found" });
+			}
+		});
+	} catch (e) {
+		console.log('e');
+		console.log(e);
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+	}
+}
+
+export const getAllActivitiesInCourse = (req, res) => {
+	try {
+		TaskActivity.find({ course: req.params.courseId }, (err, activities) => {
+			if (err) {
+				console.log('err');
+				console.log(err);
+				return res.status(500).json({ message: "An error has ocurred when we trying to get the task" })
+			}
+			if (!activities) return res.status(404).json({ message: "Activities not found" });
+			return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+		});
+	} catch (e) {
+		console.log('e');
+		console.log(e);
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+	}
+}

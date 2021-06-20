@@ -43,7 +43,8 @@ export const signin = async (req, res) => {
 				user_role: user.role,
 				user_id: user._id,
 				user_image: user.image,
-				user_name: user.first_name
+				user_name: user.first_name,
+				user_last_name: user.last_name
 			});
 		} else {
 			console.log("ID o contraseña incorrectos!");
