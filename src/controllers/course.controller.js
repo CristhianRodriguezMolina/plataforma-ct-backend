@@ -558,7 +558,7 @@ export const deleteTask = (req, res) => {
 
 				const updatedCourse = await course.save();
 
-				await TaskActivity.deleteMany({ task: taskId });
+				await TaskActivity.deleteMany({ task: req.params.taskId });
 
 				return res.status(201).json({ message: "The task has been deleted satisfatorily", updatedCourse })
 			} else {
