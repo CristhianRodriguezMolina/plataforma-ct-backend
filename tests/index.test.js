@@ -6,6 +6,7 @@ import fs from 'fs';
 
 //DB Schema imports
 import Person from '../src/models/Person';
+import Activity from '../src/models/Activity';
 
 import './auth.test';
 import './user.test';
@@ -33,6 +34,45 @@ before((done) => {
 	}, done);
 });
 
+/**
+ * Adding some temporal activities for test the functionality to add activities to a task (task-activity.test)
+ */
+before(async () => {
+	const activities = [
+		new Activity({
+			name: "Temp activity 1",
+			description: "c9KY7Q8Qg2Br5zDY",
+			type: "logic_sequence",
+			creator: "60b98fe8b1465f35148b53e4"
+		}),
+		new Activity({
+			name: "Temp activity 2",
+			description: "c9KY7Q8Qg2Br5zDY",
+			type: "logic_sequence",
+			creator: "60b98fe8b1465f35148b53e4"
+		})
+	];
+
+	return new Promise((resolve, reject) => {
+		Activity.insertMany(activities, (err, activitiesDocs) => {
+			if (err) reject(err);
+			resolve(activitiesDocs);
+		});
+	}).then(docs => {
+		return new Promise((resolve, reject) => {
+			var myJsonString = JSON.stringify(docs);
+			let filePath = path.join(__dirname, './static_test/tempActivities.json');
+			fs.writeFile(filePath, myJsonString, (err) => {
+				if (err) return reject(err);
+				console.log('Temp activities documents has been created');
+				resolve();
+			});
+		})
+
+	}).catch(e => {
+		return Promise.reject(e);
+	});
+});
 
 /**
  * Adding some temporal students for test the functionality to add students to a course (course-student.test)
@@ -71,7 +111,7 @@ before(async () => {
 				console.log('Temp students documents has been created');
 				resolve();
 			});
-		})
+		});
 
 	}).catch(e => {
 		return Promise.reject(e);
@@ -89,5 +129,15 @@ after((done) => {
 	})
 });
 
+/**
+ * Delete temporal activities documents after the test ends
+ */
+after((done) => {
+	Activity.deleteMany({ description: "c9KY7Q8Qg2Br5zDY" }, (err) => {
+		if (err) done(err);
+		console.log('Temp activities documents has been deleted');
+		done()
+	})
+});
 
 

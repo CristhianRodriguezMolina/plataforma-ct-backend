@@ -73,8 +73,7 @@ export const deleteSequenceCardByLogicSequenceId = (req, res) => {
 			} else {
 				return res.status(400).json({ message: "The logic sequence or the sequence card not found" });
 			}
-		}
-		);
+		});
 	} catch (e) {
 		console.log(e)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });

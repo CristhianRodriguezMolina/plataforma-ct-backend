@@ -46,10 +46,10 @@ describe('REQUEST /api/activity', () => {
 		try {
 			let data = fs.readFileSync(tempStudentsPath, 'utf8');
 			tempStudents = JSON.parse(data);
-			console.log('User Token defined');
+			console.log('Temporal student found');
 			done();
 		} catch (err) {
-			console.log('User token not found');
+			console.log('Temporal student not found');
 			done(err);
 		}
 	});
