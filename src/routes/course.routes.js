@@ -6,8 +6,14 @@ const router = Router();
 import * as courseCtrl from '../controllers/course.controller';
 import { authJwt } from '../middlewares';
 
+// Route for get the courses of a student 
+router.get('/mycourses/student/:id', [authJwt.verifyToken], courseCtrl.getMyStudentCourses);
+
 // Route for get the courses of a teacher
-router.get('/mycourses/:id', [authJwt.verifyToken], courseCtrl.getMyCourses);
+router.get('/mycourses/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getMyCourses);
+
+// Route for get the teacher of a course
+router.get('/teacher/:id', [authJwt.verifyToken], courseCtrl.getTeacherCourse);
 
 // Route for get a course by id
 router.get('/:id', [authJwt.verifyToken], courseCtrl.getCourseById);
@@ -43,13 +49,13 @@ router.delete('/task/activity/:taskId/:activityId', [authJwt.verifyToken, authJw
 router.delete('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.deleteTask);
 
 //Route for get all activities in a course
-router.get('/task/activity/:courseId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getAllActivitiesInCourse);
+router.get('/task/activity/:courseId', [authJwt.verifyToken], courseCtrl.getAllActivitiesInCourse);
 
 //Route for get a task
 router.get('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getTask);
 
 // Route for get the students in a specific course
-router.get('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudents);
+router.get('/students/:id', [authJwt.verifyToken], courseCtrl.getStudents);
 
 // Route for get the students in a specific course
 router.get('/tasks/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getActivities);

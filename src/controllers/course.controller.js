@@ -14,6 +14,27 @@ export const getMyCourses = async (req, res) => {
 	}
 }
 
+export const getMyStudentCourses = async (req, res) => {
+	try {
+		var courseStudents = await CourseStudent.find({ student: req.params.id }).select('course -_id'); // To get just the courses id
+
+		// Convert the object array to a array just of _id's of the courses
+		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.course);
+
+		if (courseStudents.length <= 0) {
+			return res.status(200).json({ message: 'No esta inscrito en ningun curso' });
+		}
+
+		// Get the courses that are in the array of _id's
+		const courses = await Course.find({ _id: { $in: courseStudents } });
+
+		return res.status(200).json({ message: "Cursos obtenidos satisfactoriamente", courses });
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({ message: "Hubo un error obteniendo los cursos de un estudiante" });
+	}
+}
+
 export const getCourseById = async (req, res) => {
 	try {
 		const course = await Course.findById(req.params.id);
@@ -25,6 +46,20 @@ export const getCourseById = async (req, res) => {
 		return res.status(200).json({ message: 'Curso hallado con exito', course });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error obteniendo los curso` });
+	}
+}
+
+export const getTeacherCourse = async (req, res) => {
+	try {
+		const teacher = await Person.findById(req.params.id);
+
+		if (!teacher) {
+			return res.status(404).json({ message: `Profesor no encontrado o inexistente!` });
+		}
+
+		return res.status(200).json({ message: 'Profesor hallado con exito', teacher });
+	} catch (error) {
+		return res.status(500).json({ message: `Hubo un error obteniendo el profesor de un curso` });
 	}
 }
 
@@ -169,7 +204,7 @@ export const getStudents = async (req, res) => {
 	try {
 		var courseStudents = await CourseStudent.find({ course: req.params.id }).select('student -_id'); // To get just the students id
 
-		// Convert the object array to a array just of _id's
+		// Convert the object array to a array just of _id's of the students
 		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.student);
 
 		if (courseStudents.length <= 0) {
@@ -488,7 +523,7 @@ export const addActivitiesToTask = (req, res) => {
 
 export const updateTask = (req, res) => {
 	try {
-		const { name, description, activities } = req.body;
+		const { name, description, visible, activities } = req.body;
 
 		if (!name) {
 			return res.status(400).json({ message: 'El nombre de la tarea es requerido' });
@@ -505,7 +540,8 @@ export const updateTask = (req, res) => {
 		}, {
 			"$set": {
 				"units.$[i].tasks.$[j].name": name,
-				"units.$[i].tasks.$[j].description": description
+				"units.$[i].tasks.$[j].description": description,
+				"units.$[i].tasks.$[j].visible": visible
 			}
 		}, {
 			new: true,
