@@ -175,7 +175,7 @@ export const updateUnit = (req, res) => {
 			if (result) {
 				return res.status(201).json({ message: "La unidad ha sido actualizada satisfactoriamente", updatedCourse: result })
 			} else {
-				return res.status(400).json({ message: "Unidad no encontrada" });
+				return res.status(404).json({ message: "Unidad no encontrada" });
 			}
 		});
 	}

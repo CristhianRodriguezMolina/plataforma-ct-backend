@@ -423,7 +423,7 @@ describe('Update an unit', () => {
 			})
 			.expect(201)
 			.expect((res) => {
-				assert.strictEqual(res.body.message, "The unit has been updated satisfatorily");
+				assert.strictEqual(res.body.message, "La unidad ha sido actualizada satisfactoriamente");
 			})
 			.end((err) => {
 				if (err) return done(err);
@@ -464,7 +464,7 @@ describe('Update an unit', () => {
 			.set('x-access-token', userToken)
 			.expect(404)
 			.expect((res) => {
-				assert.strictEqual(res.body.message, "unit not found");
+				assert.strictEqual(res.body.message, "Unidad no encontrada");
 			})
 			.end((err) => {
 				if (err) return done(err);
