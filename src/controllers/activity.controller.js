@@ -2,6 +2,7 @@
 import { model } from 'mongoose';
 import Activity from '../models/Activity';
 import TaskActivity from '../models/TaskActivity';
+import StudentActivity from '../models/StudentActivity';
 
 //API modules imports
 import * as logicSequenceCtrl from './logic-sequence.controller';
@@ -204,10 +205,17 @@ export const deleteActivityById = (req, res) => {
 							return res.status(500).json({ message: "Unexpected error, try again later!" })
 						}
 
+						//Se borran las entidades TaksActivity en caso de que se borre la actividad asociada
 						TaskActivity.deleteMany({ activity: activity._id }, (e) => {
 							if (e) return res.status(500).json({ message: "Unexpected error, try again later!" });
-							return res.status(200).json({ message: "The activity has been deleted satisfactorily" });
-						});
+						}).then(() => {
+							//Se borran las entidades StudentActivity en caso de que se borre la actividad asociada
+							StudentActivity.deleteMany({ activity: activity._id }, (e) => {
+								if (e) return res.status(500).json({ message: "Unexpected error, try again later!" });
+								return res.status(200).json({ message: "The student activity has been deleted satisfactorily" });
+							});
+						})
+
 					});
 				}).catch((e) => {
 					console.log("ERROR found in deleteActivityById(activity.controller)")

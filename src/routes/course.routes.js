@@ -34,7 +34,7 @@ router.delete('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOr
 router.put('/unit/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateUnit);
 
 //Route for add actvitities to a task
-router.post('/task/activity/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.addActivitiesToTask);
+router.post('/task/activity/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.addActivitiesToTask);
 
 // Route for Create a task
 router.post('/task/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createTask);
