@@ -4,6 +4,7 @@ import CourseStudent from '../models/CourseStudent';
 import Person from '../models/Person';
 import Activity from '../models/Activity';
 import TaskActivity from '../models/TaskActivity';
+import StudentActivity from '../models/StudentActivity';
 
 export const getMyCourses = async (req, res) => {
 	try {
@@ -108,6 +109,12 @@ export const deleteCourse = async (req, res) => {
 			return res.status(400).json({ message: 'Curso no encontrado' });
 		}
 
+		await TaskActivity.deleteMany({ course: req.params.id }); //Se borran las entidades TaksActivity en caso de que se borre el curso asociado
+
+		await StudentActivity.deleteMany({ course: req.params.id }); //Se borran las entidades StudentActivity en caso de que se borre el curso asociado
+
+		await CourseStudent.deleteMany({ course: req.params.id }); //Se borran las entidades CourseStudent en caso de que se borre el curso asociado
+
 		return res.status(200).json({ message: `El curso fue borrado con exito`, deletedCourse })
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error borrando el curso "${deleteCourse.name}"` })
@@ -133,6 +140,10 @@ export const deleteUnit = async (req, res) => {
 		}
 
 		unitToDelete.remove();
+
+		await TaskActivity.deleteMany({ unit: req.params.unitId }); //Se borran las entidades TaksActivity en caso de que se borre la unidad asociada
+
+		await StudentActivity.deleteMany({ unit: req.params.unitId }); //Se borran las entidades StudentActivity en caso de que se borre el curso asociado
 
 		const updatedCourse = await course.save();
 
@@ -379,6 +390,9 @@ export const removeStudentsByCourseId = async (req, res) => {
 					if (err) console.log(error);
 					course.students -= 1;
 					await course.save();
+
+					await StudentActivity.deleteMany({ course: req.params.courseId, student: req.params.studentId }); //Se borran las entidades StudentActivity en caso de que se borre el estudiante asociado del curso asociado
+
 					return res.status(201).json({ message: "Estudiante eliminado satisfactoriamente" });
 				});
 			}
@@ -462,9 +476,10 @@ export const addActivitiesToTask = (req, res) => {
 					try {
 						const activityExists = await Activity.exists({ _id: activity._id });
 						if (activityExists) {
-							const tAExists = await TaskActivity.exists({ task: req.params.taskId, activity: activity._id, course: course._id });
+							const tAExists = await TaskActivity.exists({ task: req.params.taskId, unit: req.params.unitId, activity: activity._id, course: course._id });
 							if (!tAExists) {
-								taskActivities.push(new TaskActivity({ task: req.params.taskId, activity: activity._id, course: course._id }));
+
+								taskActivities.push(new TaskActivity({ task: req.params.taskId, unit: req.params.unitId, activity: activity._id, course: course._id }));
 								resolve();
 							}
 							else {
@@ -594,7 +609,9 @@ export const deleteTask = (req, res) => {
 
 				const updatedCourse = await course.save();
 
-				await TaskActivity.deleteMany({ task: req.params.taskId });
+				await TaskActivity.deleteMany({ task: req.params.taskId }); //Se borran las entidades TaksActivity en caso de que se borre la tarea asociada
+
+				await StudentActivity.deleteMany({ task: req.params.taskId }); //Se borran las entidades StudentActivity en caso de que se borre la tarea asociada
 
 				return res.status(201).json({ message: "The task has been deleted satisfatorily", updatedCourse })
 			} else {

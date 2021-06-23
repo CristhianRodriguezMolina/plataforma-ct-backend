@@ -2,6 +2,7 @@
 import Person from '../models/Person';
 import CourseStudent from '../models/CourseStudent';
 import Course from '../models/Course';
+import StudentActivity from '../models/StudentActivity';
 
 //METODO QUE OBTIENE UN USUARIO POR SU _id
 export const getUserById = async (req, res) => {
@@ -102,7 +103,9 @@ export const deleteUserById = async (req, res) => {
 
 			await Course.updateMany({ _id: { $in: courseStudents } }, { $inc: { students: -1 } });
 
-			await CourseStudent.deleteMany({ student: deletedUser._id });
+			await CourseStudent.deleteMany({ student: deletedUser._id }); //Se borran las entidades CourseStudent en caso de que se borre el estudiante asociado
+
+			await StudentActivity.deleteMany({ student: deletedUser._id }); //Se borran las entidades StudentActivity en caso de que se borre el estudiante asociado
 		}
 
 		res.status(200).json({ deletedUser, message: "Usuario borrado con exito" });
