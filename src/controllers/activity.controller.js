@@ -212,7 +212,7 @@ export const deleteActivityById = (req, res) => {
 							//Se borran las entidades StudentActivity en caso de que se borre la actividad asociada
 							StudentActivity.deleteMany({ activity: activity._id }, (e) => {
 								if (e) return res.status(500).json({ message: "Unexpected error, try again later!" });
-								return res.status(200).json({ message: "The student activity has been deleted satisfactorily" });
+								return res.status(200).json({ message: "The activity has been deleted satisfactorily" });
 							});
 						})
 

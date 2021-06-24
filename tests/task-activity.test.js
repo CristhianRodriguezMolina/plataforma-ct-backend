@@ -11,8 +11,9 @@ import assert from "assert";
 var userToken = null;
 var tempActivities = null;
 var taskID = null;
+var unitID = null;
 
-describe('REQUEST /api/activity', () => {
+describe('REQUEST /api/course/task/activity/', () => {
     //Obtaining user token for do the tests
     before(done => {
         let userTokenPath = path.join(__dirname, './static_test/userToken.txt');
@@ -55,10 +56,21 @@ describe('REQUEST /api/activity', () => {
     });
 
     describe('Add activities to a task', () => {
+        before((done) => {
+            let unitIDPath = path.join(__dirname, './static_test/unitID.txt');
+            try {
+                unitID = fs.readFileSync(unitIDPath, 'utf8');
+                console.log('Unit ID defined');
+                done();
+            } catch (err) {
+                console.log('Unit ID not found');
+                done(err);
+            }
+        });
 
         it('Responds with a json containing a message for notify No token provided', (done) => {
             request(app)
-                .post(`/api/course/task/activity/${taskID}`)
+                .post(`/api/course/task/activity/${unitID}/${taskID}`)
                 .send({
                     activities: [
                         {
@@ -82,7 +94,7 @@ describe('REQUEST /api/activity', () => {
 
         it('Responds with a json containing a message for notify activities not found', (done) => {
             request(app)
-                .post(`/api/course/task/activity/${taskID}`)
+                .post(`/api/course/task/activity/${unitID}/${taskID}`)
                 .set('Accept', 'application/json')
                 .set('x-access-token', userToken)
                 .expect(400)
@@ -97,7 +109,7 @@ describe('REQUEST /api/activity', () => {
 
         it('Responds with a json containing a message for notify task not found', (done) => {
             request(app)
-                .post('/api/course/task/activity/666666666666666666666666')
+                .post('/api/course/task/activity/666666666666666666666666/666666666666666666666666')
                 .send({
                     activities: [
                         {
@@ -122,7 +134,7 @@ describe('REQUEST /api/activity', () => {
 
         it('Responds with a json containing a message for notify activities accepted: 1, activities denied: 0', (done) => {
             request(app)
-                .post(`/api/course/task/activity/${taskID}`)
+                .post(`/api/course/task/activity/${unitID}/${taskID}`)
                 .send({
                     activities: [
                         {
@@ -145,7 +157,7 @@ describe('REQUEST /api/activity', () => {
 
         it('Responds with a json containing a message for notify activities accepted: 1, activities denied: 1', (done) => {
             request(app)
-                .post(`/api/course/task/activity/${taskID}`)
+                .post(`/api/course/task/activity/${unitID}/${taskID}`)
                 .send({
                     activities: [
                         {
@@ -172,7 +184,7 @@ describe('REQUEST /api/activity', () => {
 
         it('Responds with a json containing a message for notify activities accepted: 0, activities denied: 2', (done) => {
             request(app)
-                .post(`/api/course/task/activity/${taskID}`)
+                .post(`/api/course/task/activity/${unitID}/${taskID}`)
                 .send({
                     activities: [
                         {
