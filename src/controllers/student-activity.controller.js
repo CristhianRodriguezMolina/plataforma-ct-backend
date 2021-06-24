@@ -39,7 +39,9 @@ export const getStudentActivityById = async (req, res) => {
 
 export const getStudentActivityByForeignIds = async (req, res) => {
 	try {
-		console.log(req.body)
+		if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
+			return res.status(400).json({ message: 'No envio datos para buscar la entidad student activity' })
+		}
 		const studentActivity = await StudentActivity.find(req.body);
 
 		if (!studentActivity) {

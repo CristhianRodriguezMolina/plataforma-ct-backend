@@ -10,7 +10,7 @@ import { authJwt } from '../middlewares';
 router.get('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], studentActivityCtrl.getAllStudentActivities);
 
 // Route for get a student activity entity by its foreign ids
-router.get('/foreign', [authJwt.verifyToken], studentActivityCtrl.getStudentActivityByForeignIds);
+router.post('/foreign', [authJwt.verifyToken], studentActivityCtrl.getStudentActivityByForeignIds);
 
 // Route for get all the student activity entities
 router.get('/:id', [authJwt.verifyToken], studentActivityCtrl.getStudentActivityById);
