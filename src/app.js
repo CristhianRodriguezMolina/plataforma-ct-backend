@@ -26,7 +26,7 @@ createAdmin();
 // SETTINGS
 
 // Set the port
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 4000);
 
 //Middlewares
 app.use(cors());
