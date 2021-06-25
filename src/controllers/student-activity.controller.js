@@ -42,13 +42,14 @@ export const getStudentActivityByForeignIds = async (req, res) => {
 		if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
 			return res.status(400).json({ message: 'No envio datos para buscar la entidad student activity' })
 		}
+
 		const studentActivity = await StudentActivity.find(req.body);
 
 		if (!studentActivity) {
 			return res.status(400).json({ message: 'Entidad student activity no encontrada o inexistente' })
 		}
 
-		return res.status(200).json({ message: 'Entidad student activity creada', studentActivity });
+		return res.status(200).json({ message: 'Entidad student activity obtenida satisfactoriamente', studentActivity });
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Ha ocurrido un error en el servidor" })

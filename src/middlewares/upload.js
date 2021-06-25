@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 // Image upload settings
 const storageImg = multer.diskStorage({
     destination: (req, file, cb) => {
-        const folderPath = path.join(__dirname, '../../static_content/i');
+        const folderPath = path.join(__dirname, `../../static_content/${req.body.folder}`);
 
         if (!fs.existsSync(folderPath)) {
             mkdirp(folderPath).then(made => {
