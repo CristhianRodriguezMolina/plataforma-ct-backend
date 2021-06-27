@@ -19,6 +19,21 @@ export const getUserById = async (req, res) => {
 	}
 };
 
+//METODO QUE OBTIENE UN USUARIO POR SU ID
+export const getUserByIdentification = async (req, res) => {
+	try {
+		const user = await Person.findOne({ id: req.params.id });
+		if (!user) {
+			return res.status(404).json({ message: "Usuario no encontrado o inexistente!" });
+		}
+
+		res.status(200).json({ user, message: "Usuario encontrado satisfactoriamente!" });
+	} catch (error) {
+		res.status(500).json({ message: "An internal error has ocurred" });
+		throw Error(`Error while serching a Users by id ${error}`);
+	}
+};
+
 //METODO QUE OBTIENE UN USUARIO POR SU ROLE
 export const getUserByRole = async (req, res) => {
 	try {
@@ -73,6 +88,30 @@ export const updateUserPasswordById = async (req, res) => {
 	try {
 		const { password } = req.body;
 		const user = req.user;
+
+		// Encrypting the password
+		user.password = await Person.encryptPassword(password);
+
+		// Saving the user in the DB
+		const updatedUser = await user.save();
+
+		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con exito' });
+	} catch (error) {
+		res.status(500).json({ message: "Un error interno ha ocurrido" });
+		throw Error(`Error mientras se actualizaba un usuario: ${error}`);
+	}
+}
+
+//RUTA QUE ACTUALIZA UN USUARIO POR SU ID Y SU CONTRASEÑA ACTUAL
+export const updateUserPasswordByIdAndCurrentPassword = async (req, res) => {
+	try {
+		const { currentPassword, password } = req.body;
+		const user = req.user;
+
+		//Verifica que la contraseña coincida con la del usuario
+		if (!await Person.matchPassword(currentPassword, user.password)) {
+			return res.status(400).json({ message: 'Contraseña actual incorrecta' });
+		}
 
 		// Encrypting the password
 		user.password = await Person.encryptPassword(password);

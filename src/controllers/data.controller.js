@@ -1,7 +1,44 @@
 import LogicSequence from '../models/LogicSequence';
 import Course from '../models/Course';
+import Person from '../models/Person';
 import fs from 'fs';
 import path from 'path';
+
+export const uploadProfileUserImg = async (req, res) => {
+	try {
+		const { file, body } = req;
+
+		if (!(file && body)) {
+			return res.status(400).json({ message: "The image couldn't be uploaded, make sure you are uploading an image file or check your internet connection" });
+		}
+
+		const user = await Person.findById(req.params.userId);
+
+		if (!user) {
+			return res.status(400).json({ message: 'Usuario no encontrado o inexsistente al subir una imagen' });
+		}
+
+		if (user.image) {
+			let filePath = path.join(__dirname, `../../static_content/profile/${user.image}`);
+
+			if (fs.existsSync(filePath)) {
+				fs.unlink(filePath, (er) => {
+					if (er) return console.log(er);
+					console.log(`file deleted successfully: ${filePath}`);
+				});
+			}
+		}
+
+		user.image = file.filename;
+
+		const updatedUser = await user.save();
+
+		return res.status(201).json({ message: 'Imagen de perfil actualizada satisfactoriamente', updatedUser })
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
 
 export const uploadCourseImg = async (req, res) => {
 	try {

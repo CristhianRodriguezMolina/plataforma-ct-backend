@@ -14,4 +14,7 @@ router.post('/upload-img/:logic_sequence_id/:sequence_card_id', [authJwt.verifyT
 //Route to upload an image from a course or a profile
 router.post('/upload-img-course/:courseId', [authJwt.verifyToken, authJwt.isAdminOrTeacher, upload.uploadImg], dataCtrl.uploadCourseImg);
 
+//Route to upload an image from a course or a profile
+router.post('/upload-profile-img-user/:userId', [authJwt.verifyToken, authJwt.isAdminOrTeacher, upload.uploadImg], dataCtrl.uploadProfileUserImg);
+
 export default router;
