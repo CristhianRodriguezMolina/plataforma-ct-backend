@@ -175,7 +175,9 @@ export const updateUnit = (req, res) => {
 			"$set": {
 				"units.$.name": unit.name,
 				"units.$.description": unit.description,
-				"units.$.visible": unit.visible
+				"units.$.visible": unit.visible,
+				"units.$.is_due_date": unit.is_due_date,
+				"units.$.due_date": unit.due_date
 			}
 		}, {
 			new: true
@@ -538,7 +540,7 @@ export const addActivitiesToTask = (req, res) => {
 
 export const updateTask = (req, res) => {
 	try {
-		const { name, description, visible, activities } = req.body;
+		const { name, description, visible, is_due_date, due_date } = req.body;
 
 		if (!name) {
 			return res.status(400).json({ message: 'El nombre de la tarea es requerido' });
@@ -556,7 +558,10 @@ export const updateTask = (req, res) => {
 			"$set": {
 				"units.$[i].tasks.$[j].name": name,
 				"units.$[i].tasks.$[j].description": description,
-				"units.$[i].tasks.$[j].visible": visible
+				"units.$[i].tasks.$[j].visible": visible,
+				"units.$[i].tasks.$[j].is_due_date": is_due_date,
+				"units.$[i].tasks.$[j].due_date": due_date
+
 			}
 		}, {
 			new: true,
