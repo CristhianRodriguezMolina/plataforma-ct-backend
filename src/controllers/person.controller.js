@@ -108,6 +108,8 @@ export const updateUserPasswordByIdAndCurrentPassword = async (req, res) => {
 		const { currentPassword, password } = req.body;
 		const user = req.user;
 
+		console.log(await Person.encryptPassword(currentPassword))
+
 		//Verifica que la contraseña coincida con la del usuario
 		if (!await Person.matchPassword(currentPassword, user.password)) {
 			return res.status(400).json({ message: 'Contraseña actual incorrecta' });
