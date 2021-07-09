@@ -39,6 +39,9 @@ router.post('/task/activity/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAd
 // Route for Create a task
 router.post('/task/:courseId/:unitId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.createTask);
 
+//Route for add actvitities to a task
+router.put('/task/activity/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.sortTaskActivities);
+
 //Route for Update a task
 router.put('/task/:courseId/:unitId/:taskId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateTask);
 

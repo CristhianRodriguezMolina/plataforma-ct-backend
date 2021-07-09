@@ -260,7 +260,7 @@ export const getStudentsNotInCourse = async (req, res) => {
 
 export const getActivities = async (req, res) => {
 	try {
-		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id'); // To get just the activities id
+		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id').sort({ position: 1 }); // To get just the activities id
 
 		// Convert the object array to a array just of _id's
 		taskActivities = Array.from(taskActivities, taskActivity => taskActivity.activity);
@@ -270,9 +270,14 @@ export const getActivities = async (req, res) => {
 		}
 
 		// Get the activities that are in the array of _id's
-		const activities = await Activity.find({ _id: { $in: taskActivities } });
+		const unsortedActivities = await Activity.find({ _id: { $in: taskActivities } });
 
-		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+		var sortedActivities = [];
+		for (let i = 0; i < taskActivities.length; i++) {
+			sortedActivities.push(unsortedActivities.filter((activity) => activity._id.equals(taskActivities[i]))[0]);
+		}
+
+		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities: sortedActivities });
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Hubo un error obteniendo las actividades de la tarea" });
@@ -453,12 +458,38 @@ export const createTask = (req, res) => {
 	};
 };
 
-export const addActivitiesToTask = (req, res) => {
+export const sortTaskActivities = async (req, res) => {
+	const { activities } = req.body;
+
+	console.log('activities');
+	console.log(activities);
+
+	for (let i = 0; i < activities.length; i++) {
+		try {
+			console.log('activities[i]._id');
+			console.log(activities[i]._id);
+			var result = await TaskActivity.updateOne({ task: req.params.taskId, activity: activities[i]._id }, { $set: { position: i } });
+		}
+		catch {
+			return res.status(500).json({ message: "Unexpected error, try again later" })
+		}
+	}
+
+	return res.status(201).json({ message: "list updated satisfactorily" });
+}
+
+export const addActivitiesToTask = async (req, res) => {
 	try {
 		const { activities } = req.body;
 		if (!activities) {
 			return res.status(400).json({ message: "Las actividades no fueron encontradas" });
 		}
+
+		const taskActivitiesNumber = await TaskActivity.countDocuments({ task: req.params.taskId });
+
+		console.log('taskActivitiesNumber');
+		console.log(taskActivitiesNumber);
+
 		Course.findOne({ "units.tasks._id": req.params.taskId }, (err, course) => {
 			if (err) {
 				console.log('err');
@@ -472,8 +503,9 @@ export const addActivitiesToTask = (req, res) => {
 
 			let promises = [];
 
+
 			//Promise for verify it an activity exists 
-			const verifyActivity = (activity) => {
+			const verifyActivity = (activity, index) => {
 				return new Promise(async (resolve, reject) => {
 					try {
 						const activityExists = await Activity.exists({ _id: activity._id });
@@ -481,7 +513,8 @@ export const addActivitiesToTask = (req, res) => {
 							const tAExists = await TaskActivity.exists({ task: req.params.taskId, unit: req.params.unitId, activity: activity._id, course: course._id });
 							if (!tAExists) {
 
-								taskActivities.push(new TaskActivity({ task: req.params.taskId, unit: req.params.unitId, activity: activity._id, course: course._id }));
+								taskActivities.push(new TaskActivity({ task: req.params.taskId, unit: req.params.unitId, activity: activity._id, course: course._id, position: taskActivitiesNumber + index }));
+
 								resolve();
 							}
 							else {
@@ -505,9 +538,9 @@ export const addActivitiesToTask = (req, res) => {
 				});
 			}
 
-			activities.map(async (activity) => {
+			activities.map(async (activity, index) => {
 
-				promises.push(verifyActivity(activity));
+				promises.push(verifyActivity(activity, index));
 
 			});
 
