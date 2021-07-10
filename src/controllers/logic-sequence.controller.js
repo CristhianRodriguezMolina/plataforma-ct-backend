@@ -1,6 +1,4 @@
 //DB Schema imports
-import e from 'cors';
-import { model } from 'mongoose';
 import LogicSequence from '../models/LogicSequence';
 
 //Get all logic sequences from DB

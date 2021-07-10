@@ -6,6 +6,7 @@ import StudentActivity from '../models/StudentActivity';
 
 //API modules imports
 import * as logicSequenceCtrl from './logic-sequence.controller';
+import * as mazeCtrl from './maze.controller';
 
 //Get all activities from DB
 export const getActivities = (req, res) => {
@@ -85,8 +86,7 @@ export const createActivity = (req, res) => {
 			if (type.localeCompare("logic_sequence") == 0) {
 				child = logicSequenceCtrl.createLogicSequence(savedActivity._id);
 			} else if (type.localeCompare("maze") == 0) {
-				console.log("maze");
-				//Do some stuff
+				child = mazeCtrl.createMaze(savedActivity._id)
 			} else if (type.localeCompare("questionnaire") == 0) {
 				console.log("questionnaire");
 				//Do some stuff

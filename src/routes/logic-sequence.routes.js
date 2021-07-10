@@ -18,7 +18,6 @@ router.delete('/sequence-card/:id/:sequence_card_id', [authJwt.verifyToken, auth
 //Update a sequence card by logic sequence id
 router.put('/sequence-card/:id/:sequence_card_id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], logicSequenceCtrl.updateSequenceCardByLogicSequenceId);
 
-
 //Get logic sequence by activity id
 router.get('/:id', [authJwt.verifyToken], logicSequenceCtrl.getLogicSequenceIdByActivityId);
 
