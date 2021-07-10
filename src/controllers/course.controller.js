@@ -31,7 +31,7 @@ export const getMyStudentCourses = async (req, res) => {
 
 		return res.status(200).json({ message: "Cursos obtenidos satisfactoriamente", courses });
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		return res.status(500).json({ message: "Hubo un error obteniendo los cursos de un estudiante" });
 	}
 }
@@ -260,7 +260,7 @@ export const getStudentsNotInCourse = async (req, res) => {
 
 export const getActivities = async (req, res) => {
 	try {
-		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id').sort({ position: 1 }); // To get just the activities id
+		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id').sort({ position: 1 }); // To get just the activities id //Sort (1: asc, -1: desc)
 
 		// Convert the object array to a array just of _id's
 		taskActivities = Array.from(taskActivities, taskActivity => taskActivity.activity);
@@ -461,13 +461,8 @@ export const createTask = (req, res) => {
 export const sortTaskActivities = async (req, res) => {
 	const { activities } = req.body;
 
-	console.log('activities');
-	console.log(activities);
-
 	for (let i = 0; i < activities.length; i++) {
 		try {
-			console.log('activities[i]._id');
-			console.log(activities[i]._id);
 			var result = await TaskActivity.updateOne({ task: req.params.taskId, activity: activities[i]._id }, { $set: { position: i } });
 		}
 		catch {
@@ -487,8 +482,7 @@ export const addActivitiesToTask = async (req, res) => {
 
 		const taskActivitiesNumber = await TaskActivity.countDocuments({ task: req.params.taskId });
 
-		console.log('taskActivitiesNumber');
-		console.log(taskActivitiesNumber);
+
 
 		Course.findOne({ "units.tasks._id": req.params.taskId }, (err, course) => {
 			if (err) {
