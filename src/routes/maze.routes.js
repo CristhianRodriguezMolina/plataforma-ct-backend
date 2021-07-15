@@ -9,4 +9,7 @@ import { authJwt } from '../middlewares';
 //Get maze by activity id
 router.get('/:id', [authJwt.verifyToken], mazeCtrl.getMazeByActivityId);
 
+//Resize maze
+router.put('/resize/:id', mazeCtrl.resizeMaze);
+
 export default router;

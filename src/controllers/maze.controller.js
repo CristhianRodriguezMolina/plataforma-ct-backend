@@ -22,6 +22,8 @@ export const createMaze = async (activity_id) => {
 		//Creating a new Maze model
 		const newMaze = new Maze({ activity_id, cells: mazeCells });
 
+		console.log(newMaze);
+
 		// Save the Maze in the DB
 		newMaze.save((err) => {
 			if (err) {
@@ -53,5 +55,66 @@ export const getMazeByActivityId = (req, res) => {
 	} catch (e) {
 		console.log(e)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
+
+export const resizeMaze = async(req, res) => {
+	try {
+		const { newCells, columns, rows } = req.body;
+
+
+		const maze = await Maze.findById({ _id: req.params.id });
+
+		if (maze) {
+
+			var oldCells = maze.cells;
+
+			for(let i = 0; i < columns; i++) {
+				for(let j = 0; j < rows; j++) {
+					let tempOldCell = oldCells.find(cell => cell.j === j && cell.i === i);
+					let tempNewCell = newCells.find(cell => cell.j === j && cell.i === i);
+
+					if(tempOldCell) {
+
+						if(tempOldCell.type !== tempNewCell.type) {
+							tempOldCell.type = tempNewCell.type;
+						}
+					} else {
+						const cell = {
+							i,
+							j,
+							type: 'EMPTY'
+						}
+						oldCells.push(cell);
+					}
+				}
+			}
+
+			if(columns < maze.cols || rows < maze.rows){
+
+				let eliminatedLeftoverCellsMatrix = oldCells.filter(cell => {
+					return cell.j < rows && cell.i < columns;
+				});
+
+				maze.cells = eliminatedLeftoverCellsMatrix;
+			
+			}
+			
+			maze.cols = columns;
+			maze.rows = rows;
+
+			await maze.save();
+		
+
+			res.status(201).json({message: "Cells updated satisfactorily", maze});
+
+		}
+		else {
+			res.status(404).json({messge: "Maze not found"});
+		}
+	} 
+	catch (e) {
+		console.log(e);
+		return res.status(500).json({message: "Unexpected error, please try again later!"});
 	}
 }
