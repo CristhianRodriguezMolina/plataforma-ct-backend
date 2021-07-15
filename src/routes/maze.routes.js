@@ -12,4 +12,7 @@ router.get('/:id', [authJwt.verifyToken], mazeCtrl.getMazeByActivityId);
 //Resize maze
 router.put('/resize/:id', mazeCtrl.resizeMaze);
 
+//Update maze
+router.put('/id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], mazeCtrl.updateMazeByActivityId);
+
 export default router;
