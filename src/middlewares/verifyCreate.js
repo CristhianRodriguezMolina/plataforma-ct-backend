@@ -58,7 +58,7 @@ export const verifyFields = async (req, res, next) => {
         return res.status(200).json({ message: 'Por favor, ingrese la edad' });
     }
 
-    if (!genre || genre.length <= 0) {
+    if (!genre || genre.length <= 0 || genre === 'NA') {
         return res.status(200).json({ message: 'Por favor, ingrese el genero' });
     }
 

@@ -9,6 +9,7 @@ import path from "path"; //To join paths
 import personRoutes from "./routes/person.routes";
 import courseRoutes from "./routes/course.routes";
 import logicSequenceRoutes from './routes/logic-sequence.routes';
+import mazeRoutes from './routes/maze.routes';
 import activityRoutes from './routes/activity.routes';
 import dataRoutes from './routes/data.routes';
 import authRoutes from './routes/auth.routes';
@@ -45,6 +46,7 @@ app.use("/api/person", personRoutes); //Route to user administration
 app.use("/api/course", courseRoutes); //Route to course administration
 app.use('/api/activity', activityRoutes); //Route to activities administration
 app.use('/api/logic-sequence', logicSequenceRoutes); //Route to logic sequence administration
+app.use('/api/maze', mazeRoutes); //Route to maze administration
 app.use('/api/data', dataRoutes); //Route to data uploading administration
 app.use('/api/student-activity', studentActivityRoutes); //Route to student activity entity administration
 
