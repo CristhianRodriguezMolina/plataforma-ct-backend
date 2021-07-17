@@ -237,7 +237,7 @@ describe('REQUEST /api/activity', () => {
 				})
 				.expect(201)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, "The activity has been updated satisfactorily");
+					assert.strictEqual(res.body.message, "Actividad actualizada");
 				})
 				.end((err) => {
 					if (err) return done(err);
