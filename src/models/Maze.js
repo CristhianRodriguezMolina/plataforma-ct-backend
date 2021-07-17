@@ -6,6 +6,7 @@ const MazeSchema = new Schema({
 	'rows': { type: Number, default: 5, required: true },
 	'instructions': [{
 		'type': { type: String, required: true },
+		'num': { type: String, required: true }
 	}],
 	'cells': [{
 		'i': { type: Number, required: true },

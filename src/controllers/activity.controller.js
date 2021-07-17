@@ -137,8 +137,7 @@ export const updateActivityById = (req, res) => {
 				if (activity.type.localeCompare("logic_sequence") == 0) {
 					child = logicSequenceCtrl.updateLogicSequenceByActivityId(activity._id, req.body.child);
 				} else if (activity.type.localeCompare("maze") == 0) {
-					console.log("maze");
-					//Do some stuff
+					child = mazeCtrl.updateMazeByActivityId(activity._id, req.body.child);
 				} else if (activity.type.localeCompare("questionnaire") == 0) {
 					console.log("questionnaire");
 					//Do some stuff
@@ -148,7 +147,7 @@ export const updateActivityById = (req, res) => {
 					Activity.findByIdAndUpdate(req.params.id, req.body.activity, {
 						new: true
 					}).then(() => {
-						return res.status(201).json({ message: "The activity has been updated satisfactorily" });
+						return res.status(201).json({ message: 'Actividad actualizada', updatedActivity: activity });
 					}).catch(error => {
 						console.log("ERROR found in updateActivityById(activity.controller)");
 						console.error(error);
