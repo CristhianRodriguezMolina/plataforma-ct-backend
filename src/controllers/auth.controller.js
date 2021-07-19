@@ -32,7 +32,7 @@ export const signin = async (req, res) => {
 		if (await Person.matchPassword(password, user.password)) {
 			//Genera un token de sesion al usuario
 			const token = jwt.sign({ id: user._id }, config.SECRET, {
-				expiresIn: 604800 //Tiempo de caducidad: 24 hours
+				expiresIn: 604800 //Tiempo de caducidad: 24 hours 604800
 			});
 
 			//Retorna los datos de inicio de sesion al cliente
