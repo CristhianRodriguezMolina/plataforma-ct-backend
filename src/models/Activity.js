@@ -8,7 +8,8 @@ const ActivitySchema = new Schema({
     'score': { type: Number, default: 0 },
     'completed': { type: Boolean, default: false },
     'public': { type: Boolean, default: false },
-    'date': { type: Date, default: Date.now }
+    'date': { type: Date, default: Date.now },
+    'verified': { type: Boolean, default: false, required: true },
 }, { timestamps: true });
 
 export default model('Activity', ActivitySchema);

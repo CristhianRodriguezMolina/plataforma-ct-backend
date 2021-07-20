@@ -58,12 +58,14 @@ export const getMazeByActivityId = (req, res) => {
 
 export const resizeMaze = async (req, res) => {
 	try {
-		const { cells, columns, rows } = req.body;
+		const { cells, columns, rows, verified } = req.body;
 
 
 		var maze = await Maze.findOne({ activity_id: req.params.id });
 
 		if (maze) {
+
+			maze.verified = verified;
 
 			maze = saveCells(maze, cells, columns, rows);
 
@@ -135,13 +137,15 @@ const saveCells = (maze, newCells, columns, rows) => {
 
 export const updateMazeByActivityId = async (activity_id, maze_body) => {
 	try {
-		const { instructions, cells, columns, rows } = maze_body;
+		const { instructions, cells, columns, rows, verified } = maze_body;
 
 		var maze = await Maze.findOne({ activity_id: activity_id });
 
 		if (maze) {
 
 			// maze = saveCells(maze, cells, columns, rows);
+
+			maze.verified = verified;
 
 			maze.cells = cells;
 
