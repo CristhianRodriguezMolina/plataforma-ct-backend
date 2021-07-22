@@ -464,6 +464,7 @@ export const sortTaskActivities = async (req, res) => {
 	for (let i = 0; i < activities.length; i++) {
 		try {
 			var result = await TaskActivity.updateOne({ task: req.params.taskId, activity: activities[i]._id }, { $set: { position: i } });
+			console.log(result);
 		}
 		catch {
 			return res.status(500).json({ message: "Unexpected error, try again later" })
@@ -722,5 +723,68 @@ export const getAllActivitiesInCourse = (req, res) => {
 		console.log('e');
 		console.log(e);
 		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+	}
+}
+
+export const getLastActivityToContinue = async (req, res) => {
+	try {
+		var lastActivityInfo;
+		var lastTask;
+		var lastActivity;
+		var pos = -1;
+	
+
+
+		const course = await Course.findById({ _id: req.params.courseId });
+
+		let isThereLastActivity = false;
+		if(!course) return res.status(404).json({message: "No se pudo encontrar la información"});
+
+		let tasks = course.units.id(req.params.unitId).tasks;
+
+
+		for(let i = 0; i < tasks.length && !isThereLastActivity; i++) {
+			if(tasks[i].visible) {
+
+				const taskActivities = await TaskActivity.find({ task: tasks[i]._id }).sort({ position: 1 });
+
+				for(let j = 0; j < taskActivities.length && !isThereLastActivity; j++) {
+					const studentActivity = await StudentActivity.findOne({ student: req.params.studentId, task: tasks[i]._id, activity: taskActivities[j].activity });
+					if(studentActivity) {
+						if(!studentActivity.complete) {
+							isThereLastActivity = true;
+							lastTask = tasks[i];
+							lastActivity = await Activity.findById({ _id: taskActivities[j].activity });
+							pos = taskActivities[j].position;
+						}
+					}
+					else {
+						isThereLastActivity = true;
+						lastTask = tasks[i];
+						lastActivity = await Activity.findById({ _id: taskActivities[j].activity });
+						pos = taskActivities[j].position;
+					}
+				}
+			}
+		}
+
+		if(isThereLastActivity && lastTask && lastActivity) {
+			lastActivityInfo = {
+				taskId: lastTask._id,
+				taskName: lastTask.name,
+				taskDes: lastTask.description,
+				activityId: lastActivity._id,
+				activityName: lastActivity.name,
+				activityDes: lastActivity.description,
+				activityPos: pos
+			}
+
+			return res.status(200).json({ message: 'Ultima actividad obtenida satisfactoriamente', success: true, lastActivityInfo });
+		}
+		return res.status(200).json({ message: 'No se pudo encontrar la ultima actividad', success: false});
+	}
+	catch (e) {
+		console.log(e);
+		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde'})
 	}
 }

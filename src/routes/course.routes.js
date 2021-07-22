@@ -78,4 +78,7 @@ router.post('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], co
 // Route for remove students from course
 router.delete('/students/:courseId/:studentId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.removeStudentsByCourseId);
 
+// Route for get the last activity to continue the latest task
+router.get('/students/last-activity/:studentId/:courseId/:unitId', [authJwt.verifyToken], courseCtrl.getLastActivityToContinue);
+
 export default router;
