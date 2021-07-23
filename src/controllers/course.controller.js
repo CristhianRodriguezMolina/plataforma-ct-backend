@@ -770,6 +770,7 @@ export const getLastActivityToContinue = async (req, res) => {
 
 		if(isThereLastActivity && lastTask && lastActivity) {
 			lastActivityInfo = {
+				activityType: lastActivity.type,
 				taskId: lastTask._id,
 				taskName: lastTask.name,
 				taskDes: lastTask.description,
