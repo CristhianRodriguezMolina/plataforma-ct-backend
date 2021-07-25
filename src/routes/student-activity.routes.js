@@ -10,7 +10,7 @@ import { authJwt } from '../middlewares';
 router.get('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher], studentActivityCtrl.getAllStudentActivities);
 
 // Route for get a student activity entity by its foreign ids
-router.post('/foreign', [authJwt.verifyToken], studentActivityCtrl.getStudentActivityByForeignIds);
+router.post('/foreign', [authJwt.verifyToken], studentActivityCtrl.getStudentActivityByForeignIds); // ITS A GET PETITION BUT IT NEEDS TO BE POST TO SEND THING THROUGHT THE BODY
 
 // Route for get all the student activity entities
 router.get('/:id', [authJwt.verifyToken], studentActivityCtrl.getStudentActivityById);

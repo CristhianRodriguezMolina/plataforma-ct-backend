@@ -47,6 +47,8 @@ export const getStudentActivityByForeignIds = async (req, res) => {
 
 		if (!studentActivity) {
 			return res.status(400).json({ message: 'Entidad student activity no encontrada o inexistente' })
+		} else if (studentActivity.length <= 0) {
+			return res.status(400).json({ message: 'Entidad student activity no encontrada o inexistente' })
 		}
 
 		return res.status(200).json({ message: 'Entidad student activity obtenida satisfactoriamente', studentActivity });
@@ -145,7 +147,7 @@ export const updateStudentActivityByForeignIds = async (req, res) => {
 		const { grade, complete } = req.body;
 
 		if (!grade && !complete) {
-			return res.status(400).json({ message: 'Falta los datos para editar el ' });
+			return res.status(400).json({ message: 'Falta los datos para editar la entidad StudentActivity' });
 		}
 
 		const updatedStudentActivity = await StudentActivity.findOneAndUpdate({

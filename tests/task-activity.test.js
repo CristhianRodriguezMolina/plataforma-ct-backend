@@ -210,6 +210,11 @@ describe('REQUEST /api/course/task/activity/', () => {
         });
     });
 
+    // RUNNING STUDENT-ACTIVITY TESTS -----------------------------------------------------------------------------------------------------------------------------------------
+    //TESTS FOR ADD AND REMOVE RELATIONS BETWEEN ACTIVITIES AND STUDENTS
+    describe('Running student-activities tests', () => {
+        require('./student-activity.test');
+    });
 
     describe('Remove activities to a task', () => {
         it('Responds with a json containing a message for notify no token provided', done => {
