@@ -783,9 +783,23 @@ export const getLastActivityToContinue = async (req, res) => {
 			return res.status(200).json({ message: 'Ultima actividad obtenida satisfactoriamente', success: true, lastActivityInfo });
 		}
 		return res.status(200).json({ message: 'No se pudo encontrar la ultima actividad', success: false});
-	}
-	catch (e) {
+	} catch (e) {
 		console.log(e);
 		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde'})
 	}
-}
+};
+
+export const getStudentIndividualProgress = async(req, res) => {
+	try {
+
+		const student = await Person.findById(req.params.studentId);
+		const studentActivities = await StudentActivity.find({ student: req.params.studentId, course: req.params.courseId });
+		const course = await Course.findById(req.params.courseId);
+		const tasksActivities = await TaskActivity.find({ course: req.params.courseId });
+
+		return res.status(200).json({ message: 'Información del progreso del studiante obtenida satisfactoriamente', studentActivities, course, tasksActivities, student });
+	} catch (e) {
+		console.log(e);
+		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde'})
+	}
+};

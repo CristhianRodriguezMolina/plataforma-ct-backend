@@ -78,6 +78,9 @@ router.post('/students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], co
 // Route for remove students from course
 router.delete('/students/:courseId/:studentId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.removeStudentsByCourseId);
 
+// Get student individual progress 
+router.get('/students/individual-progress/:studentId/:courseId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudentIndividualProgress);
+
 // Route for get the last activity to continue the latest task
 router.get('/students/last-activity/:studentId/:courseId/:unitId', [authJwt.verifyToken], courseCtrl.getLastActivityToContinue);
 
