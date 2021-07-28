@@ -7,7 +7,8 @@ const StudentActivitySchema = new Schema({
 	'activity': { ref: 'Activity', type: Schema.Types.ObjectId },
 	'student': { ref: 'Person', type: Schema.Types.ObjectId },
 	'grade': { type: Number, default: 0 },
-	'complete': { type: Boolean, default: false }
+	'complete': { type: Boolean, default: false },
+	'date': Date
 }, { timestamps: true });
 
 export default model('StudentActivity', StudentActivitySchema);

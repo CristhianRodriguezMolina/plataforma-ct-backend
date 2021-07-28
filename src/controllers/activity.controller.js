@@ -39,7 +39,7 @@ export const getMyActivities = (req, res) => {
 		Activity.find({ creator: req.params.creatorId }, null, { sort: { name: 1 } },
 			(err, activities) => {
 				if (err) return res.status(500).json({ message: "Unexpected error, try again later!" });
-				Activity.countDocuments((error, count) => {
+				Activity.countDocuments({ creator: req.params.creatorId }, (error, count) => {
 					if (error) {
 						console.log("ERROR when we trying to get all activities");
 						console.log(error);

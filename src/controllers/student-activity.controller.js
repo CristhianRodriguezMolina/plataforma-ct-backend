@@ -128,7 +128,11 @@ export const updateStudentActivityById = async (req, res) => {
 			return res.status(400).json({ message: 'Falta los datos para editar la entidad StudentActivity' });
 		}
 
-		const updatedStudentActivity = await StudentActivity.findByIdAndUpdate(req.params.id, req.body, { new: true });
+		const updatedStudentActivity = await StudentActivity.findByIdAndUpdate(req.params.id, {
+			grade,
+			complete,
+			date: Date.now()
+		}, { new: true });
 
 		if (!updatedStudentActivity) {
 			return res.status(400).json({ message: 'Entidad StudentActivity no entontrada' });
