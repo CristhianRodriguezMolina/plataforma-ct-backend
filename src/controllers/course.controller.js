@@ -799,8 +799,10 @@ export const getStudentIndividualProgress = async(req, res) => {
 		const studentActivities = await StudentActivity.find({ student: req.params.studentId, course: req.params.courseId });
 		const course = await Course.findById(req.params.courseId);
 		const tasksActivities = await TaskActivity.find({ course: req.params.courseId });
+		const tasksActivitiesId = Array.from(tasksActivities, taskActivity => taskActivity.activity);
+		const activities = await Activity.find({ _id: { $in: tasksActivitiesId }});
 
-		return res.status(200).json({ message: 'Información del progreso del studiante obtenida satisfactoriamente', studentActivities, course, tasksActivities, student });
+		return res.status(200).json({ message: 'Información del progreso del studiante obtenida satisfactoriamente', studentActivities, course, tasksActivities, student, activities });
 	} catch (e) {
 		console.log(e);
 		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde'})
