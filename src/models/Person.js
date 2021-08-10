@@ -9,7 +9,7 @@ const PersonSchema = new Schema({
     'genre': { type: String, default: "NA" },
     'image': { type: String, default: "", trim: true },
     'email': { type: String, default: "", trim: true },
-    'achievements': { type: String, default: "", trim: true },
+    'description': { type: String, default: "", trim: true },
     'id': { type: String, require: true, unique: true },
     'password': { type: String, require: true },
     'actived': { type: Boolean, default: true },
