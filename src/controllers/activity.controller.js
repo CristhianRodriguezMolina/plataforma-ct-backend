@@ -3,6 +3,8 @@ import { model } from 'mongoose';
 import Activity from '../models/Activity';
 import TaskActivity from '../models/TaskActivity';
 import StudentActivity from '../models/StudentActivity';
+import Maze from '../models/Maze';
+import LogicSequence from '../models/LogicSequence';
 
 //API modules imports
 import * as logicSequenceCtrl from './logic-sequence.controller';
@@ -239,5 +241,36 @@ export const deleteActivityById = (req, res) => {
 	} catch (e) {
 		console.log(e)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+};
+
+export const getActivityById = async(req, res) => {
+	try {
+		const activity = await Activity.findById(req.params.id);
+		var inheritedActivity;
+		if(!activity) {
+			return res.status(404).json({ message: 'Actividad no encontrada' });
+		}
+
+		console.log(activity);
+		if(activity.type === 'logic_sequence') {
+			inheritedActivity = await LogicSequence.findOne({ activity_id: activity._id });
+		} else if(activity.type === 'maze') {
+			inheritedActivity = await Maze.findOne({ activity_id: activity._id });
+		} else if(activity.type === 'cuestionnaire') {
+			//do some cuestionnaire stuff	
+		}
+
+		console.log(inheritedActivity)
+
+		if (!inheritedActivity) {
+			return res.status(404).json({ message: 'Actividad no encontrada' });
+		}
+
+		return res.status(200).json({ message: 'Actividad obtenida satisfactoriamente', activity, inheritedActivity});
+	}
+	catch (e) {
+		console.log(e);
+		return res.status(500).json({ message: 'Hubo un error inesperado, por favor intentelo mas tarde' });
 	}
 };

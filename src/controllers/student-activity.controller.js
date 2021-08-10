@@ -40,21 +40,21 @@ export const getStudentActivityById = async (req, res) => {
 export const getStudentActivityByForeignIds = async (req, res) => {
 	try {
 		if (req.body.constructor === Object && Object.keys(req.body).length === 0) {
-			return res.status(400).json({ message: 'No envio datos para buscar la entidad student activity' })
+			return res.status(400).json({ message: 'No envio datos para buscar la entidad student activity', found: false });
 		}
 
 		const studentActivity = await StudentActivity.find(req.body);
-
+		console.log(req.body)
 		if (!studentActivity) {
-			return res.status(400).json({ message: 'Entidad student activity no encontrada o inexistente' })
+			return res.status(200).json({ message: 'Entidad student activity no encontrada o inexistente', found: false });
 		} else if (studentActivity.length <= 0) {
-			return res.status(400).json({ message: 'Entidad student activity no encontrada o inexistente' })
+			return res.status(200).json({ message: 'Entidad student activity no encontrada o inexistente', found: false });
 		}
 
-		return res.status(200).json({ message: 'Entidad student activity obtenida satisfactoriamente', studentActivity });
+		return res.status(200).json({ message: 'Entidad student activity obtenida satisfactoriamente', found: true, studentActivity });
 	} catch (error) {
 		console.log(error)
-		return res.status(500).json({ message: "Ha ocurrido un error en el servidor" })
+		return res.status(500).json({ message: "Ha ocurrido un error en el servidor", found: false });
 	}
 }
 
