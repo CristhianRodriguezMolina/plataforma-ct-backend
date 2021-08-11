@@ -396,7 +396,7 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Responds with a json containing a message for notify that a student-activity not has been founded', done => {
+		it('Responds with a json containing a message for notify that a student-activity has not been found', done => {
 			request(app)
 				.get(`/api/student-activity/666666666666666666666666`)
 				.set('x-access-token', userToken)
@@ -417,6 +417,7 @@ describe('REQUEST /api/activity', () => {
 				.expect(400)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, 'No envio datos para buscar la entidad student activity');
+					assert.strictEqual(res.body.found, false);
 				})
 				.end((err) => {
 					if (err) return done(err);
@@ -433,9 +434,10 @@ describe('REQUEST /api/activity', () => {
 					task: '666666666666666666666666',
 				})
 				.set('x-access-token', userToken)
-				.expect(400)
+				.expect(200)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, 'Entidad student activity no encontrada o inexistente');
+					assert.strictEqual(res.body.found, false);
 				})
 				.end((err) => {
 					if (err) return done(err);
@@ -457,7 +459,7 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Responds with a json containing a message for notify that a student-activity has been founded', done => {
+		it('Responds with a json containing a message for notify that a student-activity has been found', done => {
 			request(app)
 				.post(`/api/student-activity/foreign`)
 				.send({
@@ -469,6 +471,7 @@ describe('REQUEST /api/activity', () => {
 				.expect(200)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, 'Entidad student activity obtenida satisfactoriamente');
+					assert.strictEqual(res.body.found, true);
 				})
 				.end((err) => {
 					if (err) return done(err);

@@ -44,7 +44,6 @@ export const getStudentActivityByForeignIds = async (req, res) => {
 		}
 
 		const studentActivity = await StudentActivity.find(req.body);
-		console.log(req.body)
 		if (!studentActivity) {
 			return res.status(200).json({ message: 'Entidad student activity no encontrada o inexistente', found: false });
 		} else if (studentActivity.length <= 0) {

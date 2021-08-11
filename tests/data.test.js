@@ -69,8 +69,9 @@ describe('REQUEST /api/data', () => {
 				.set('Content-Type', 'multipart/form-data')
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
-				.attach('image', path.join(__dirname, './static_test/image.png'))
 				.field('name', "My activity with an image")
+				.field('folder', 'i')
+				.attach('image', path.join(__dirname, './static_test/image.png'))
 				.expect(201)
 				.end(function (err, res) {
 					if (err) return done(err);
