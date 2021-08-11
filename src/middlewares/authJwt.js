@@ -17,6 +17,7 @@ export const verifyToken = async (req, res, next) => {
         req.userId = tokenDecoded.id;
 
         const user = await Person.findById(req.userId);
+
         if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
         req.userRole = user.role;

@@ -60,6 +60,13 @@ export const resizeMaze = async (req, res) => {
 	try {
 		const { cells, columns, rows, verified } = req.body;
 
+		if(!cells || !columns || !rows) {
+			return res.status(400).json({message: '¡Campos requeridos!'});
+		}
+
+		if(columns <= 0 || rows <= 0) {
+			return res.status(400).json({message: 'El número de columnas o filas debe de ser mayor a cero'});
+		}
 
 		var maze = await Maze.findOne({ activity_id: req.params.id });
 
@@ -71,11 +78,11 @@ export const resizeMaze = async (req, res) => {
 
 			await maze.save();
 
-			res.status(201).json({ message: "Cells updated satisfactorily", maze });
+			return res.status(201).json({ message: "Cells updated satisfactorily", maze });
 
 		}
 		else {
-			res.status(404).json({ message: "Maze not found" });
+			return res.status(404).json({ message: "Maze not found" });
 		}
 	}
 	catch (e) {
@@ -99,6 +106,7 @@ const saveCells = (maze, newCells, columns, rows) => {
 
 	for (let i = 0; i < columns; i++) {
 		for (let j = 0; j < rows; j++) {
+
 			let tempOldCell = oldCells.find(cell => cell.j === j && cell.i === i);
 			let tempNewCell = newCells.find(cell => cell.j === j && cell.i === i);
 
@@ -137,16 +145,14 @@ const saveCells = (maze, newCells, columns, rows) => {
 
 export const updateMazeByActivityId = async (activity_id, maze_body) => {
 	try {
-		const { instructions, cells, columns, rows, verified } = maze_body;
+		const { instructions, cells, columns, rows } = maze_body;
 
 		var maze = await Maze.findOne({ activity_id: activity_id });
 
 		if (maze) {
 
 			// maze = saveCells(maze, cells, columns, rows);
-
-			maze.verified = verified;
-
+	
 			maze.cells = cells;
 
 			maze.instructions = instructions;

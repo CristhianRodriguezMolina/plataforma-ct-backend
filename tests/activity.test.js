@@ -11,7 +11,7 @@ import assert from "assert";
 var activityID = null;
 var userToken = null;
 var personID = null
-
+var activityMazeID = null;
 
 /**
  * Testing activity endpoints
@@ -144,9 +144,41 @@ describe('REQUEST /api/activity', () => {
 		});
 	});
 
+	describe('Creating an activity with type maze', () => {
+		it('Responds with a json containing a message for notify the operation success', done => {
+			request(app)
+				.post('/api/activity')
+				.send({
+					name: "My first activity",
+					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
+					type: "maze",
+					creator: `${personID}`
+				})
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
+				.expect(201)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "The activity has been created satisfactorily");
+				})
+				.end((err, res) => {
+					if (err) return done(err);
+					let filePath = path.join(__dirname, './static_test/activityMazeID.txt');
+					fs.writeFile(filePath, res.body.activity_id, (err) => {
+						if (err) console.error(err);
+					});
+					done();
+				});
+		});
+	});
+
 	// RUNNING LOGIC SEQUENCE TESTS -----------------------------------------------------------------------------------------------------------------------------------------
 	describe('Running logic sequence tests', () => {
 		require('./logic-sequence.test');
+	});
+
+	// RUNNING MAZE TESTS -----------------------------------------------------------------------------------------------------------------------------------------
+	describe('Running logic sequence tests', () => {
+		require('./maze.test');
 	});
 
 
@@ -406,6 +438,79 @@ describe('REQUEST /api/activity', () => {
 		});
 	});
 
+	describe('Updating an activity with maze type', () => {
+
+		it('Responds with a json containing a message for notify the operation success', done => {
+			request(app)
+				.put(`/api/activity/${activityID}`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
+				.send({
+					activity: {
+						name: "My first activity",
+						description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+					},
+					child: [{
+						cells: [
+								{ i: 0, j: 0, type: 'EMPTY' },	
+								{ i: 0, j: 1, type: 'EMPTY' },
+								{ i: 0, j: 2, type: 'EMPTY' },
+								{ i: 0, j: 3, type: 'EMPTY' },
+								{ i: 0, j: 4, type: 'EMPTY' },
+								{ i: 1, j: 0, type: 'EMPTY' },
+								{ i: 1, j: 1, type: 'EMPTY' },
+								{ i: 1, j: 2, type: 'EMPTY' },
+								{ i: 1, j: 3, type: 'EMPTY' },
+								{ i: 1, j: 4, type: 'EMPTY' },
+								{ i: 2, j: 0, type: 'EMPTY' },
+								{ i: 2, j: 1, type: 'BLOCK' },
+								{ i: 2, j: 2, type: 'BLOCK' },
+								{ i: 2, j: 3, type: 'EMPTY' },
+								{ i: 2, j: 4, type: 'EMPTY' },
+								{ i: 3, j: 0, type: 'EMPTY' },
+								{ i: 3, j: 1, type: 'EMPTY' },
+								{ i: 3, j: 2, type: 'EMPTY' },
+								{ i: 3, j: 3, type: 'END' },
+								{ i: 3, j: 4, type: 'BLOCK' },
+								{ i: 4, j: 0, type: 'BLOCK' },
+								{ i: 4, j: 1, type: 'START' },
+								{ i: 4, j: 2, type: 'EMPTY' },
+								{ i: 4, j: 3, type: 'EMPTY' },
+								{ i: 4, j: 4, type: 'EMPTY' }
+							],
+						instructions: [
+							{ type: 'LEFT', num: '3' },
+							{ type: 'FORWARD', num: '0' },
+							{ type: 'FORWARD', num: '4' },
+							{ type: 'RIGHT', num: '14' },
+							{ type: 'FORWARD', num: '5' },
+							{ type: 'RIGHT', num: '2' },
+							{ type: 'FORWARD', num: '7' },
+							{ type: 'FORWARD', num: '8' },
+							{ type: 'FORWARD', num: '6' },
+							{ type: 'RIGHT', num: '1' },
+							{ type: 'FORWARD', num: '9' },
+							{ type: 'FORWARD', num: '11' },
+							{ type: 'FORWARD', num: '10' },
+							{ type: 'FORWARD', num: '12' },
+							{ type: 'FORWARD', num: '13' },
+							{ type: 'LEFT', num: '15' }
+						  ],
+						columns: "5",
+						rows: "5",
+					}
+				]})
+				.expect(201)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "Actividad actualizada");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+	});
+
 	// LIST ACTIVITIES -----------------------------------------------------------------------------------------------------------------------------------------
 	describe('List activities', () => {
 
@@ -494,6 +599,36 @@ describe('REQUEST /api/activity', () => {
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
 				.expect(500)
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+	});
+
+	describe('Deleting an activity with maze type', () => {
+			
+		before((done) => {
+			let activityMazeIDPath = path.join(__dirname, './static_test/activityMazeID.txt');
+			try {
+				activityMazeID = fs.readFileSync(activityMazeIDPath, 'utf8');
+				console.log('Activity ID of maze defined');
+				done();
+			} catch (err) {
+				console.log('Activity ID of maze not found');
+				done(err);
+			}
+		});
+
+		it('Respond with a json containing a message for notify the operation success', done => {
+			request(app)
+				.delete(`/api/activity/${activityMazeID}`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
+				.expect(200)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "The activity has been deleted satisfactorily");
+				})
 				.end((err) => {
 					if (err) return done(err);
 					done();
