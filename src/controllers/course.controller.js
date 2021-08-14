@@ -798,7 +798,7 @@ export const getStudentIndividualProgress = async (req, res) => {
 		const student = await Person.findById(req.params.studentId);
 		const studentActivities = await StudentActivity.find({ student: req.params.studentId, course: req.params.courseId });
 		const course = await Course.findById(req.params.courseId);
-		const tasksActivities = await TaskActivity.find({ course: req.params.courseId });
+		const tasksActivities = await TaskActivity.find({ course: req.params.courseId }).populate("activity");
 
 		return res.status(200).json({ message: 'Información del progreso del studiante obtenida satisfactoriamente', studentActivities, course, tasksActivities, student });
 	} catch (e) {
