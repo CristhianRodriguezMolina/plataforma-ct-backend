@@ -304,7 +304,7 @@ export const getActivitesNotInTask = async (req, res) => {
 		// Get just the verified activities
 		// const verfiedActivities = activities.map(activity => activity.verified === true);
 
-		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities: verfiedActivities });
+		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Hubo un error obteniendo actividades de la tarea" });
@@ -735,26 +735,26 @@ export const getLastActivityToContinue = async (req, res) => {
 		var lastTask;
 		var lastActivity;
 		var pos = -1;
-	
+
 
 
 		const course = await Course.findById({ _id: req.params.courseId });
 
 		let isThereLastActivity = false;
-		if(!course) return res.status(404).json({message: "No se pudo encontrar la información"});
+		if (!course) return res.status(404).json({ message: "No se pudo encontrar la información" });
 
 		let tasks = course.units.id(req.params.unitId).tasks;
 
 
-		for(let i = 0; i < tasks.length && !isThereLastActivity; i++) {
-			if(tasks[i].visible) {
+		for (let i = 0; i < tasks.length && !isThereLastActivity; i++) {
+			if (tasks[i].visible) {
 
 				const taskActivities = await TaskActivity.find({ task: tasks[i]._id }).sort({ position: 1 });
 
-				for(let j = 0; j < taskActivities.length && !isThereLastActivity; j++) {
+				for (let j = 0; j < taskActivities.length && !isThereLastActivity; j++) {
 					const studentActivity = await StudentActivity.findOne({ student: req.params.studentId, task: tasks[i]._id, activity: taskActivities[j].activity });
-					if(studentActivity) {
-						if(!studentActivity.complete) {
+					if (studentActivity) {
+						if (!studentActivity.complete) {
 							isThereLastActivity = true;
 							lastTask = tasks[i];
 							lastActivity = await Activity.findById({ _id: taskActivities[j].activity });
@@ -771,7 +771,7 @@ export const getLastActivityToContinue = async (req, res) => {
 			}
 		}
 
-		if(isThereLastActivity && lastTask && lastActivity) {
+		if (isThereLastActivity && lastTask && lastActivity) {
 			lastActivityInfo = {
 				activityType: lastActivity.type,
 				taskId: lastTask._id,
@@ -785,26 +785,24 @@ export const getLastActivityToContinue = async (req, res) => {
 
 			return res.status(200).json({ message: 'Ultima actividad obtenida satisfactoriamente', success: true, lastActivityInfo });
 		}
-		return res.status(200).json({ message: 'No se pudo encontrar la ultima actividad', success: false});
+		return res.status(200).json({ message: 'No se pudo encontrar la ultima actividad', success: false });
 	} catch (e) {
 		console.log(e);
-		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde'})
+		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde' })
 	}
 };
 
-export const getStudentIndividualProgress = async(req, res) => {
+export const getStudentIndividualProgress = async (req, res) => {
 	try {
 
 		const student = await Person.findById(req.params.studentId);
 		const studentActivities = await StudentActivity.find({ student: req.params.studentId, course: req.params.courseId });
 		const course = await Course.findById(req.params.courseId);
-		const tasksActivities = await TaskActivity.find({ course: req.params.courseId });
-		const tasksActivitiesId = Array.from(tasksActivities, taskActivity => taskActivity.activity);
-		const activities = await Activity.find({ _id: { $in: tasksActivitiesId }});
+		const tasksActivities = await TaskActivity.find({ course: req.params.courseId }).populate("activity");
 
-		return res.status(200).json({ message: 'Información del progreso del studiante obtenida satisfactoriamente', studentActivities, course, tasksActivities, student, activities });
+		return res.status(200).json({ message: 'Información del progreso del studiante obtenida satisfactoriamente', studentActivities, course, tasksActivities, student });
 	} catch (e) {
 		console.log(e);
-		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde'})
+		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde' })
 	}
 };
