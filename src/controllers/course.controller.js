@@ -129,10 +129,6 @@ export const deleteUnit = async (req, res) => {
 			return res.status(400).json({ message: 'Curso no encontrado' });
 		}
 
-		if (!course) {
-			return res.status(404).json({ message: 'Curso no encontrado' });
-		}
-
 		const unitToDelete = course.units.id(req.params.unitId);
 
 		if (!unitToDelete) {

@@ -5,10 +5,12 @@ import TaskActivity from '../models/TaskActivity';
 import StudentActivity from '../models/StudentActivity';
 import Maze from '../models/Maze';
 import LogicSequence from '../models/LogicSequence';
+import Questionnaire from '../models/Questionnaire';
 
 //API modules imports
 import * as logicSequenceCtrl from './logic-sequence.controller';
 import * as mazeCtrl from './maze.controller';
+import * as questionnaireCtrl from '../controllers/questionnaire.controller';
 
 //Get all activities from DB
 export const getActivities = (req, res) => {
@@ -86,12 +88,11 @@ export const createActivity = (req, res) => {
 			if (err) return res.status(500).json({ message: "Unexpected error, try again later!" })
 			let child;
 			if (type.localeCompare("logic_sequence") == 0) {
-				child = logicSequenceCtrl.createLogicSequence(savedActivity._id);
+				child = logicSequenceCtrl.createLogicSequence(savedActivity._id); 	// logic_sequence
 			} else if (type.localeCompare("maze") == 0) {
-				child = mazeCtrl.createMaze(savedActivity._id)
+				child = mazeCtrl.createMaze(savedActivity._id) 						// maze
 			} else if (type.localeCompare("questionnaire") == 0) {
-				console.log("questionnaire");
-				//Do some stuff
+				child = questionnaireCtrl.createQuestionnaire(savedActivity._id)	// questionnaire
 			}
 
 			if (child) {
@@ -137,12 +138,11 @@ export const updateActivityById = (req, res) => {
 			if (activity) {
 				let child;
 				if (activity.type.localeCompare("logic_sequence") == 0) {
-					child = logicSequenceCtrl.updateLogicSequenceByActivityId(activity._id, req.body.child);
+					child = logicSequenceCtrl.updateLogicSequenceByActivityId(activity._id, req.body.child); 	// logic_sequence
 				} else if (activity.type.localeCompare("maze") == 0) {
-					child = mazeCtrl.updateMazeByActivityId(activity._id, req.body.child);
+					child = mazeCtrl.updateMazeByActivityId(activity._id, req.body.child); 						// maze
 				} else if (activity.type.localeCompare("questionnaire") == 0) {
-					console.log("questionnaire");
-					//Do some stuff
+					child = questionnaireCtrl.updateQuestionnaireByActivityId(activity._id, req.body.child); 	// questionnaire
 				}
 				if (!child) return res.status(500).json({ message: "Unexpected error, try again later!" });
 				child.then(() => {
@@ -189,13 +189,11 @@ export const deleteActivityById = (req, res) => {
 
 			let child;
 			if (activity.type.localeCompare("logic_sequence") == 0) {
-				child = logicSequenceCtrl.deleteLogicSequenceByActivityId(activity._id);
+				child = logicSequenceCtrl.deleteLogicSequenceByActivityId(activity._id);	// logic_sequence
 			} else if (activity.type.localeCompare("maze") == 0) {
-				console.log("maze");
-				//Do some stuff
+				child = mazeCtrl.deleteMazeByActivityId(activity._id);						// maze
 			} else if (activity.type.localeCompare("questionnaire") == 0) {
-				console.log("questionnaire");
-				//Do some stuff
+				child = questionnaireCtrl.deleteQuestionnaireByActivityId(activity._id);	// questionnaire
 			}
 
 			if (child) {
@@ -244,21 +242,21 @@ export const deleteActivityById = (req, res) => {
 	}
 };
 
-export const getActivityById = async(req, res) => {
+export const getActivityById = async (req, res) => {
 	try {
 		const activity = await Activity.findById(req.params.id);
 		var inheritedActivity;
-		if(!activity) {
+		if (!activity) {
 			return res.status(404).json({ message: 'Actividad no encontrada' });
 		}
 
 		console.log(activity);
-		if(activity.type === 'logic_sequence') {
-			inheritedActivity = await LogicSequence.findOne({ activity_id: activity._id });
-		} else if(activity.type === 'maze') {
-			inheritedActivity = await Maze.findOne({ activity_id: activity._id });
-		} else if(activity.type === 'cuestionnaire') {
-			//do some cuestionnaire stuff	
+		if (activity.type === 'logic_sequence') {
+			inheritedActivity = await LogicSequence.findOne({ activity_id: activity._id });		// logic_sequence
+		} else if (activity.type === 'maze') {
+			inheritedActivity = await Maze.findOne({ activity_id: activity._id });				// maze
+		} else if (activity.type === 'questionnaire') {
+			inheritedActivity = await Questionnaire.findOne({ activity_id: activity._id });		// questionnaire
 		}
 
 		console.log(inheritedActivity)
@@ -267,7 +265,7 @@ export const getActivityById = async(req, res) => {
 			return res.status(404).json({ message: 'Actividad no encontrada' });
 		}
 
-		return res.status(200).json({ message: 'Actividad obtenida satisfactoriamente', activity, inheritedActivity});
+		return res.status(200).json({ message: 'Actividad obtenida satisfactoriamente', activity, inheritedActivity });
 	}
 	catch (e) {
 		console.log(e);
