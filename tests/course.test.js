@@ -15,7 +15,7 @@ var personID = null;
 var userToken = null;
 
 /**
- * Testing course tests
+ * Testing course endpoints
  */
 describe('REQUEST /api/course', () => {
 	before((done) => {
