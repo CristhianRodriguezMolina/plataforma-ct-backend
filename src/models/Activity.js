@@ -10,6 +10,7 @@ const ActivitySchema = new Schema({
     'public': { type: Boolean, default: false },
     'date': { type: Date, default: Date.now },
     'verified': { type: Boolean, default: false, required: true },
+	'difficulty': { type: String, default: 'beginner' }
 }, { timestamps: true });
 
 export default model('Activity', ActivitySchema);
