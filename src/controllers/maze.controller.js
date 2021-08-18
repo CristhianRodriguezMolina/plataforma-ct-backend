@@ -60,12 +60,12 @@ export const resizeMaze = async (req, res) => {
 	try {
 		const { cells, columns, rows, verified } = req.body;
 
-		if(!cells || !columns || !rows) {
-			return res.status(400).json({message: '¡Campos requeridos!'});
+		if (!cells || !columns || !rows) {
+			return res.status(400).json({ message: '¡Campos requeridos!' });
 		}
 
-		if(columns <= 0 || rows <= 0) {
-			return res.status(400).json({message: 'El número de columnas o filas debe de ser mayor a cero'});
+		if (columns <= 0 || rows <= 0) {
+			return res.status(400).json({ message: 'El número de columnas o filas debe de ser mayor a cero' });
 		}
 
 		var maze = await Maze.findOne({ activity_id: req.params.id });
@@ -143,6 +143,24 @@ const saveCells = (maze, newCells, columns, rows) => {
 
 };
 
+//Delete a maze
+export const deleteMazeByActivityId = async (activity_id) => {
+	try {
+
+		Maze.findOneAndDelete({ activity_id }, (err) => {
+			if (err) {
+				console.log("ERROR found in deleteMazeByActivityId(maze.controller)");
+				console.error(err);
+				throw "Unexpected error, try again later!";
+			}
+		});
+	} catch (e) {
+		console.log(e)
+		throw "Unexpected error, try again later!";
+	}
+};
+
+// Update a maze
 export const updateMazeByActivityId = async (activity_id, maze_body) => {
 	try {
 		const { instructions, cells, columns, rows } = maze_body;
@@ -152,11 +170,14 @@ export const updateMazeByActivityId = async (activity_id, maze_body) => {
 		if (maze) {
 
 			// maze = saveCells(maze, cells, columns, rows);
-	
+
+			// Se actualizan las celdas del laberinto
 			maze.cells = cells;
 
+			// Se actualizan las instrucciones del laberinto
 			maze.instructions = instructions;
 
+			// Se guarda el laberinto
 			await maze.save();
 
 			return { message: "Laberinto actualizado satisfactoriamente" };

@@ -1,0 +1,287 @@
+//DB Schema imports
+import Questionnaire from "../models/Questionnaire";
+
+// Create questionnaire
+export const createQuestionnaire = async (activity_id) => {
+	try {
+		// The defatult opcions of a new questionnaire
+		const questions = [{
+			question: 'Pregunta 1',
+			options: [{
+				option: 'Opción 1',
+			}]
+		}]
+
+		//Creating a new questionnaire model
+		const newQuestionnaire = new Questionnaire({ activity_id, questions });
+
+		// Save the questionnaire in the DB
+		newQuestionnaire.save((err) => {
+			if (err) {
+				console.log("ERROR in createQuestionnaire (questionnaire.controller)");
+				console.error(err)
+				throw "Unexpected error, try again later!"
+			}
+		});
+	} catch (error) {
+		console.log(e)
+		throw "Unexpected error, try again later!"
+	}
+}
+
+// Get a questionnaire by the activity_id
+export const getQuestionnaireByActivityId = (req, res) => {
+	try {
+		Questionnaire.findOne({ activity_id: req.params.id }).populate("activity_id")
+			.then((result) => {
+				if (result) {
+					return res.status(200).json(result);
+				}
+				return res.status(400).json({ message: "Questionnaire not found" });
+			})
+			.catch(err => {
+				console.log("========== ERROR LOG IN QUESTIONNAIRE CONTROLLER getQuestionnaireByActivityId ==========")
+				console.error(err);
+				return res.status(500).json({ message: "An error has been found while we trying to get a Questionnaire" });
+			});
+	} catch (e) {
+		console.log(e)
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
+
+// Delete a questionnaire
+export const deleteQuestionnaireByActivityId = async (activity_id) => {
+	try {
+
+		Questionnaire.findOneAndDelete({ activity_id }, (err) => {
+			if (err) {
+				console.log("ERROR found in deleteQuestionnaireByActivityId(questionnaire.controller)");
+				console.error(err);
+				throw "Unexpected error, try again later!";
+			}
+		});
+	} catch (e) {
+		console.log(e)
+		throw "Unexpected error, try again later!";
+	}
+};
+
+// Update a questionnaire
+export const updateQuestionnaireByActivityId = async (activity_id, questionnaire_body) => {
+	try {
+		const { questions } = questionnaire_body;
+
+		var questionnaire = await Questionnaire.findOne({ activity_id: activity_id });
+
+		if (questionnaire) {
+
+			// Se actualizan las preguntas del cuestionario
+			questionnaire.questions = questions;
+
+			// Se guarda el cuestionario
+			await questionnaire.save();
+
+			return { message: "Cuestionario actualizado satisfactoriamente" };
+		} else {
+			return { message: "Cuestionario no encontrado" };
+		}
+
+	} catch (e) {
+		console.log(e)
+		throw "Unexpected error, try again later!";
+	}
+};
+
+// METHODS FOR QUESTIONS --------------------------------------------------------------------------------------
+
+// Create a new question in a questionnaire by the id
+export const createQuestionByQuestionnaireId = async (req, res) => {
+	try {
+
+		const questionnaire = await Questionnaire.findById(req.params.id);
+
+		if (!questionnaire) {
+			return res.status(400).json({ message: 'Cuestionario no encontrado o inexistente' })
+		}
+
+		questionnaire.questions.push({
+			question: `Pregunta ${questionnaire.questions.length + 1}`,
+			options: [{
+				option: 'Opción 1',
+			}]
+		});
+
+		const updatedQuestionnaire = await questionnaire.save();
+
+		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
+	} catch (error) {
+		console.log(e)
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
+
+// Delete a new question in a questionnaire by the id
+export const deleteQuestionByQuestionnaireId = async (req, res) => {
+	try {
+
+		const questionnaire = await Questionnaire.findById(req.params.id);
+
+		if (!questionnaire) {
+			return res.status(400).json({ message: 'Cuestionario no encontrado o inexistente' })
+		}
+
+		const questionToRemove = questionnaire.questions.id(req.params.questionId);
+
+		if (!questionToRemove) {
+			return res.status(404).json({ message: 'Pregunta no encontrada o inexistente' })
+		}
+
+		questionToRemove.remove();
+
+		const updatedQuestionnaire = await questionnaire.save();
+
+		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
+	} catch (error) {
+		console.log(e)
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
+
+// Update a new question in a questionnaire by the id
+export const updateQuestionByQuestionnaireId = async (req, res) => {
+	try {
+		const { question, image } = req.body;
+
+		if (!question && !image) {
+			return res.status(400).json({ message: "Campos requeridos!" });
+		}
+
+		const questionnaire = await Questionnaire.findById(req.params.id);
+
+		if (!questionnaire) {
+			return res.status(400).json({ message: 'Cuestionario no encontrado o inexistente' })
+		}
+
+		const questionToUpdate = questionnaire.questions.id(req.params.questionId);
+
+		if (!questionToUpdate) {
+			return res.status(404).json({ message: 'Pregunta no encontrada o inexistente' })
+		}
+
+		// The questionnaire question is updated
+		questionToUpdate.question = question;
+		questionToUpdate.image = image;
+
+		const updatedQuestionnaire = await questionnaire.save();
+
+		return res.status(201).json({ message: 'Pregunta del cuestionario actualizada satisfactoriamente', updatedQuestionnaire });
+	} catch (error) {
+		console.log(e)
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
+
+// METHODS FOR OPTIONS --------------------------------------------------------------------------------------
+
+// Create a new option in a question inside a questionnaire by the ids
+export const createOptionByQuestionnaireAndQuestionId = async (req, res) => {
+	try {
+		const questionnaire = await Questionnaire.findById(req.params.id);
+
+		if (!questionnaire) {
+			return res.status(400).json({ message: 'Cuestionario no encontrado o inexistente' })
+		}
+
+		const question = questionnaire.questions.id(req.params.questionId);
+
+		if (!question) {
+			return res.status(404).json({ message: 'Pregunta no encontrada o inexistente' })
+		}
+
+		// Add a new option to the question
+		question.options.push({
+			option: `Opción ${question.options.length + 1}`,
+		})
+
+		const updatedQuestionnaire = await questionnaire.save();
+
+		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
+	} catch (error) {
+		console.log(e)
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
+
+// Delete a new option in a question inside a questionnaire by the ids
+export const deleteOptionByQuestionnaireAndQuestionId = async (req, res) => {
+	try {
+		const questionnaire = await Questionnaire.findById(req.params.id);
+
+		if (!questionnaire) {
+			return res.status(400).json({ message: 'Cuestionario no encontrado o inexistente' })
+		}
+
+		const question = questionnaire.questions.id(req.params.questionId);
+
+		if (!question) {
+			return res.status(404).json({ message: 'Pregunta no encontrada o inexistente' })
+		}
+
+		const optionToRemove = question.options.id(req.params.optionId);
+
+		if (!optionToRemove) {
+			return res.status(404).json({ message: 'Option no encontrada o inexistente' })
+		}
+
+		optionToRemove.remove();
+
+		const updatedQuestionnaire = await questionnaire.save();
+
+		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
+	} catch (error) {
+		console.log(e)
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
+
+// Update a new option in a question inside a questionnaire by the ids
+export const updateOptionByQuestionnaireAndQuestionId = async (req, res) => {
+	try {
+		const { option, image, isCorrect } = req.body;
+
+		if (!option && !image) {
+			return res.status(400).json({ message: "Campos requeridos!" });
+		}
+
+		const questionnaire = await Questionnaire.findById(req.params.id);
+
+		if (!questionnaire) {
+			return res.status(400).json({ message: 'Cuestionario no encontrado o inexistente' })
+		}
+
+		const question = questionnaire.questions.id(req.params.questionId);
+
+		if (!question) {
+			return res.status(404).json({ message: 'Pregunta no encontrada o inexistente' })
+		}
+
+		const optionToUpdate = question.options.id(req.params.optionId);
+
+		if (!optionToUpdate) {
+			return res.status(404).json({ message: 'Option no encontrada o inexistente' })
+		}
+
+		// The question option is updated
+		optionToUpdate.option = option;
+		optionToUpdate.image = image;
+		optionToUpdate.isCorrect = isCorrect;
+
+		const updatedQuestionnaire = await questionnaire.save();
+
+		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
+	} catch (error) {
+		console.log(e)
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
