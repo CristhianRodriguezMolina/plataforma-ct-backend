@@ -206,7 +206,7 @@ export const createOptionByQuestionnaireAndQuestionId = async (req, res) => {
 
 		const updatedQuestionnaire = await questionnaire.save();
 
-		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
+		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestion: question });
 	} catch (error) {
 		console.log(e)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
