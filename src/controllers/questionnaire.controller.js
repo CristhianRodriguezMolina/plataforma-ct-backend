@@ -141,7 +141,7 @@ export const deleteQuestionByQuestionnaireId = async (req, res) => {
 
 		const updatedQuestionnaire = await questionnaire.save();
 
-		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
+		return res.status(201).json({ message: 'Pregunta del cuestionario eliminada satisfactoriamente', updatedQuestionnaire });
 	} catch (error) {
 		console.log(e)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
@@ -151,9 +151,9 @@ export const deleteQuestionByQuestionnaireId = async (req, res) => {
 // Update a new question in a questionnaire by the id
 export const updateQuestionByQuestionnaireId = async (req, res) => {
 	try {
-		const { question, image } = req.body;
+		const { question } = req.body;
 
-		if (!question && !image) {
+		if (!question) {
 			return res.status(400).json({ message: "Campos requeridos!" });
 		}
 
@@ -171,7 +171,6 @@ export const updateQuestionByQuestionnaireId = async (req, res) => {
 
 		// The questionnaire question is updated
 		questionToUpdate.question = question;
-		questionToUpdate.image = image;
 
 		const updatedQuestionnaire = await questionnaire.save();
 
@@ -238,7 +237,7 @@ export const deleteOptionByQuestionnaireAndQuestionId = async (req, res) => {
 
 		const updatedQuestionnaire = await questionnaire.save();
 
-		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
+		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestion: question });
 	} catch (error) {
 		console.log(e)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
