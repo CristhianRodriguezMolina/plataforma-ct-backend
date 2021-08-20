@@ -151,7 +151,7 @@ export const deleteQuestionByQuestionnaireId = async (req, res) => {
 // Update a new question in a questionnaire by the id
 export const updateQuestionByQuestionnaireId = async (req, res) => {
 	try {
-		const { question } = req.body;
+		const { question, options } = req.body;
 
 		if (!question) {
 			return res.status(400).json({ message: "Campos requeridos!" });
@@ -171,6 +171,7 @@ export const updateQuestionByQuestionnaireId = async (req, res) => {
 
 		// The questionnaire question is updated
 		questionToUpdate.question = question;
+		questionToUpdate.options = options;
 
 		const updatedQuestionnaire = await questionnaire.save();
 

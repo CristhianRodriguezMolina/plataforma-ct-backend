@@ -43,7 +43,7 @@ export const getMazeByActivityId = (req, res) => {
 				if (result) {
 					return res.status(200).json(result);
 				}
-				return res.status(400).json({ message: "Maze not found" });
+				return res.status(400).json({ message: "Laberinto no encontrado" });
 			})
 			.catch(err => {
 				console.log("========== ERROR LOG IN MAZE CONTROLLER getMazeIdByActivityId ==========")
