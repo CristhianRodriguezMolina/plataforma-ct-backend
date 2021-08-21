@@ -67,7 +67,7 @@ router.get('/tasks/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], course
 router.get('/not-in-course-students/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getStudentsNotInCourse);
 
 // Route for get the activities in a specific task
-router.get('/not-in-task-activities/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getActivitesNotInTask);
+router.get('/not-in-task-activities/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.getActivitiesNotInTask);
 
 // Route for update a course
 router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], courseCtrl.updateCourseById);

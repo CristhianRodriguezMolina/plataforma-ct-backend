@@ -46,7 +46,7 @@ export const uploadOptionImg = async (req, res) => {
 
 		const updatedQuestionnaire = await questionnaire.save();
 
-		return res.status(201).json({ message: 'Imagen del curso actualizada satisfactoriamente', updatedQuestion: question });
+		return res.status(201).json({ message: 'Imagen del cuestionario actualizada satisfactoriamente', updatedQuestion: question });
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
@@ -86,12 +86,88 @@ export const uploadQuestionImg = async (req, res) => {
 
 		const updatedQuestionnaire = await questionnaire.save();
 
-		return res.status(201).json({ message: 'Imagen del curso actualizada satisfactoriamente', updatedQuestionnaire });
+		return res.status(201).json({ message: 'Imagen del cuestionario actualizada satisfactoriamente', updatedQuestionnaire });
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
 	}
 };
+
+// Delete a question image
+export const deleteQuestionImg = async (req, res) => {
+	try {
+		const questionnaire = await Questionnaire.findById(req.params.questionnaireId);
+
+		if (!questionnaire) {
+			return res.status(400).json({ message: 'Cuestionario no encontrado o inexistente' })
+		}
+
+		const question = questionnaire.questions.id(req.params.questionId);
+
+		if (!question) {
+			return res.status(404).json({ message: 'Pregunta no encontrada o inexistente' })
+		}
+
+		let filePath = path.join(__dirname, `../../static_content/questionnaire/${question.image}`);
+
+		if (fs.existsSync(filePath)) {
+			fs.unlink(filePath, (er) => {
+				if (er) return console.log(er);
+				console.log(`file deleted successfully: ${filePath}`);
+			});
+		}
+
+		question.image = '';
+
+		const updatedQuestionnaire = await questionnaire.save();
+
+		return res.status(201).json({ message: 'Imagen del curso borrada satisfactoriamente', updatedQuestionnaire });
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
+
+// Delete an option image
+export const deleteOptionImg = async (req, res) => {
+	try {
+		const questionnaire = await Questionnaire.findById(req.params.questionnaireId);
+
+		if (!questionnaire) {
+			return res.status(400).json({ message: 'Cuestionario no encontrado o inexistente' })
+		}
+
+		const question = questionnaire.questions.id(req.params.questionId);
+
+		if (!question) {
+			return res.status(404).json({ message: 'Pregunta no encontrada o inexistente' })
+		}
+
+		const option = question.options.id(req.params.optionId);
+
+		if (!option) {
+			return res.status(404).json({ message: 'Option no encontrada o inexistente' })
+		}
+
+		let filePath = path.join(__dirname, `../../static_content/questionnaire/${option.image}`);
+
+		if (fs.existsSync(filePath)) {
+			fs.unlink(filePath, (er) => {
+				if (er) return console.log(er);
+				console.log(`file deleted successfully: ${filePath}`);
+			});
+		}
+
+		option.image = '';
+
+		const updatedQuestionnaire = await questionnaire.save();
+
+		return res.status(201).json({ message: 'Imagen del curso borrada satisfactoriamente', updatedQuestion: question });
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: "Unexpected error, please try again later!" });
+	}
+}
 
 export const uploadProfileUserImg = async (req, res) => {
 	try {

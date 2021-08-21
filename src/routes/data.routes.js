@@ -23,4 +23,10 @@ router.post('/upload-questionnaire-img/question/:questionnaireId/:questionId', [
 //Route to upload an image from a questionnaire option
 router.post('/upload-questionnaire-img/option/:questionnaireId/:questionId/:optionId', [authJwt.verifyToken, authJwt.isAdminOrTeacher, upload.uploadImg], dataCtrl.uploadOptionImg);
 
+// Route to delete an image from a questionnaire question
+router.delete('/delete-questionnaire-img/question/:questionnaireId/:questionId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], dataCtrl.deleteQuestionImg);
+
+// Route to delete an image from a questionnaire option
+router.delete('/delete-questionnaire-img/option/:questionnaireId/:questionId/:optionId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], dataCtrl.deleteOptionImg);
+
 export default router;

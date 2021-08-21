@@ -280,7 +280,7 @@ export const getActivities = async (req, res) => {
 	}
 }
 
-export const getActivitesNotInTask = async (req, res) => {
+export const getActivitiesNotInTask = async (req, res) => {
 	try {
 		var taskActivities = await TaskActivity.find({ task: req.params.id }).select('activity -_id'); // To get just the activities id
 
@@ -291,16 +291,19 @@ export const getActivitesNotInTask = async (req, res) => {
 			// In case that the task doesn't have activities, just get all the activities
 			const activities = await Activity.find({});
 
-			return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+			// Get just the verified activities
+			const verfiedActivities = activities.filter(activity => activity.verified === true);
+
+			return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities: verfiedActivities });
 		}
 
 		// Get the activities that are not in the array of _id's
 		const activities = await Activity.find({ _id: { $nin: taskActivities } });
 
 		// Get just the verified activities
-		// const verfiedActivities = activities.map(activity => activity.verified === true);
+		const verfiedActivities = activities.map(activity => activity.verified === true);
 
-		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities });
+		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities: verfiedActivities });
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Hubo un error obteniendo actividades de la tarea" });
