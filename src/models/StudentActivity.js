@@ -8,6 +8,8 @@ const StudentActivitySchema = new Schema({
 	'student': { ref: 'Person', type: Schema.Types.ObjectId },
 	'grade': { type: Number, default: 0 },
 	'complete': { type: Boolean, default: false },
+	'minutes': { type: String, default: '00'},
+	'seconds': { type: String, default: '00' },
 	'date': Date
 }, { timestamps: true });
 
