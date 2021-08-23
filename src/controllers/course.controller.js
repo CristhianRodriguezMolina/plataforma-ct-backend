@@ -301,7 +301,7 @@ export const getActivitiesNotInTask = async (req, res) => {
 		const activities = await Activity.find({ _id: { $nin: taskActivities } });
 
 		// Get just the verified activities
-		const verfiedActivities = activities.map(activity => activity.verified === true);
+		const verfiedActivities = activities.filter(activity => activity.verified === true);
 
 		return res.status(200).json({ message: "Actividades obtenidas satisfactoriamente", activities: verfiedActivities });
 	} catch (error) {
