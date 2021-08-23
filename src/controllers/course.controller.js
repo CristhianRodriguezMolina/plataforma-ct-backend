@@ -466,7 +466,7 @@ export const sortTaskActivities = async (req, res) => {
 	for (let i = 0; i < activities.length; i++) {
 		try {
 			var result = await TaskActivity.updateOne({ task: req.params.taskId, activity: activities[i]._id }, { $set: { position: i } });
-			console.log(result);
+
 		}
 		catch {
 			return res.status(500).json({ message: "Unexpected error, try again later" })

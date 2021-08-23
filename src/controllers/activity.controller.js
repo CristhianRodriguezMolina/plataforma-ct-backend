@@ -250,7 +250,7 @@ export const getActivityById = async (req, res) => {
 			return res.status(404).json({ message: 'Actividad no encontrada' });
 		}
 
-		console.log(activity);
+
 		if (activity.type === 'logic_sequence') {
 			inheritedActivity = await LogicSequence.findOne({ activity_id: activity._id });		// logic_sequence
 		} else if (activity.type === 'maze') {
@@ -259,7 +259,7 @@ export const getActivityById = async (req, res) => {
 			inheritedActivity = await Questionnaire.findOne({ activity_id: activity._id });		// questionnaire
 		}
 
-		console.log(inheritedActivity)
+
 
 		if (!inheritedActivity) {
 			return res.status(404).json({ message: 'Actividad no encontrada' });
