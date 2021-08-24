@@ -121,7 +121,7 @@ export const createStudentActivity = async (req, res) => {
 
 export const updateStudentActivityById = async (req, res) => {
 	try {
-		const { grade, complete } = req.body;
+		const { grade, complete, minutes, seconds } = req.body;
 
 		if (!grade && !complete) {
 			return res.status(400).json({ message: 'Falta los datos para editar la entidad StudentActivity' });
@@ -130,6 +130,8 @@ export const updateStudentActivityById = async (req, res) => {
 		const updatedStudentActivity = await StudentActivity.findByIdAndUpdate(req.params.id, {
 			grade,
 			complete,
+			minutes,
+			seconds,
 			date: Date.now()
 		}, { new: true });
 
