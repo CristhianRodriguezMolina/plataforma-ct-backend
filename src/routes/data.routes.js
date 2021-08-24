@@ -15,7 +15,7 @@ router.post('/upload-img/:logic_sequence_id/:sequence_card_id', [authJwt.verifyT
 router.post('/upload-img-course/:courseId', [authJwt.verifyToken, authJwt.isAdminOrTeacher, upload.uploadImg], dataCtrl.uploadCourseImg);
 
 //Route to upload an image from a profile
-router.post('/upload-profile-img-user/:userId', [authJwt.verifyToken, authJwt.isAdminOrTeacher, upload.uploadImg], dataCtrl.uploadProfileUserImg);
+router.post('/upload-profile-img-user/:userId', [authJwt.verifyToken, upload.uploadImg], dataCtrl.uploadProfileUserImg);
 
 //Route to upload an image from a questionnaire question
 router.post('/upload-questionnaire-img/question/:questionnaireId/:questionId', [authJwt.verifyToken, authJwt.isAdminOrTeacher, upload.uploadImg], dataCtrl.uploadQuestionImg);
