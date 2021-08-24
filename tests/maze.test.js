@@ -70,7 +70,7 @@ describe('REQUEST /api/maze', () => {
 				.set('x-access-token', userToken)
 				.expect(400)
 				.expect(res => {
-					assert.strictEqual(res.body.message, "Maze not found");
+					assert.strictEqual(res.body.message, "Laberinto no encontrado");
 				})
 				.end((err) => {
 					if (err) return done(err);
