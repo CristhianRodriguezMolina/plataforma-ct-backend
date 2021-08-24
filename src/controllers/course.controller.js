@@ -9,6 +9,11 @@ import StudentActivity from '../models/StudentActivity';
 export const getMyCourses = async (req, res) => {
 	try {
 		const courses = await Course.find({ creator: req.params.id }, null, { sort: { name: 1 } });
+
+		if (courses.length <= 0) {
+			return res.status(200).json({ message: 'Aún no tiene ningun curso', courses });
+		}
+
 		return res.status(200).json({ message: 'Cursos hallados con exito', courses });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error obteniendo los cursos` });
