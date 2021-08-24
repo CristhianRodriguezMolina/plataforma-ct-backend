@@ -490,8 +490,6 @@ export const addActivitiesToTask = async (req, res) => {
 
 		const taskActivitiesNumber = await TaskActivity.countDocuments({ task: req.params.taskId });
 
-
-
 		Course.findOne({ "units.tasks._id": req.params.taskId }, (err, course) => {
 			if (err) {
 				console.log('err');
@@ -740,14 +738,21 @@ export const getLastActivityToContinue = async (req, res) => {
 		var lastActivity;
 		var pos = -1;
 
-
-
 		const course = await Course.findById({ _id: req.params.courseId });
 
 		let isThereLastActivity = false;
 		if (!course) return res.status(404).json({ message: "No se pudo encontrar la información" });
 
-		let tasks = course.units.id(req.params.unitId).tasks;
+		let unit = course.units.id(req.params.unitId);
+
+		if (!unit) {
+			return res.status(404).json({ message: "Unidad no existente" })
+		}
+		if (!unit.visible) {
+			return res.status(404).json({ message: "Unidad no visible" })
+		}
+
+		let tasks = unit.tasks;
 
 
 		for (let i = 0; i < tasks.length && !isThereLastActivity; i++) {
