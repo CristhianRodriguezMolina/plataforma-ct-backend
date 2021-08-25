@@ -30,7 +30,19 @@ describe('REQUEST /api/course', () => {
 		}
 	});
 
-	describe('Create an course', () => {
+	describe('Create a course', () => {
+		before((done) => {
+			let personIDPath = path.join(__dirname, './static_test/personID.txt');
+			try {
+				personID = fs.readFileSync(personIDPath, 'utf8');
+				console.log('Person ID defined');
+				done();
+			} catch (err) {
+				console.log('Person ID not found');
+				done(err);
+			}
+		});
+
 		it('Respond with a json containing a message for notify the operation failed', done => {
 			request(app)
 				.post(`/api/course`)
@@ -39,7 +51,8 @@ describe('REQUEST /api/course', () => {
 					name: "Nuevo curso test",
 					description: "Descripción test",
 					topic: "Tema test",
-					visible: false
+					visible: false,
+					creator: personID
 				})
 				.expect(403)
 				.expect((res) => {
@@ -58,7 +71,8 @@ describe('REQUEST /api/course', () => {
 					name: "Nuevo curso test",
 					description: "Descripción test",
 					topic: "Tema test",
-					visible: false
+					visible: false,
+					creator: personID
 				})
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
