@@ -59,7 +59,7 @@ export const getStudentActivityByForeignIds = async (req, res) => {
 
 export const createStudentActivity = async (req, res) => {
 	try {
-		const { courseId, unitId, taskId, activityId, studentId } = req.body;
+		const { courseId, unitId, taskId, activityId, studentId, type, answer } = req.body;
 
 		const studentActivityCheck = await StudentActivity.findOne({
 			student: studentId,
@@ -107,7 +107,7 @@ export const createStudentActivity = async (req, res) => {
 			unit: unitId,
 			task: taskId,
 			activity: activityId,
-			student: studentId
+			student: studentId,
 		})
 
 		const savedStudentActivity = await studentActivity.save();
@@ -121,9 +121,9 @@ export const createStudentActivity = async (req, res) => {
 
 export const updateStudentActivityById = async (req, res) => {
 	try {
-		const { grade, complete, minutes, seconds } = req.body;
+		const { grade, complete, minutes, seconds, type, answer } = req.body;
 
-		if (!grade && !complete) {
+		if (!grade && !complete && !answer && !type) {
 			return res.status(400).json({ message: 'Falta los datos para editar la entidad StudentActivity' });
 		}
 
@@ -132,7 +132,8 @@ export const updateStudentActivityById = async (req, res) => {
 			complete,
 			minutes,
 			seconds,
-			date: Date.now()
+			answer,
+			type
 		}, { new: true });
 
 		if (!updatedStudentActivity) {
