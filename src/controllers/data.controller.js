@@ -219,7 +219,7 @@ export const uploadCourseImg = async (req, res) => {
 			return res.status(400).json({ message: 'Curso no encontrado o inexsistente al subir una imagen' });
 		}
 
-		if (course.image !== 'default-course-image.jpg') {
+		if (course.image !== '') {
 			let filePath = path.join(__dirname, `../../static_content/course-images/${course.image}`);
 
 			if (fs.existsSync(filePath)) {

@@ -6,7 +6,7 @@ const CourseSchema = new Schema({
     'topic': { type: String, require: true },
     'creator': { ref: 'Person', type: Schema.Types.ObjectId },
     'visible': Boolean,
-    'image': { type: String, default: 'default-course-image.jpg' },
+    'image': { type: String, default: '' },
     'actual_unit': String,
     'due_date': Date,
     'students': { type: Number, default: 0 },
