@@ -15,6 +15,7 @@ import activityRoutes from './routes/activity.routes';
 import dataRoutes from './routes/data.routes';
 import authRoutes from './routes/auth.routes';
 import studentActivityRoutes from './routes/student-activity.routes';
+import perspectiveRoutes from './routes/perspective.routes';
 
 // Initial setup
 import { createAdmin } from './libs/initialSetup';
@@ -51,6 +52,7 @@ app.use('/api/maze', mazeRoutes); //Route to maze administration
 app.use('/api/questionnaire', questionnaireRoutes); //Route to questionnaire administration
 app.use('/api/data', dataRoutes); //Route to data uploading administration
 app.use('/api/student-activity', studentActivityRoutes); //Route to student activity entity administration
+app.use('/api/perspective', perspectiveRoutes); // Route to student perspective evaluation
 
 /**
  * express static

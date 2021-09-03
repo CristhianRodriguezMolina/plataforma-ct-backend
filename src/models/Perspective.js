@@ -10,4 +10,4 @@ const PerspectiveSchema = new Schema({
 	'message': { type: String, require: true },
 }, { timestamps: true });
 
-export default model('Prespective', PerspectiveSchema);
+export default model('Perspective', PerspectiveSchema);
