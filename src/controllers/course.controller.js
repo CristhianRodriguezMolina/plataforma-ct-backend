@@ -5,6 +5,7 @@ import Person from '../models/Person';
 import Activity from '../models/Activity';
 import TaskActivity from '../models/TaskActivity';
 import StudentActivity from '../models/StudentActivity';
+import Perspective from '../models/Perspective';
 
 export const getMyCourses = async (req, res) => {
 	try {
@@ -119,6 +120,8 @@ export const deleteCourse = async (req, res) => {
 		await StudentActivity.deleteMany({ course: req.params.id }); //Se borran las entidades StudentActivity en caso de que se borre el curso asociado
 
 		await CourseStudent.deleteMany({ course: req.params.id }); //Se borran las entidades CourseStudent en caso de que se borre el curso asociado
+
+		await Perspective.deleteMany({ course: req.params.id }); //Se borran las entidades Perspective en caso de que se borre el curso asociado
 
 		return res.status(200).json({ message: `El curso fue borrado con exito`, deletedCourse })
 	} catch (error) {

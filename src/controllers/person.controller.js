@@ -3,6 +3,7 @@ import Person from '../models/Person';
 import CourseStudent from '../models/CourseStudent';
 import Course from '../models/Course';
 import StudentActivity from '../models/StudentActivity';
+import Perspective from '../models/Perspective';
 
 //METODO QUE OBTIENE UN USUARIO POR SU _id
 export const getUserById = async (req, res) => {
@@ -147,6 +148,12 @@ export const deleteUserById = async (req, res) => {
 			await CourseStudent.deleteMany({ student: deletedUser._id }); //Se borran las entidades CourseStudent en caso de que se borre el estudiante asociado
 
 			await StudentActivity.deleteMany({ student: deletedUser._id }); //Se borran las entidades StudentActivity en caso de que se borre el estudiante asociado
+
+			await Perspective.deleteMany({ student: deletedUser._id }); //Se borran las entidades Perspective en caso de que se borre el estudiante asociado
+		} else if (deletedUser.role.localeCompare("teacher") === 0) {
+			await Course.deleteMany({ creator: deletedUser._id }); //Se borran las entidades Course en caso de que se borre el profesor asociado
+
+			await Perspective.deleteMany({ teacher: deletedUser._id }); //Se borran las entidades Perspective en caso de que se borre el profesor asociado
 		}
 
 		res.status(200).json({ deletedUser, message: "Usuario borrado con exito" });

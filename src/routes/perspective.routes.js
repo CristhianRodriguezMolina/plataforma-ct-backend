@@ -7,7 +7,10 @@ import * as perspectiveCtrl from '../controllers/perspective.controller';
 import { authJwt } from '../middlewares';
 
 //Get perspective by person mongoose id
-router.get('/:person/:personId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], perspectiveCtrl.getPerspectiveByPersonId);
+router.get('/:person/:personId', [authJwt.verifyToken], perspectiveCtrl.getPerspectiveByPersonId);
+
+//Get perspective by course, student and teacher
+router.get('/:courseId/:teacherId/:studentId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], perspectiveCtrl.getPerspectiveByCourseStudentTeacher);
 
 //Update perspective by perspective id
 router.put('/:perspectiveId', [authJwt.verifyToken, authJwt.isAdminOrTeacher], perspectiveCtrl.updatePerspectiveByPerspectiveId);
