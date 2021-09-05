@@ -12,6 +12,7 @@ const StudentActivitySchema = new Schema({
 	'seconds': { type: String, default: '00' },
 	'answer': [{ type: Object }],
 	'type': { type: Object },
+	'attempts': { type: Number, default: 0}
 }, { timestamps: true });
 
 export default model('StudentActivity', StudentActivitySchema);
