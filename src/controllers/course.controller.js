@@ -677,6 +677,8 @@ export const removeActvitiesFromTask = async (req, res) => {
 				return res.status(400).json({ message: "Tarea o actividad no encontrada" });
 			}
 		});
+
+		await StudentActivity.deleteMany({ task: req.params.taskId, activity: req.params.activityId }); //Se borran las entidades StudentActivity en caso de que se borre la actividad de la tarea asociadas
 	} catch (error) {
 		console.log('Error found in removeActvitiesFromTask (course.controller)');
 		console.log(error);
