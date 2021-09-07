@@ -12,7 +12,7 @@ var personID = null;
 var userToken = null;
 
 /**
- * Testing users tests
+ * Testing users endpoints
  */
 describe('REQUEST /api/person', () => {
 	before((done) => {
@@ -27,7 +27,10 @@ describe('REQUEST /api/person', () => {
 		}
 	});
 
-	describe('Create an person', () => {
+	/**
+	 * Creating a person
+	 */
+	describe('Create a person', () => {
 
 		it('Respond with a json containing a message for notify the operation failed', done => {
 			request(app)
@@ -121,6 +124,12 @@ describe('REQUEST /api/person', () => {
 					done();
 				});
 		});
+	});
+
+	// RUNNING COURSE TESTS -----------------------------------------------------------------------------------------------------------------------------------------
+	//TESTS FOR CREATE, UPDATE AND REMOVE A COURSE
+	describe('Running course tests', () => {
+		require('./course.test');
 	});
 
 	// UPDATE A PERSON -----------------------------------------------------------------------------------------------------------------------------------------

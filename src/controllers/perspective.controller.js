@@ -13,11 +13,19 @@ export const createPerspective = async (req, res) => {
 		}
 
 		if (!teacher) {
-			return res.status(404).json({ message: 'Profesor no encontrado' });
+			return res.status(404).json({ message: '¡Profesor no encontrado!' });
 		}
 
 		if (!student) {
-			return res.status(404).json({ message: 'Estudiante no encontrado' });
+			return res.status(404).json({ message: '¡Estudiante no encontrado!' });
+		}
+
+		if (!req.body.message) {
+			return res.status(400).json({ message: '¡Campo de mensaje requerido!' });
+		}
+
+		if (req.body.message.trim() === '') {
+			return res.status(400).json({ message: '¡El mensaje no puede estar vacio!' });
 		}
 
 		const newPerspective = new Perspective({
@@ -29,7 +37,32 @@ export const createPerspective = async (req, res) => {
 
 		const perspectiveTemp = await newPerspective.save();
 
-		const savedPerspective = await Perspective.findById(perspectiveTemp._id).populate([{ path: 'student', select: ['first_name', 'last_name'] }, { path: 'teacher', select: ['first_name', 'last_name'] }, , { path: 'course', select: ['name', 'description'] }]);
+		const savedPerspective = await Perspective.findById(perspectiveTemp._id)
+			.populate(
+				[
+					{
+						path: 'student',
+						select: [
+							'first_name',
+							'last_name'
+						]
+					},
+					{
+						path: 'teacher',
+						select: [
+							'first_name',
+							'last_name'
+						]
+					},
+					{
+						path: 'course',
+						select: [
+							'name',
+							'description'
+						]
+					}
+				]
+			);
 
 		return res.status(201).json({ message: "Perspectiva creada exitosamente", perspective: savedPerspective });
 
@@ -52,7 +85,11 @@ export const updatePerspectiveByPerspectiveId = async (req, res) => {
 
 		const updatedPerspective = await Perspective.findByIdAndUpdate(req.params.perspectiveId, req.body, { new: true });
 
-		return res.status(201).json({ message: "Perspectiva actualizada exitosamente", updatedPerspective });
+		if (!updatedPerspective) {
+			return res.status(404).json({ message: '¡Perspectiva no encontrada!' });
+		}
+
+		return res.status(201).json({ message: "¡Perspectiva actualizada exitosamente!", updatedPerspective });
 
 	} catch (e) {
 		console.log(e);
@@ -62,7 +99,11 @@ export const updatePerspectiveByPerspectiveId = async (req, res) => {
 
 export const deletePerspectiveByPerspectiveId = async (req, res) => {
 	try {
-		await Perspective.findByIdAndDelete(req.params.perspectiveId);
+		const deletedPerspective = await Perspective.findByIdAndDelete(req.params.perspectiveId);
+
+		if (!deletedPerspective) {
+			return res.status(404).json({ message: '¡Perspectiva no encontrada!' });
+		}
 
 		return res.status(201).json({ message: "¡Perspectiva eliminada satisfactoriamente!" });
 
@@ -74,7 +115,7 @@ export const deletePerspectiveByPerspectiveId = async (req, res) => {
 
 export const getPerspectiveByPersonId = async (req, res) => {
 	try {
-		var perspectives;
+		var perspectives = null;
 		if (req.params.person === 'teacher' || req.params.person === 'admin') {
 			perspectives = await Perspective.find({ teacher: req.params.personId })
 				.populate([{ path: 'student', select: ['first_name', 'last_name'] }, { path: 'teacher', select: ['first_name', 'last_name'] }, , { path: 'course', select: ['name', 'description'] }]);

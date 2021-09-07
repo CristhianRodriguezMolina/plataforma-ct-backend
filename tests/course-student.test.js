@@ -120,7 +120,7 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Responds with a json containing a message for notify students accepted: 1, students denied: 0', (done) => {
+		it('Responds with a json containing a message for notify accepted students: 1, denied students: 0', (done) => {
 			request(app)
 				.post(`/api/course/students/${courseID}`)
 				.send({
@@ -143,7 +143,7 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Responds with a json containing a message for notify students accepted: 1, students denied: 1', (done) => {
+		it('Responds with a json containing a message for notify accepted students: 1, denied students: 1', (done) => {
 			request(app)
 				.post(`/api/course/students/${courseID}`)
 				.send({
@@ -170,7 +170,7 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Responds with a json containing a message for notify students accepted: 0, students denied: 2', (done) => {
+		it('Responds with a json containing a message for notify accepted students: 0, denied students: 2', (done) => {
 			request(app)
 				.post(`/api/course/students/${courseID}`)
 				.send({
