@@ -21,7 +21,7 @@ export const createMaze = async (activity_id) => {
 
 		//Creating a new Maze model
 		const newMaze = new Maze({ activity_id, cells: mazeCells });
-
+		console.log('Maze one')
 		// Save the Maze in the DB
 		newMaze.save((err) => {
 			if (err) {
@@ -30,6 +30,7 @@ export const createMaze = async (activity_id) => {
 				throw "Unexpected error, try again later!"
 			}
 		});
+		console.log('Maze two')
 	} catch (e) {
 		console.log(e)
 		throw "Unexpected error, try again later!"
