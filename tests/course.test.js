@@ -289,6 +289,12 @@ describe('Running task-activities tests', () => {
 	require('./task-activity.test');
 });
 
+// RUNNING PERSPECTIVE TESTS -----------------------------------------------------------------------------------------------------------------------------------------
+//TESTS FOR CREATE AND DEELETE PERSPECTIVES
+describe('Running perpectives tests', () => {
+	require('./perspective.test');
+});
+
 // UPDATE A COURSE -----------------------------------------------------------------------------------------------------------------------------------------
 describe('Update a course', () => {
 	before((done) => {

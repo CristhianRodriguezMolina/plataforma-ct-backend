@@ -10,7 +10,6 @@ import Activity from '../src/models/Activity';
 
 import './auth.test';
 import './user.test';
-import './course.test';
 import './activity.test';
 
 /**
@@ -117,6 +116,12 @@ before(async () => {
 		return Promise.reject(e);
 	});
 });
+
+// ==================================================================================
+// DELETING DOCUMENTS
+// ==================================================================================
+
+
 
 /**
  * Delete temporal students documents after the test ends
