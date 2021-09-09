@@ -142,7 +142,7 @@ export const updateActivityById = (req, res) => {
 				} else if (activity.type.localeCompare("maze") == 0) {
 					child = mazeCtrl.updateMazeByActivityId(activity._id, req.body.child); 						// maze
 				} else if (activity.type.localeCompare("questionnaire") == 0) {
-					child = questionnaireCtrl.updateQuestionnaireByActivityId(activity._id, req.body.child); 	// questionnaire
+					child = questionnaireCtrl.updateQuestionnaireByActivityId(activity._id, req.body.child, res); 	// questionnaire
 				}
 				if (!child) return res.status(500).json({ message: "Unexpected error, try again later!" });
 				child.then(() => {

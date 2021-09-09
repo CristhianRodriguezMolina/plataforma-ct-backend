@@ -12,6 +12,7 @@ var activityID = null;
 var userToken = null;
 var personID = null
 var activityMazeID = null;
+var activityQuestionnaireID = null;
 
 /**
  * Testing activity endpoints
@@ -171,6 +172,33 @@ describe('REQUEST /api/activity', () => {
 		});
 	});
 
+	describe('Creating an activity with type maze', () => {
+		it('Responds with a json containing a message for notify the operation success', done => {
+			request(app)
+				.post('/api/activity')
+				.send({
+					name: "My first questionnaire activity",
+					description: "Introduction to the logic activities, this activity is only for test the students basic knowledges",
+					type: "questionnaire",
+					creator: `${personID}`
+				})
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
+				.expect(201)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "The activity has been created satisfactorily");
+				})
+				.end((err, res) => {
+					if (err) return done(err);
+					let filePath = path.join(__dirname, './static_test/activityQuestionnaireID.txt');
+					fs.writeFile(filePath, res.body.activity_id, (err) => {
+						if (err) console.error(err);
+					});
+					done();
+				});
+		});
+	});
+
 	// RUNNING LOGIC SEQUENCE TESTS -----------------------------------------------------------------------------------------------------------------------------------------
 	describe('Running logic sequence tests', () => {
 		require('./logic-sequence.test');
@@ -181,6 +209,10 @@ describe('REQUEST /api/activity', () => {
 		require('./maze.test');
 	});
 
+	// RUNNING QUESTIONNAIRE TESTS -----------------------------------------------------------------------------------------------------------------------------------------
+	describe('Running questionnaire tests', () => {
+		require('./questionnaire.test');
+	});
 
 	// UPDATE AN ACTIVITY -----------------------------------------------------------------------------------------------------------------------------------------
 	describe('Update an activity', () => {
@@ -438,11 +470,246 @@ describe('REQUEST /api/activity', () => {
 		});
 	});
 
-	describe('Updating an activity with maze type', () => {
+	describe('Update an activity', () => {
+		before((done) => {
+			let activityQuestionnaireIDPath = path.join(__dirname, './static_test/activityQuestionnaireID.txt');
+			try {
+				activityQuestionnaireID = fs.readFileSync(activityQuestionnaireIDPath, 'utf8');
+				console.log('Activity ID of the questionnaire defined');
+				done();
+			} catch (err) {
+				console.log('Activity ID of the questionnaire not found');
+				done(err);
+			}
+		});
 
-		it('Responds with a json containing a message for notify the operation success', done => {
+		it('Responds with a json containing a message for notify no token provided', done => {
 			request(app)
 				.put(`/api/activity/${activityID}`)
+				.set('Accept', 'application/json')
+				.send({
+					activity: {
+						name: "My first questionnaire activity",
+						description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+					},
+					child: {
+						questions: [
+							{
+								question: "First",
+								image: "image.jpg",
+								options: [
+									{
+										option: 'First',
+										image: "image.jpg",
+									},
+									{
+										option: 'First',
+										image: "image.jpg",
+									}
+								]
+							},
+							{
+								question: "Second",
+								image: "image.jpg",
+								options: [
+									{
+										option: 'First',
+										image: "image.jpg",
+									},
+									{
+										option: 'First',
+										image: "image.jpg",
+									}
+								]
+							},
+						]
+					}
+				})
+				.expect(403)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "No token provided");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+
+		it('Responds with a json containing a message for the operation success', done => {
+			request(app)
+				.put(`/api/activity/${activityQuestionnaireID}`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
+				.send({
+					activity: {
+						name: "My first questionnaire activity",
+						description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+					},
+					child: {
+						questions: [
+							{
+								question: "First",
+								image: "image.jpg",
+								options: [
+									{
+										option: 'First',
+										image: "image.jpg",
+									},
+									{
+										option: 'First',
+										image: "image.jpg",
+									}
+								]
+							},
+							{
+								question: "Second",
+								image: "image.jpg",
+								options: [
+									{
+										option: 'First',
+										image: "image.jpg",
+									},
+									{
+										option: 'First',
+										image: "image.jpg",
+									}
+								]
+							},
+						]
+					}
+				})
+				.expect(201)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "Actividad actualizada");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+
+		it('Responds with a json containing a message for fields missing', done => {
+			request(app)
+				.put(`/api/activity/${activityQuestionnaireID}`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
+				.send({
+					activity: {
+						name: "My first questionnaire activity",
+						description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+					},
+					child: {
+						questions: [
+							{
+								question: "   ",
+								image: "image.jpg",
+								options: [
+									{
+										option: 'First',
+										image: "image.jpg",
+									},
+									{
+										option: 'First',
+										image: "image.jpg",
+									}
+								]
+							},
+							{
+								question: "Second",
+								image: "image.jpg",
+								options: [
+									{
+										option: '   ',
+										image: "image.jpg",
+									},
+									{
+										option: 'First',
+										image: "image.jpg",
+									}
+								]
+							},
+						]
+					}
+				})
+				.expect(400)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "Ninguna pregunta puede estar vacia");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+
+		it('Responds with a json containing a message for fields missing', done => {
+			request(app)
+				.put(`/api/activity/${activityQuestionnaireID}`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
+				.send({
+					activity: {
+						name: "My first questionnaire activity",
+						description: "Only for new students. Introduction to the logic activities, this activity is only for test the students basic knowledges"
+					},
+					child: {
+						questions: [
+							{
+								question: "First",
+								image: "image.jpg",
+								options: [
+									{
+										option: 'First',
+										image: "image.jpg",
+									},
+									{
+										option: 'First',
+										image: "image.jpg",
+									}
+								]
+							},
+							{
+								question: "Second",
+								image: "image.jpg",
+								options: [
+									{
+										option: '    ',
+										image: "image.jpg",
+									},
+									{
+										option: 'First',
+										image: "image.jpg",
+									}
+								]
+							},
+						]
+					}
+				})
+				.expect(400)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "Ninguna pregunta puede tener opciones vacias");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+	});
+
+	describe('Updating an activity with maze type', () => {
+		before((done) => {
+			let activityMazeIDPath = path.join(__dirname, './static_test/activityMazeID.txt');
+			try {
+				activityMazeID = fs.readFileSync(activityMazeIDPath, 'utf8');
+				console.log('Activity ID of the maze defined');
+				done();
+			} catch (err) {
+				console.log('Activity ID of the maze not found');
+				done(err);
+			}
+		});
+		it('Responds with a json containing a message for notify the operation success', done => {
+			request(app)
+				.put(`/api/activity/${activityMazeID}`)
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
 				.send({
@@ -452,32 +719,32 @@ describe('REQUEST /api/activity', () => {
 					},
 					child: [{
 						cells: [
-								{ i: 0, j: 0, type: 'EMPTY' },	
-								{ i: 0, j: 1, type: 'EMPTY' },
-								{ i: 0, j: 2, type: 'EMPTY' },
-								{ i: 0, j: 3, type: 'EMPTY' },
-								{ i: 0, j: 4, type: 'EMPTY' },
-								{ i: 1, j: 0, type: 'EMPTY' },
-								{ i: 1, j: 1, type: 'EMPTY' },
-								{ i: 1, j: 2, type: 'EMPTY' },
-								{ i: 1, j: 3, type: 'EMPTY' },
-								{ i: 1, j: 4, type: 'EMPTY' },
-								{ i: 2, j: 0, type: 'EMPTY' },
-								{ i: 2, j: 1, type: 'BLOCK' },
-								{ i: 2, j: 2, type: 'BLOCK' },
-								{ i: 2, j: 3, type: 'EMPTY' },
-								{ i: 2, j: 4, type: 'EMPTY' },
-								{ i: 3, j: 0, type: 'EMPTY' },
-								{ i: 3, j: 1, type: 'EMPTY' },
-								{ i: 3, j: 2, type: 'EMPTY' },
-								{ i: 3, j: 3, type: 'END' },
-								{ i: 3, j: 4, type: 'BLOCK' },
-								{ i: 4, j: 0, type: 'BLOCK' },
-								{ i: 4, j: 1, type: 'START' },
-								{ i: 4, j: 2, type: 'EMPTY' },
-								{ i: 4, j: 3, type: 'EMPTY' },
-								{ i: 4, j: 4, type: 'EMPTY' }
-							],
+							{ i: 0, j: 0, type: 'EMPTY' },
+							{ i: 0, j: 1, type: 'EMPTY' },
+							{ i: 0, j: 2, type: 'EMPTY' },
+							{ i: 0, j: 3, type: 'EMPTY' },
+							{ i: 0, j: 4, type: 'EMPTY' },
+							{ i: 1, j: 0, type: 'EMPTY' },
+							{ i: 1, j: 1, type: 'EMPTY' },
+							{ i: 1, j: 2, type: 'EMPTY' },
+							{ i: 1, j: 3, type: 'EMPTY' },
+							{ i: 1, j: 4, type: 'EMPTY' },
+							{ i: 2, j: 0, type: 'EMPTY' },
+							{ i: 2, j: 1, type: 'BLOCK' },
+							{ i: 2, j: 2, type: 'BLOCK' },
+							{ i: 2, j: 3, type: 'EMPTY' },
+							{ i: 2, j: 4, type: 'EMPTY' },
+							{ i: 3, j: 0, type: 'EMPTY' },
+							{ i: 3, j: 1, type: 'EMPTY' },
+							{ i: 3, j: 2, type: 'EMPTY' },
+							{ i: 3, j: 3, type: 'END' },
+							{ i: 3, j: 4, type: 'BLOCK' },
+							{ i: 4, j: 0, type: 'BLOCK' },
+							{ i: 4, j: 1, type: 'START' },
+							{ i: 4, j: 2, type: 'EMPTY' },
+							{ i: 4, j: 3, type: 'EMPTY' },
+							{ i: 4, j: 4, type: 'EMPTY' }
+						],
 						instructions: [
 							{ type: 'LEFT', num: '3' },
 							{ type: 'FORWARD', num: '0' },
@@ -495,11 +762,12 @@ describe('REQUEST /api/activity', () => {
 							{ type: 'FORWARD', num: '12' },
 							{ type: 'FORWARD', num: '13' },
 							{ type: 'LEFT', num: '15' }
-						  ],
+						],
 						columns: "5",
 						rows: "5",
 					}
-				]})
+					]
+				})
 				.expect(201)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, "Actividad actualizada");
@@ -607,22 +875,28 @@ describe('REQUEST /api/activity', () => {
 	});
 
 	describe('Deleting an activity with maze type', () => {
-			
-		before((done) => {
-			let activityMazeIDPath = path.join(__dirname, './static_test/activityMazeID.txt');
-			try {
-				activityMazeID = fs.readFileSync(activityMazeIDPath, 'utf8');
-				console.log('Activity ID of maze defined');
-				done();
-			} catch (err) {
-				console.log('Activity ID of maze not found');
-				done(err);
-			}
-		});
 
 		it('Respond with a json containing a message for notify the operation success', done => {
 			request(app)
 				.delete(`/api/activity/${activityMazeID}`)
+				.set('Accept', 'application/json')
+				.set('x-access-token', userToken)
+				.expect(200)
+				.expect((res) => {
+					assert.strictEqual(res.body.message, "The activity has been deleted satisfactorily");
+				})
+				.end((err) => {
+					if (err) return done(err);
+					done();
+				});
+		});
+	});
+
+	describe('Deleting an activity with questionnaire type', () => {
+
+		it('Respond with a json containing a message for notify the operation success', done => {
+			request(app)
+				.delete(`/api/activity/${activityQuestionnaireID}`)
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
 				.expect(200)

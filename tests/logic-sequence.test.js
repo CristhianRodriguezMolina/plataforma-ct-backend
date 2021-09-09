@@ -507,17 +507,6 @@ describe('REQUEST /api/logic-sequence', () => {
 				});
 		});
 
-		it('Respond with a json containing a message for notify the sequence card Id is invalid', done => {
-			request(app)
-				.delete(`/api/logic-sequence/sequence-card/${logicSequenceID}/genericID`)
-				.set('x-access-token', userToken)
-				.expect(500)
-				.end((err) => {
-					if (err) return done(err);
-					done();
-				});
-		});
-
 		it('Respond with a json containing a message for notify the logic sequence has been not found', done => {
 			request(app)
 				.delete(`/api/logic-sequence/sequence-card/666666666666666666666666/${sequenceCardID}`)

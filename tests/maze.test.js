@@ -27,8 +27,6 @@ describe('REQUEST /api/maze', () => {
 
 	before((done) => {
 		let activityMazeIDPath = path.join(__dirname, './static_test/activityMazeID.txt');
-
-
 		try {
 			activityMazeID = fs.readFileSync(activityMazeIDPath, 'utf8');
 			console.log('Activity ID of the maze defined');
@@ -89,32 +87,32 @@ describe('REQUEST /api/maze', () => {
 					columns: "2",
 					rows: "2",
 					cells: [
-							{ i: 0, j: 0, type: 'EMPTY' },	
-							{ i: 0, j: 1, type: 'EMPTY' },
-							{ i: 0, j: 2, type: 'EMPTY' },
-							{ i: 0, j: 3, type: 'EMPTY' },
-							{ i: 0, j: 4, type: 'EMPTY' },
-							{ i: 1, j: 0, type: 'EMPTY' },
-							{ i: 1, j: 1, type: 'EMPTY' },
-							{ i: 1, j: 2, type: 'EMPTY' },
-							{ i: 1, j: 3, type: 'EMPTY' },
-							{ i: 1, j: 4, type: 'EMPTY' },
-							{ i: 2, j: 0, type: 'EMPTY' },
-							{ i: 2, j: 1, type: 'BLOCK' },
-							{ i: 2, j: 2, type: 'BLOCK' },
-							{ i: 2, j: 3, type: 'EMPTY' },
-							{ i: 2, j: 4, type: 'EMPTY' },
-							{ i: 3, j: 0, type: 'EMPTY' },
-							{ i: 3, j: 1, type: 'EMPTY' },
-							{ i: 3, j: 2, type: 'EMPTY' },
-							{ i: 3, j: 3, type: 'END' },
-							{ i: 3, j: 4, type: 'BLOCK' },
-							{ i: 4, j: 0, type: 'BLOCK' },
-							{ i: 4, j: 1, type: 'START' },
-							{ i: 4, j: 2, type: 'EMPTY' },
-							{ i: 4, j: 3, type: 'EMPTY' },
-							{ i: 4, j: 4, type: 'EMPTY' }
-						]
+						{ i: 0, j: 0, type: 'EMPTY' },
+						{ i: 0, j: 1, type: 'EMPTY' },
+						{ i: 0, j: 2, type: 'EMPTY' },
+						{ i: 0, j: 3, type: 'EMPTY' },
+						{ i: 0, j: 4, type: 'EMPTY' },
+						{ i: 1, j: 0, type: 'EMPTY' },
+						{ i: 1, j: 1, type: 'EMPTY' },
+						{ i: 1, j: 2, type: 'EMPTY' },
+						{ i: 1, j: 3, type: 'EMPTY' },
+						{ i: 1, j: 4, type: 'EMPTY' },
+						{ i: 2, j: 0, type: 'EMPTY' },
+						{ i: 2, j: 1, type: 'BLOCK' },
+						{ i: 2, j: 2, type: 'BLOCK' },
+						{ i: 2, j: 3, type: 'EMPTY' },
+						{ i: 2, j: 4, type: 'EMPTY' },
+						{ i: 3, j: 0, type: 'EMPTY' },
+						{ i: 3, j: 1, type: 'EMPTY' },
+						{ i: 3, j: 2, type: 'EMPTY' },
+						{ i: 3, j: 3, type: 'END' },
+						{ i: 3, j: 4, type: 'BLOCK' },
+						{ i: 4, j: 0, type: 'BLOCK' },
+						{ i: 4, j: 1, type: 'START' },
+						{ i: 4, j: 2, type: 'EMPTY' },
+						{ i: 4, j: 3, type: 'EMPTY' },
+						{ i: 4, j: 4, type: 'EMPTY' }
+					]
 				})
 				.set('Accept', 'application/json')
 				.expect(403)
@@ -134,32 +132,32 @@ describe('REQUEST /api/maze', () => {
 					columns: "0",
 					rows: "0",
 					cells: [
-							{ i: 0, j: 0, type: 'EMPTY' },	
-							{ i: 0, j: 1, type: 'EMPTY' },
-							{ i: 0, j: 2, type: 'EMPTY' },
-							{ i: 0, j: 3, type: 'EMPTY' },
-							{ i: 0, j: 4, type: 'EMPTY' },
-							{ i: 1, j: 0, type: 'EMPTY' },
-							{ i: 1, j: 1, type: 'EMPTY' },
-							{ i: 1, j: 2, type: 'EMPTY' },
-							{ i: 1, j: 3, type: 'EMPTY' },
-							{ i: 1, j: 4, type: 'EMPTY' },
-							{ i: 2, j: 0, type: 'EMPTY' },
-							{ i: 2, j: 1, type: 'BLOCK' },
-							{ i: 2, j: 2, type: 'BLOCK' },
-							{ i: 2, j: 3, type: 'EMPTY' },
-							{ i: 2, j: 4, type: 'EMPTY' },
-							{ i: 3, j: 0, type: 'EMPTY' },
-							{ i: 3, j: 1, type: 'EMPTY' },
-							{ i: 3, j: 2, type: 'EMPTY' },
-							{ i: 3, j: 3, type: 'END' },
-							{ i: 3, j: 4, type: 'BLOCK' },
-							{ i: 4, j: 0, type: 'BLOCK' },
-							{ i: 4, j: 1, type: 'START' },
-							{ i: 4, j: 2, type: 'EMPTY' },
-							{ i: 4, j: 3, type: 'EMPTY' },
-							{ i: 4, j: 4, type: 'EMPTY' }
-						]
+						{ i: 0, j: 0, type: 'EMPTY' },
+						{ i: 0, j: 1, type: 'EMPTY' },
+						{ i: 0, j: 2, type: 'EMPTY' },
+						{ i: 0, j: 3, type: 'EMPTY' },
+						{ i: 0, j: 4, type: 'EMPTY' },
+						{ i: 1, j: 0, type: 'EMPTY' },
+						{ i: 1, j: 1, type: 'EMPTY' },
+						{ i: 1, j: 2, type: 'EMPTY' },
+						{ i: 1, j: 3, type: 'EMPTY' },
+						{ i: 1, j: 4, type: 'EMPTY' },
+						{ i: 2, j: 0, type: 'EMPTY' },
+						{ i: 2, j: 1, type: 'BLOCK' },
+						{ i: 2, j: 2, type: 'BLOCK' },
+						{ i: 2, j: 3, type: 'EMPTY' },
+						{ i: 2, j: 4, type: 'EMPTY' },
+						{ i: 3, j: 0, type: 'EMPTY' },
+						{ i: 3, j: 1, type: 'EMPTY' },
+						{ i: 3, j: 2, type: 'EMPTY' },
+						{ i: 3, j: 3, type: 'END' },
+						{ i: 3, j: 4, type: 'BLOCK' },
+						{ i: 4, j: 0, type: 'BLOCK' },
+						{ i: 4, j: 1, type: 'START' },
+						{ i: 4, j: 2, type: 'EMPTY' },
+						{ i: 4, j: 3, type: 'EMPTY' },
+						{ i: 4, j: 4, type: 'EMPTY' }
+					]
 				})
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
@@ -182,32 +180,32 @@ describe('REQUEST /api/maze', () => {
 					columns: "2",
 					rows: "2",
 					cells: [
-							{ i: 0, j: 0, type: 'EMPTY' },	
-							{ i: 0, j: 1, type: 'EMPTY' },
-							{ i: 0, j: 2, type: 'EMPTY' },
-							{ i: 0, j: 3, type: 'EMPTY' },
-							{ i: 0, j: 4, type: 'EMPTY' },
-							{ i: 1, j: 0, type: 'EMPTY' },
-							{ i: 1, j: 1, type: 'EMPTY' },
-							{ i: 1, j: 2, type: 'EMPTY' },
-							{ i: 1, j: 3, type: 'EMPTY' },
-							{ i: 1, j: 4, type: 'EMPTY' },
-							{ i: 2, j: 0, type: 'EMPTY' },
-							{ i: 2, j: 1, type: 'BLOCK' },
-							{ i: 2, j: 2, type: 'BLOCK' },
-							{ i: 2, j: 3, type: 'EMPTY' },
-							{ i: 2, j: 4, type: 'EMPTY' },
-							{ i: 3, j: 0, type: 'EMPTY' },
-							{ i: 3, j: 1, type: 'EMPTY' },
-							{ i: 3, j: 2, type: 'EMPTY' },
-							{ i: 3, j: 3, type: 'END' },
-							{ i: 3, j: 4, type: 'BLOCK' },
-							{ i: 4, j: 0, type: 'BLOCK' },
-							{ i: 4, j: 1, type: 'START' },
-							{ i: 4, j: 2, type: 'EMPTY' },
-							{ i: 4, j: 3, type: 'EMPTY' },
-							{ i: 4, j: 4, type: 'EMPTY' }
-						]
+						{ i: 0, j: 0, type: 'EMPTY' },
+						{ i: 0, j: 1, type: 'EMPTY' },
+						{ i: 0, j: 2, type: 'EMPTY' },
+						{ i: 0, j: 3, type: 'EMPTY' },
+						{ i: 0, j: 4, type: 'EMPTY' },
+						{ i: 1, j: 0, type: 'EMPTY' },
+						{ i: 1, j: 1, type: 'EMPTY' },
+						{ i: 1, j: 2, type: 'EMPTY' },
+						{ i: 1, j: 3, type: 'EMPTY' },
+						{ i: 1, j: 4, type: 'EMPTY' },
+						{ i: 2, j: 0, type: 'EMPTY' },
+						{ i: 2, j: 1, type: 'BLOCK' },
+						{ i: 2, j: 2, type: 'BLOCK' },
+						{ i: 2, j: 3, type: 'EMPTY' },
+						{ i: 2, j: 4, type: 'EMPTY' },
+						{ i: 3, j: 0, type: 'EMPTY' },
+						{ i: 3, j: 1, type: 'EMPTY' },
+						{ i: 3, j: 2, type: 'EMPTY' },
+						{ i: 3, j: 3, type: 'END' },
+						{ i: 3, j: 4, type: 'BLOCK' },
+						{ i: 4, j: 0, type: 'BLOCK' },
+						{ i: 4, j: 1, type: 'START' },
+						{ i: 4, j: 2, type: 'EMPTY' },
+						{ i: 4, j: 3, type: 'EMPTY' },
+						{ i: 4, j: 4, type: 'EMPTY' }
+					]
 				})
 				.expect(201)
 				.expect((res) => {
@@ -227,11 +225,11 @@ describe('REQUEST /api/maze', () => {
 					columns: "5",
 					rows: "5",
 					cells: [
-							{ i: 0, j: 0, type: 'EMPTY' },	
-							{ i: 0, j: 1, type: 'EMPTY' },
-							{ i: 1, j: 0, type: 'EMPTY' },
-							{ i: 1, j: 1, type: 'EMPTY' }
-						]
+						{ i: 0, j: 0, type: 'EMPTY' },
+						{ i: 0, j: 1, type: 'EMPTY' },
+						{ i: 1, j: 0, type: 'EMPTY' },
+						{ i: 1, j: 1, type: 'EMPTY' }
+					]
 				})
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
@@ -267,23 +265,23 @@ describe('REQUEST /api/maze', () => {
 					columns: "2",
 					rows: "2",
 					cells: [
-							{ i: 0, j: 0, type: 'EMPTY' },	
-							{ i: 0, j: 1, type: 'EMPTY' },
-							{ i: 0, j: 2, type: 'EMPTY' },
-							{ i: 1, j: 0, type: 'EMPTY' },
-							{ i: 1, j: 1, type: 'EMPTY' },
-							{ i: 1, j: 2, type: 'EMPTY' },
-							{ i: 2, j: 0, type: 'EMPTY' },
-							{ i: 2, j: 1, type: 'BLOCK' },
-							{ i: 2, j: 2, type: 'BLOCK' },
-							{ i: 0, j: 3, type: 'EMPTY' },
-							{ i: 1, j: 3, type: 'EMPTY' },
-							{ i: 2, j: 3, type: 'EMPTY' },
-							{ i: 3, j: 0, type: 'END' },
-							{ i: 3, j: 1, type: 'BLOCK' },
-							{ i: 3, j: 2, type: 'BLOCK' },
-							{ i: 3, j: 3, type: 'START' }
-						]
+						{ i: 0, j: 0, type: 'EMPTY' },
+						{ i: 0, j: 1, type: 'EMPTY' },
+						{ i: 0, j: 2, type: 'EMPTY' },
+						{ i: 1, j: 0, type: 'EMPTY' },
+						{ i: 1, j: 1, type: 'EMPTY' },
+						{ i: 1, j: 2, type: 'EMPTY' },
+						{ i: 2, j: 0, type: 'EMPTY' },
+						{ i: 2, j: 1, type: 'BLOCK' },
+						{ i: 2, j: 2, type: 'BLOCK' },
+						{ i: 0, j: 3, type: 'EMPTY' },
+						{ i: 1, j: 3, type: 'EMPTY' },
+						{ i: 2, j: 3, type: 'EMPTY' },
+						{ i: 3, j: 0, type: 'END' },
+						{ i: 3, j: 1, type: 'BLOCK' },
+						{ i: 3, j: 2, type: 'BLOCK' },
+						{ i: 3, j: 3, type: 'START' }
+					]
 				})
 				.set('Accept', 'application/json')
 				.set('x-access-token', userToken)
