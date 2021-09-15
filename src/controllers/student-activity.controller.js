@@ -1,5 +1,6 @@
 //DB Schema imports
 import StudentActivity from '../models/StudentActivity';
+import TaskActivity from '../models/TaskActivity';
 import Course from '../models/Course';
 import Person from '../models/Person';
 import Activity from '../models/Activity';
@@ -70,6 +71,17 @@ export const createStudentActivity = async (req, res) => {
 
 		if (studentActivityCheck) {
 			return res.status(400).json({ message: 'Ya existe una relación Student Activity con los datos proporcionados' });
+		}
+
+		const taskActivityCheck = await TaskActivity.findOne({
+			course: courseId,
+			unit: unitId,
+			task: taskId,
+			activity: activityId
+		});
+
+		if (!taskActivityCheck) {
+			return res.status(404).json({ message: 'No existe una relacion entre la tarea y la actividad' });
 		}
 
 		const course = await Course.findById(courseId);
