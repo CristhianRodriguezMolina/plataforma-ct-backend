@@ -1,4 +1,3 @@
-import dotenv from 'dotenv/config';
 import mongoose from 'mongoose';
 
 import path, { resolve } from 'path';
@@ -11,12 +10,6 @@ import Activity from '../src/models/Activity';
 import './auth.test';
 import './user.test';
 import './activity.test';
-
-/**
- * Data base configuration
- * NoSQL MongoDB
- */
-const URI = process.env.MONGODB_URI;
 
 
 /**
