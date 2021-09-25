@@ -133,9 +133,9 @@ describe('REQUEST /api/activity', () => {
 				})
 				.set('x-access-token', userToken)
 				.set('Accept', 'application/json')
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, 'Curso no encontrado');
+					assert.strictEqual(res.body.message, 'No existe una relacion entre la tarea y la actividad');
 				})
 				.end((err, res) => {
 					if (err) return done(err);
@@ -155,9 +155,9 @@ describe('REQUEST /api/activity', () => {
 				})
 				.set('x-access-token', userToken)
 				.set('Accept', 'application/json')
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, 'Unidad no encontrada');
+					assert.strictEqual(res.body.message, 'No existe una relacion entre la tarea y la actividad');
 				})
 				.end((err, res) => {
 					if (err) return done(err);
@@ -165,7 +165,7 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Responds with a json containing a message for notify That the unit provided doesnt exist', (done) => {
+		it('Responds with a json containing a message for notify That the unit provided doesnt exist (test 1)', (done) => {
 			request(app)
 				.post(`/api/student-activity`)
 				.send({
@@ -177,9 +177,9 @@ describe('REQUEST /api/activity', () => {
 				})
 				.set('x-access-token', userToken)
 				.set('Accept', 'application/json')
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, 'Tarea no encontrada');
+					assert.strictEqual(res.body.message, 'No existe una relacion entre la tarea y la actividad');
 				})
 				.end((err, res) => {
 					if (err) return done(err);
@@ -187,7 +187,7 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Responds with a json containing a message for notify That the unit provided doesnt exist', (done) => {
+		it('Responds with a json containing a message for notify That the unit provided doesnt exist (test 2)', (done) => {
 			request(app)
 				.post(`/api/student-activity`)
 				.send({
@@ -199,9 +199,9 @@ describe('REQUEST /api/activity', () => {
 				})
 				.set('x-access-token', userToken)
 				.set('Accept', 'application/json')
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, 'Actividad no encontrada');
+					assert.strictEqual(res.body.message, 'No existe una relacion entre la tarea y la actividad');
 				})
 				.end((err, res) => {
 					if (err) return done(err);
@@ -209,7 +209,7 @@ describe('REQUEST /api/activity', () => {
 				});
 		});
 
-		it('Responds with a json containing a message for notify That the unit provided doesnt exist', (done) => {
+		it('Responds with a json containing a message for notify That the unit provided doesnt exist (test 3)', (done) => {
 			request(app)
 				.post(`/api/student-activity`)
 				.send({
@@ -221,7 +221,7 @@ describe('REQUEST /api/activity', () => {
 				})
 				.set('x-access-token', userToken)
 				.set('Accept', 'application/json')
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, 'Estudiante no encontrado');
 				})
@@ -315,7 +315,7 @@ describe('REQUEST /api/activity', () => {
 				})
 				.set('x-access-token', userToken)
 				.set('Accept', 'application/json')
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, 'Entidad StudentActivity no entontrada');
 				})
@@ -334,7 +334,7 @@ describe('REQUEST /api/activity', () => {
 				})
 				.set('x-access-token', userToken)
 				.set('Accept', 'application/json')
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, 'Entidad StudentActivity no entontrada');
 				})
@@ -400,7 +400,7 @@ describe('REQUEST /api/activity', () => {
 			request(app)
 				.get(`/api/student-activity/666666666666666666666666`)
 				.set('x-access-token', userToken)
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, 'Entidad student activity no encontrada');
 				})
@@ -498,7 +498,7 @@ describe('REQUEST /api/activity', () => {
 			request(app)
 				.delete(`/api/student-activity/666666666666666666666666`)
 				.set('x-access-token', userToken)
-				.expect(400)
+				.expect(404)
 				.expect((res) => {
 					assert.strictEqual(res.body.message, 'Entidad student activity no encontrada');
 				})

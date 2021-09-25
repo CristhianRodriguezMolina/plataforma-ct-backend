@@ -28,7 +28,7 @@ export const getStudentActivityById = async (req, res) => {
 		const studentActivity = await StudentActivity.findById(req.params.id);
 
 		if (!studentActivity) {
-			return res.status(400).json({ message: 'Entidad student activity no encontrada' })
+			return res.status(404).json({ message: 'Entidad student activity no encontrada' })
 		}
 
 		return res.status(200).json({ message: 'Entidad student activity obtenida satisfactoriamente', studentActivity })
@@ -87,31 +87,31 @@ export const createStudentActivity = async (req, res) => {
 		const course = await Course.findById(courseId);
 
 		if (!course) {
-			return res.status(400).json({ message: 'Curso no encontrado' });
+			return res.status(404).json({ message: 'Curso no encontrado' });
 		}
 
 		const unit = course.units.id(unitId);
 
 		if (!unit) {
-			return res.status(400).json({ message: "Unidad no encontrada" });
+			return res.status(404).json({ message: "Unidad no encontrada" });
 		}
 
 		const task = unit.tasks.id(taskId);
 
 		if (!task) {
-			return res.status(400).json({ message: 'Tarea no encontrada' });
+			return res.status(404).json({ message: 'Tarea no encontrada' });
 		}
 
 		const activity = await Activity.findById(activityId);
 
 		if (!activity) {
-			return res.status(400).json({ message: 'Actividad no encontrada' });
+			return res.status(404).json({ message: 'Actividad no encontrada' });
 		}
 
 		const student = await Person.findById(studentId);
 
 		if (!student) {
-			return res.status(400).json({ message: 'Estudiante no encontrado' });
+			return res.status(404).json({ message: 'Estudiante no encontrado' });
 		}
 
 		const studentActivity = new StudentActivity({
@@ -150,7 +150,7 @@ export const updateStudentActivityById = async (req, res) => {
 		}, { new: true });
 
 		if (!updatedStudentActivity) {
-			return res.status(400).json({ message: 'Entidad StudentActivity no entontrada' });
+			return res.status(404).json({ message: 'Entidad StudentActivity no entontrada' });
 		}
 
 		return res.status(200).json({ message: 'Entidad student activity actualizada satisfactoriamente', updatedStudentActivity })
@@ -179,7 +179,7 @@ export const updateStudentActivityByForeignIds = async (req, res) => {
 		});
 
 		if (!updatedStudentActivity) {
-			return res.status(400).json({ message: 'Entidad StudentActivity no entontrada' });
+			return res.status(404).json({ message: 'Entidad StudentActivity no entontrada' });
 		}
 
 		return res.status(200).json({ message: 'Entidad student activity actualizada satisfactoriamente', updatedStudentActivity })
@@ -194,7 +194,7 @@ export const deleteStudentActivityById = async (req, res) => {
 		const deletedStudentActivity = await StudentActivity.findByIdAndDelete(req.params.id);
 
 		if (!deletedStudentActivity) {
-			return res.status(400).json({ message: 'Entidad student activity no encontrada' })
+			return res.status(404).json({ message: 'Entidad student activity no encontrada' })
 		}
 
 		return res.status(200).json({ message: 'Entidad student activity borrada satisfactoriamente', deletedStudentActivity })
@@ -216,7 +216,7 @@ export const deleteStudentActivityByForeignIds = async (req, res) => {
 		});
 
 		if (!deletedStudentActivity) {
-			return res.status(400).json({ message: 'Entidad StudentActivity no entontrada' });
+			return res.status(404).json({ message: 'Entidad StudentActivity no entontrada' });
 		}
 
 		return res.status(200).json({ message: 'Entidad student activity borrada satisfactoriamente', deletedStudentActivity })
