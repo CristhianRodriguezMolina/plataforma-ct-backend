@@ -12,6 +12,7 @@ import './user.test';
 import './activity.test';
 
 
+
 /**
  * Connecting to database
  */
