@@ -27,6 +27,8 @@ before((done) => {
 	}, done);
 });
 
+
+
 /**
  * Adding some temporal activities for test the functionality to add activities to a task (task-activity.test)
  */
@@ -87,6 +89,14 @@ before(async () => {
 			id: "sXEDs3gYEphBjNUz",
 			password: "12345",
 			role: "student"
+		}),
+		new Person({
+			first_name: "temp teacher 2",
+			last_name: "rJ5TcUWFvxAuxD3X",
+			genre: "Male",
+			id: "fRnV4K9Z2wMBjp",
+			password: "12345",
+			role: "teacher"
 		})
 	];
 
