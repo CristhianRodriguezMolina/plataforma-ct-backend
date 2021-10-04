@@ -73,7 +73,7 @@ export const getTeacherCourse = async (req, res) => {
 export const createCourse = async (req, res) => {
 	try {
 		const { name, description, topic, creator, visible } = req.body;
-		const newCourse = new Course({ name, description, topic, creator, visible });
+		const newCourse = new Course({ name, description: "", topic: "", creator, visible });
 
 		const savedCourse = await newCourse.save();
 
