@@ -47,7 +47,7 @@ export const getUserByRole = async (req, res) => {
 	}
 };
 
-//METODO QUE ELIMINA UN USUARIO 
+//METODO QUE CREA UN USUARIO 
 export const createUser = async (req, res) => {
 	try {
 		const { first_name, last_name, birth_date, genre, id, password, role } = req.body;
