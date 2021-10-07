@@ -12,7 +12,7 @@ export const getMyCourses = async (req, res) => {
 		const courses = await Course.find({ creator: req.params.id }, null, { sort: { name: 1 } });
 
 		if (courses.length <= 0) {
-			return res.status(200).json({ message: 'Aún no tiene ningun curso' });
+			return res.status(200).json({ message: 'Aún no tiene ningún curso' });
 		}
 
 		return res.status(200).json({ message: 'Cursos hallados con éxito', courses });
@@ -29,7 +29,7 @@ export const getMyStudentCourses = async (req, res) => {
 		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.course);
 
 		if (courseStudents.length <= 0) {
-			return res.status(200).json({ message: 'No está inscrito en ningun curso' });
+			return res.status(200).json({ message: 'No está inscrito en ningún curso' });
 		}
 
 		// Get the courses that are in the array of _id's
