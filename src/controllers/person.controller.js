@@ -77,7 +77,7 @@ export const updateUserById = async (req, res) => {
 			res.status(400).json({ message: 'Usuario no entontrado' });
 		}
 
-		res.status(201).json({ updatedUser, message: 'Usuario actualizado con exito' });
+		res.status(201).json({ updatedUser, message: 'Usuario actualizado con éxito' });
 	} catch (error) {
 		res.status(500).json({ message: "Un error interno ha ocurrido" });
 		throw Error(`Error mientras se actualizaba un usuario: ${error}`);
@@ -96,7 +96,7 @@ export const updateUserPasswordById = async (req, res) => {
 		// Saving the user in the DB
 		const updatedUser = await user.save();
 
-		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con exito' });
+		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con éxito' });
 	} catch (error) {
 		res.status(500).json({ message: "Un error interno ha ocurrido" });
 		throw Error(`Error mientras se actualizaba un usuario: ${error}`);
@@ -122,7 +122,7 @@ export const updateUserPasswordByIdAndCurrentPassword = async (req, res) => {
 		// Saving the user in the DB
 		const updatedUser = await user.save();
 
-		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con exito' });
+		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con éxito' });
 	} catch (error) {
 		res.status(500).json({ message: "Un error interno ha ocurrido" });
 		throw Error(`Error mientras se actualizaba un usuario: ${error}`);
@@ -156,7 +156,7 @@ export const deleteUserById = async (req, res) => {
 			await Perspective.deleteMany({ teacher: deletedUser._id }); //Se borran las entidades Perspective en caso de que se borre el profesor asociado
 		}
 
-		res.status(200).json({ deletedUser, message: "Usuario borrado con exito" });
+		res.status(200).json({ deletedUser, message: "Usuario borrado con éxito" });
 	} catch (error) {
 		res.status(500).json({ message: "Un error interno ha ocurrido" });
 		throw Error(`Error mientras se borraba un usuario: ${error}`);

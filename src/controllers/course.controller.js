@@ -15,7 +15,7 @@ export const getMyCourses = async (req, res) => {
 			return res.status(200).json({ message: 'Aún no tiene ningun curso' });
 		}
 
-		return res.status(200).json({ message: 'Cursos hallados con exito', courses });
+		return res.status(200).json({ message: 'Cursos hallados con éxito', courses });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error obteniendo los cursos` });
 	}
@@ -29,7 +29,7 @@ export const getMyStudentCourses = async (req, res) => {
 		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.course);
 
 		if (courseStudents.length <= 0) {
-			return res.status(200).json({ message: 'No esta inscrito en ningun curso' });
+			return res.status(200).json({ message: 'No está inscrito en ningun curso' });
 		}
 
 		// Get the courses that are in the array of _id's
@@ -50,7 +50,7 @@ export const getCourseById = async (req, res) => {
 			return res.status(404).json({ message: `Curso no encontrado o inexistente!` });
 		}
 
-		return res.status(200).json({ message: 'Curso hallado con exito', course });
+		return res.status(200).json({ message: 'Curso hallado con éxito', course });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error obteniendo los curso` });
 	}
@@ -64,7 +64,7 @@ export const getTeacherCourse = async (req, res) => {
 			return res.status(404).json({ message: `Profesor no encontrado o inexistente!` });
 		}
 
-		return res.status(200).json({ message: 'Profesor hallado con exito', teacher });
+		return res.status(200).json({ message: 'Profesor hallado con éxito', teacher });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error obteniendo el profesor de un curso` });
 	}
@@ -123,7 +123,7 @@ export const deleteCourse = async (req, res) => {
 
 		await Perspective.deleteMany({ course: req.params.id }); //Se borran las entidades Perspective en caso de que se borre el curso asociado
 
-		return res.status(200).json({ message: `El curso fue borrado con exito`, deletedCourse })
+		return res.status(200).json({ message: `El curso fue borrado con éxito`, deletedCourse })
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error borrando el curso "${deleteCourse.name}"` })
 	}
@@ -151,7 +151,7 @@ export const deleteUnit = async (req, res) => {
 
 		const updatedCourse = await course.save();
 
-		return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse });
+		return res.status(200).json({ message: `La unidad fue borrada con éxito`, updatedCourse });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}` });
 	}
@@ -211,7 +211,7 @@ export const updateCourseById = async (req, res) => {
 			return res.status(404).json({ message: 'Curso no encontrado' });
 		}
 
-		return res.status(201).json({ updatedCourse, message: `El curso fue actualizado con exito` })
+		return res.status(201).json({ updatedCourse, message: `El curso fue actualizado con éxito` })
 	} catch (error) {
 		return res.status(500).json({ message: "Hubo un error actualizando un curso" })
 	}

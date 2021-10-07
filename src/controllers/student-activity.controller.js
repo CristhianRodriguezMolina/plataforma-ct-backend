@@ -11,12 +11,12 @@ export const getAllStudentActivities = async (req, res) => {
 		const studentActivities = await StudentActivity.find({});
 
 		if (!studentActivities) {
-			return res.status(200).json({ message: 'Aun no hay entidades student-activity' });
+			return res.status(200).json({ message: 'Aún no hay entidades student-activity' });
 		} else if (studentActivities.length <= 0) {
-			return res.status(200).json({ message: 'Aun no hay entidades student-activity' });
+			return res.status(200).json({ message: 'Aún no hay entidades student-activity' });
 		}
 
-		return res.status(200).json({ message: 'Entidades student-activity obtenidas con exito', studentActivities });
+		return res.status(200).json({ message: 'Entidades student-activity obtenidas con éxito', studentActivities });
 	} catch (error) {
 		console.log(error)
 		return res.status(500).json({ message: "Ha ocurrido un error en el servidor" })
