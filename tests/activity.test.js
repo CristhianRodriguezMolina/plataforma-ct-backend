@@ -838,7 +838,7 @@ describe('REQUEST /api/activity', () => {
 				.set('x-access-token', userToken)
 				.expect(200)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, "The activity has been deleted satisfactorily");
+					assert.strictEqual(res.body.message, "La actividad ha sido borrada satisfactoriamente");
 				})
 				.end((err) => {
 					if (err) return done(err);
@@ -883,7 +883,7 @@ describe('REQUEST /api/activity', () => {
 				.set('x-access-token', userToken)
 				.expect(200)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, "The activity has been deleted satisfactorily");
+					assert.strictEqual(res.body.message, "La actividad ha sido borrada satisfactoriamente");
 				})
 				.end((err) => {
 					if (err) return done(err);
@@ -901,7 +901,7 @@ describe('REQUEST /api/activity', () => {
 				.set('x-access-token', userToken)
 				.expect(200)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, "The activity has been deleted satisfactorily");
+					assert.strictEqual(res.body.message, "La actividad ha sido borrada satisfactoriamente");
 				})
 				.end((err) => {
 					if (err) return done(err);
