@@ -18,10 +18,10 @@ router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], activityCtrl
 //Delete an activity
 router.delete('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], activityCtrl.deleteActivityById);
 
-// Route for get the courses of a teacher
+// Route for get the activities by teacher
 router.get('/myactivities/:creatorId', [authJwt.verifyToken], activityCtrl.getMyActivities);
 
 // Get an activity by id
- router.get('/:id', [authJwt.verifyToken], activityCtrl.getActivityById)
+router.get('/:id', [authJwt.verifyToken], activityCtrl.getActivityById)
 
 export default router;

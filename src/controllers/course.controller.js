@@ -323,7 +323,7 @@ export const addStudentsByCourseId = (req, res) => {
 		const { students } = req.body;
 		if (students) {
 			Course.findById(req.params.id, (err, course) => {
-				if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+				if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor inténtelo de nuevo mas tarde" });
 				if (course) {
 					let courseStudents = [];
 					let deniedStudents = [];
@@ -401,7 +401,7 @@ export const addStudentsByCourseId = (req, res) => {
 export const removeStudentsByCourseId = async (req, res) => {
 	try {
 		CourseStudent.findOneAndDelete({ course: req.params.courseId, student: req.params.studentId }, (err, courseStudent) => {
-			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor inténtelo de nuevo mas tarde" });
 			if (courseStudent) {
 				Course.findById(req.params.courseId, async (err, course) => {
 					if (err) console.log(error);
@@ -464,7 +464,7 @@ export const createTask = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inexperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inexperado, por favor inténtelo mas tarde" });
 	};
 };
 
@@ -497,7 +497,7 @@ export const addActivitiesToTask = async (req, res) => {
 			if (err) {
 				console.log('err');
 				console.log(err);
-				return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+				return res.status(500).json({ message: "Hubo un error en el servidor, por favor inténtelo de nuevo mas tarde" });
 			}
 			if (!course) return res.status(400).json({ message: "Tarea no encontrada" });
 
@@ -622,7 +622,7 @@ export const updateTask = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor inténtelo mas tarde" });
 	};
 };
 
@@ -662,14 +662,14 @@ export const deleteTask = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor inténtelo mas tarde" });
 	};
 };
 
 export const removeActvitiesFromTask = async (req, res) => {
 	try {
 		TaskActivity.findOneAndDelete({ task: req.params.taskId, activity: req.params.activityId }, (err, taskActivity) => {
-			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor inténtelo de nuevo mas tarde" });
 			if (taskActivity) {
 				return res.status(201).json({ message: "Actividad eliminada satisfactoriamente" });
 			}
@@ -714,7 +714,7 @@ export const getTask = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor inténtelo mas tarde" });
 	}
 }
 
@@ -732,7 +732,7 @@ export const getAllActivitiesInCourse = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor inténtelo mas tarde" });
 	}
 }
 
@@ -802,7 +802,7 @@ export const getLastActivityToContinue = async (req, res) => {
 		return res.status(200).json({ message: 'No se pudo encontrar la ultima actividad', success: false });
 	} catch (e) {
 		console.log(e);
-		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde' })
+		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor inténtelo mas tarde' })
 	}
 };
 
@@ -817,6 +817,6 @@ export const getStudentIndividualProgress = async (req, res) => {
 		return res.status(200).json({ message: 'Información del progreso del studiante obtenida satisfactoriamente', studentActivities, course, tasksActivities, student });
 	} catch (e) {
 		console.log(e);
-		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde' })
+		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor inténtelo mas tarde' })
 	}
 };
