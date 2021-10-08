@@ -13,9 +13,7 @@ export const verifyToken = async (req, res, next) => {
     if (!token) return res.status(403).json({ message: 'No token provided' });
 
     try {
-        let secret = config.SECRET || "please-change-this-secret-usign-dotenv-file";
-
-        const tokenDecoded = jwt.verify(token, secret);
+        const tokenDecoded = jwt.verify(token, config.SECRET);
         req.userId = tokenDecoded.id;
 
         const user = await Person.findById(req.userId);
