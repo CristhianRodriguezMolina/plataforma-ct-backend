@@ -19,7 +19,7 @@ router.get('/identification/:id', [authJwt.verifyToken], personCtrl.getUserByIde
 router.post('/', [authJwt.verifyToken, authJwt.isAdminOrTeacher, verifyCreate.verifyFields, verifyCreate.checkRoleExisted], personCtrl.createUser);
 
 //Actualizar un usuario por id
-router.put('/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher], personCtrl.updateUserById);
+router.put('/:id', [authJwt.verifyToken], personCtrl.updateUserById);
 
 //Actualizar la contraseña de un usuario por id
 router.put('/session/:id', [authJwt.verifyToken, authJwt.isAdminOrTeacher, verifyCreate.verifySesionFields], personCtrl.updateUserPasswordById);
