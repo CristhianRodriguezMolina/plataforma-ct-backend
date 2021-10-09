@@ -32,9 +32,7 @@ export const signin = async (req, res) => {
 		if (await Person.matchPassword(password, user.password)) {
 			//Genera un token de sesion al usuario
 
-			let secret = config.SECRET || "please-change-this-secret-usign-dotenv-file";
-
-			const token = jwt.sign({ id: user._id }, secret, {
+			const token = jwt.sign({ id: user._id }, config.SECRET, {
 				expiresIn: 604800 //Tiempo de caducidad: 24 hours 604800
 			});
 
@@ -42,7 +40,7 @@ export const signin = async (req, res) => {
 			return res.status(200).json({
 				message: 'Signin correcto',
 				token: token,
-				expire_at: jwt.decode(token, secret).exp,
+				expire_at: jwt.decode(token, config.SECRET).exp,
 				user_role: user.role,
 				user_id: user._id,
 				user_image: user.image,
