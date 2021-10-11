@@ -4,6 +4,7 @@ import CourseStudent from '../models/CourseStudent';
 import Course from '../models/Course';
 import StudentActivity from '../models/StudentActivity';
 import Perspective from '../models/Perspective';
+import TaskActivity from '../models/TaskActivity';
 
 //METODO QUE OBTIENE UN USUARIO POR SU _id
 export const getUserById = async (req, res) => {
@@ -151,6 +152,16 @@ export const deleteUserById = async (req, res) => {
 
 			await Perspective.deleteMany({ student: deletedUser._id }); //Se borran las entidades Perspective en caso de que se borre el estudiante asociado
 		} else if (deletedUser.role.localeCompare("teacher") === 0) {
+			var coursesToDelete = await Course.find({ creator: deletedUser._id }).select("_id");
+
+			coursesToDelete = Array.from(coursesToDelete, courseToDelete => courseToDelete._id);
+
+			await CourseStudent.deleteMany({ course: { $in: coursesToDelete } }); //Se borran las entidades CourseStudent en caso de que se borre el estudiante asociado
+
+			await TaskActivity.deleteMany({ course: { $in: coursesToDelete } }); //Se borran las entidades TaksActivity en caso de que se borre el curso asociado
+
+			await StudentActivity.deleteMany({ course: { $in: coursesToDelete } }); //Se borran las entidades StudentActivity en caso de que se borre el curso asociado
+
 			await Course.deleteMany({ creator: deletedUser._id }); //Se borran las entidades Course en caso de que se borre el profesor asociado
 
 			await Perspective.deleteMany({ teacher: deletedUser._id }); //Se borran las entidades Perspective en caso de que se borre el profesor asociado
