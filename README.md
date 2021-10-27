@@ -88,3 +88,12 @@ Start the server
   npm run dev
 ```
 
+
+
+## Running Tests
+
+To run tests, run the following command
+
+```bash
+  npm run test
+```
