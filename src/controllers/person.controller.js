@@ -4,6 +4,7 @@ import CourseStudent from '../models/CourseStudent';
 import Course from '../models/Course';
 import StudentActivity from '../models/StudentActivity';
 import Perspective from '../models/Perspective';
+import TaskActivity from '../models/TaskActivity';
 
 //METODO QUE OBTIENE UN USUARIO POR SU _id
 export const getUserById = async (req, res) => {
@@ -47,7 +48,7 @@ export const getUserByRole = async (req, res) => {
 	}
 };
 
-//METODO QUE ELIMINA UN USUARIO 
+//METODO QUE CREA UN USUARIO 
 export const createUser = async (req, res) => {
 	try {
 		const { first_name, last_name, birth_date, genre, id, password, role } = req.body;
@@ -77,7 +78,7 @@ export const updateUserById = async (req, res) => {
 			res.status(400).json({ message: 'Usuario no entontrado' });
 		}
 
-		res.status(201).json({ updatedUser, message: 'Usuario actualizado con exito' });
+		res.status(201).json({ updatedUser, message: 'Usuario actualizado con éxito' });
 	} catch (error) {
 		res.status(500).json({ message: "Un error interno ha ocurrido" });
 		throw Error(`Error mientras se actualizaba un usuario: ${error}`);
@@ -96,7 +97,7 @@ export const updateUserPasswordById = async (req, res) => {
 		// Saving the user in the DB
 		const updatedUser = await user.save();
 
-		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con exito' });
+		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con éxito' });
 	} catch (error) {
 		res.status(500).json({ message: "Un error interno ha ocurrido" });
 		throw Error(`Error mientras se actualizaba un usuario: ${error}`);
@@ -122,7 +123,7 @@ export const updateUserPasswordByIdAndCurrentPassword = async (req, res) => {
 		// Saving the user in the DB
 		const updatedUser = await user.save();
 
-		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con exito' });
+		res.status(201).json({ updatedUser, message: 'Datos de sesion de usuario actualizados con éxito' });
 	} catch (error) {
 		res.status(500).json({ message: "Un error interno ha ocurrido" });
 		throw Error(`Error mientras se actualizaba un usuario: ${error}`);
@@ -151,12 +152,22 @@ export const deleteUserById = async (req, res) => {
 
 			await Perspective.deleteMany({ student: deletedUser._id }); //Se borran las entidades Perspective en caso de que se borre el estudiante asociado
 		} else if (deletedUser.role.localeCompare("teacher") === 0) {
+			var coursesToDelete = await Course.find({ creator: deletedUser._id }).select("_id");
+
+			coursesToDelete = Array.from(coursesToDelete, courseToDelete => courseToDelete._id);
+
+			await CourseStudent.deleteMany({ course: { $in: coursesToDelete } }); //Se borran las entidades CourseStudent en caso de que se borre el estudiante asociado
+
+			await TaskActivity.deleteMany({ course: { $in: coursesToDelete } }); //Se borran las entidades TaksActivity en caso de que se borre el curso asociado
+
+			await StudentActivity.deleteMany({ course: { $in: coursesToDelete } }); //Se borran las entidades StudentActivity en caso de que se borre el curso asociado
+
 			await Course.deleteMany({ creator: deletedUser._id }); //Se borran las entidades Course en caso de que se borre el profesor asociado
 
 			await Perspective.deleteMany({ teacher: deletedUser._id }); //Se borran las entidades Perspective en caso de que se borre el profesor asociado
 		}
 
-		res.status(200).json({ deletedUser, message: "Usuario borrado con exito" });
+		res.status(200).json({ deletedUser, message: "Usuario borrado con éxito" });
 	} catch (error) {
 		res.status(500).json({ message: "Un error interno ha ocurrido" });
 		throw Error(`Error mientras se borraba un usuario: ${error}`);

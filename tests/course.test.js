@@ -338,7 +338,7 @@ describe('Update a course', () => {
 			})
 			.expect(201)
 			.expect((res) => {
-				assert.strictEqual(res.body.message, "El curso fue actualizado con exito");
+				assert.strictEqual(res.body.message, "El curso fue actualizado con éxito");
 			})
 			.end((err) => {
 				if (err) return done(err);
@@ -638,7 +638,7 @@ describe('List courses', () => {
 			.set('x-access-token', userToken)
 			.expect(200)
 			.expect((res) => {
-				assert.strictEqual(res.body.message, "Cursos hallados con exito");
+				assert.strictEqual(res.body.message, "Cursos hallados con éxito");
 			})
 			.end((err) => {
 				if (err) return done(err);
@@ -652,7 +652,7 @@ describe('List courses', () => {
 			.set('x-access-token', userToken)
 			.expect(200)
 			.expect((res) => {
-				assert.strictEqual(res.body.message, `Curso hallado con exito`);
+				assert.strictEqual(res.body.message, `Curso hallado con éxito`);
 			})
 			.end((err) => {
 				if (err) return done(err);
@@ -831,7 +831,7 @@ describe('Delete an unit in a course', () => {
 			.set('x-access-token', userToken)
 			.expect(200)
 			.expect((res) => {
-				assert.strictEqual(res.body.message, "La unidad fue borrada con exito");
+				assert.strictEqual(res.body.message, "La unidad fue borrada con éxito");
 			})
 			.end((err, res) => {
 				if (err) return done(err);
@@ -862,7 +862,7 @@ describe('Delete a course', () => {
 			.set('x-access-token', userToken)
 			.expect(200)
 			.expect((res) => {
-				assert.strictEqual(res.body.message, "El curso fue borrado con exito");
+				assert.strictEqual(res.body.message, "El curso fue borrado con éxito");
 			})
 			.end((err) => {
 				if (err) return done(err);

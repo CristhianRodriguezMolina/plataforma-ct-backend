@@ -187,7 +187,7 @@ export const updateLogicSequenceByActivityId = async (activity_id, sequence_card
 		LogicSequence.findOneAndUpdate({ activity_id }, sequence_cards, {
 			new: true
 		}).then(() => {
-			return { message: "La secuencia logica ha sido actualizada satisfactoriamente" };
+			return { message: "La secuencia lógica ha sido actualizada satisfactoriamente" };
 		}).catch(err => {
 			console.log("ERROR found in updateLogicSequenceByActivityId(logicsequence.controller)");
 			console.error(err);

@@ -1,4 +1,3 @@
 export default {
-    SECRET: '3CC31B65-2AC5-5F67-9437-4B1E58F0AD13',
-    SECRET_REFRESH: '3BB68B65-2CC5-5F67-6937-4B1E58FUCK13'
+    SECRET: process.env.SECRET_WORD || "please-change-this-secret-usign-dotenv-file"
 }

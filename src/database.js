@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
  * NoSQL MongoDB
  */
 const URI = process.env.MONGODB_URI;
-// const URI = 'mongodb://127.0.0.1:27017/ct-database'
+//const URI = 'mongodb://127.0.0.1:27017/ct-database'
 mongoose.connect(URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
@@ -14,4 +14,3 @@ mongoose.connect(URI, {
 })
     .then(db => console.log('DB is connected'))
     .catch(err => console.error(err));
-    

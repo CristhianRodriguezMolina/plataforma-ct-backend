@@ -30,7 +30,7 @@ export const getActivities = (req, res) => {
 				return res.status(200).json({ message: "Activities list request has been completed satisfactorily", activities, count });
 			});
 
-		});
+		}).populate({ path: 'creator', select: '_id first_name last_name' });
 	} catch (e) {
 		console.log(e)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
@@ -211,7 +211,7 @@ export const deleteActivityById = (req, res) => {
 							//Se borran las entidades StudentActivity en caso de que se borre la actividad asociada
 							StudentActivity.deleteMany({ activity: activity._id }, (e) => {
 								if (e) return res.status(500).json({ message: "Unexpected error, try again later!" });
-								return res.status(200).json({ message: "The activity has been deleted satisfactorily" });
+								return res.status(200).json({ message: "La actividad ha sido borrada satisfactoriamente" });
 							});
 						})
 
@@ -269,6 +269,6 @@ export const getActivityById = async (req, res) => {
 	}
 	catch (e) {
 		console.log(e);
-		return res.status(500).json({ message: 'Hubo un error inesperado, por favor intentelo mas tarde' });
+		return res.status(500).json({ message: 'Hubo un error inesperado, por favor inténtelo mas tarde' });
 	}
 };

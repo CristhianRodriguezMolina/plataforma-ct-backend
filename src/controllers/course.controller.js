@@ -12,10 +12,10 @@ export const getMyCourses = async (req, res) => {
 		const courses = await Course.find({ creator: req.params.id }, null, { sort: { name: 1 } });
 
 		if (courses.length <= 0) {
-			return res.status(200).json({ message: 'Aún no tiene ningun curso' });
+			return res.status(200).json({ message: 'Aún no tiene ningún curso' });
 		}
 
-		return res.status(200).json({ message: 'Cursos hallados con exito', courses });
+		return res.status(200).json({ message: 'Cursos hallados con éxito', courses });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error obteniendo los cursos` });
 	}
@@ -29,7 +29,7 @@ export const getMyStudentCourses = async (req, res) => {
 		courseStudents = Array.from(courseStudents, courseStudent => courseStudent.course);
 
 		if (courseStudents.length <= 0) {
-			return res.status(200).json({ message: 'No esta inscrito en ningun curso' });
+			return res.status(200).json({ message: 'No está inscrito en ningún curso' });
 		}
 
 		// Get the courses that are in the array of _id's
@@ -50,7 +50,7 @@ export const getCourseById = async (req, res) => {
 			return res.status(404).json({ message: `Curso no encontrado o inexistente!` });
 		}
 
-		return res.status(200).json({ message: 'Curso hallado con exito', course });
+		return res.status(200).json({ message: 'Curso hallado con éxito', course });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error obteniendo los curso` });
 	}
@@ -64,7 +64,7 @@ export const getTeacherCourse = async (req, res) => {
 			return res.status(404).json({ message: `Profesor no encontrado o inexistente!` });
 		}
 
-		return res.status(200).json({ message: 'Profesor hallado con exito', teacher });
+		return res.status(200).json({ message: 'Profesor hallado con éxito', teacher });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error obteniendo el profesor de un curso` });
 	}
@@ -73,7 +73,7 @@ export const getTeacherCourse = async (req, res) => {
 export const createCourse = async (req, res) => {
 	try {
 		const { name, description, topic, creator, visible } = req.body;
-		const newCourse = new Course({ name, description, topic, creator, visible });
+		const newCourse = new Course({ name, description: "", topic: "", creator, visible });
 
 		const savedCourse = await newCourse.save();
 
@@ -123,7 +123,7 @@ export const deleteCourse = async (req, res) => {
 
 		await Perspective.deleteMany({ course: req.params.id }); //Se borran las entidades Perspective en caso de que se borre el curso asociado
 
-		return res.status(200).json({ message: `El curso fue borrado con exito`, deletedCourse })
+		return res.status(200).json({ message: `El curso fue borrado con éxito`, deletedCourse })
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error borrando el curso "${deleteCourse.name}"` })
 	}
@@ -151,7 +151,7 @@ export const deleteUnit = async (req, res) => {
 
 		const updatedCourse = await course.save();
 
-		return res.status(200).json({ message: `La unidad fue borrada con exito`, updatedCourse });
+		return res.status(200).json({ message: `La unidad fue borrada con éxito`, updatedCourse });
 	} catch (error) {
 		return res.status(500).json({ message: `Hubo un error borrando una unidad del curso "${deletedUnit.name}` });
 	}
@@ -211,7 +211,7 @@ export const updateCourseById = async (req, res) => {
 			return res.status(404).json({ message: 'Curso no encontrado' });
 		}
 
-		return res.status(201).json({ updatedCourse, message: `El curso fue actualizado con exito` })
+		return res.status(201).json({ updatedCourse, message: `El curso fue actualizado con éxito` })
 	} catch (error) {
 		return res.status(500).json({ message: "Hubo un error actualizando un curso" })
 	}
@@ -323,7 +323,7 @@ export const addStudentsByCourseId = (req, res) => {
 		const { students } = req.body;
 		if (students) {
 			Course.findById(req.params.id, (err, course) => {
-				if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+				if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor inténtelo de nuevo mas tarde" });
 				if (course) {
 					let courseStudents = [];
 					let deniedStudents = [];
@@ -401,7 +401,7 @@ export const addStudentsByCourseId = (req, res) => {
 export const removeStudentsByCourseId = async (req, res) => {
 	try {
 		CourseStudent.findOneAndDelete({ course: req.params.courseId, student: req.params.studentId }, (err, courseStudent) => {
-			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor inténtelo de nuevo mas tarde" });
 			if (courseStudent) {
 				Course.findById(req.params.courseId, async (err, course) => {
 					if (err) console.log(error);
@@ -464,7 +464,7 @@ export const createTask = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inexperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inexperado, por favor inténtelo mas tarde" });
 	};
 };
 
@@ -497,7 +497,7 @@ export const addActivitiesToTask = async (req, res) => {
 			if (err) {
 				console.log('err');
 				console.log(err);
-				return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+				return res.status(500).json({ message: "Hubo un error en el servidor, por favor inténtelo de nuevo mas tarde" });
 			}
 			if (!course) return res.status(400).json({ message: "Tarea no encontrada" });
 
@@ -622,7 +622,7 @@ export const updateTask = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor inténtelo mas tarde" });
 	};
 };
 
@@ -662,14 +662,14 @@ export const deleteTask = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor inténtelo mas tarde" });
 	};
 };
 
 export const removeActvitiesFromTask = async (req, res) => {
 	try {
 		TaskActivity.findOneAndDelete({ task: req.params.taskId, activity: req.params.activityId }, (err, taskActivity) => {
-			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor intentelo de nuevo mas tarde" });
+			if (err) return res.status(500).json({ message: "Hubo un error en el servidor, por favor inténtelo de nuevo mas tarde" });
 			if (taskActivity) {
 				return res.status(201).json({ message: "Actividad eliminada satisfactoriamente" });
 			}
@@ -714,7 +714,7 @@ export const getTask = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor inténtelo mas tarde" });
 	}
 }
 
@@ -732,7 +732,7 @@ export const getAllActivitiesInCourse = (req, res) => {
 	} catch (e) {
 		console.log('e');
 		console.log(e);
-		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor intentelo mas tarde" });
+		return res.status(500).json({ message: "Ha ocurrido un error inesperado, por favor inténtelo mas tarde" });
 	}
 }
 
@@ -802,7 +802,7 @@ export const getLastActivityToContinue = async (req, res) => {
 		return res.status(200).json({ message: 'No se pudo encontrar la ultima actividad', success: false });
 	} catch (e) {
 		console.log(e);
-		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde' })
+		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor inténtelo mas tarde' })
 	}
 };
 
@@ -817,6 +817,6 @@ export const getStudentIndividualProgress = async (req, res) => {
 		return res.status(200).json({ message: 'Información del progreso del studiante obtenida satisfactoriamente', studentActivities, course, tasksActivities, student });
 	} catch (e) {
 		console.log(e);
-		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor intentelo mas tarde' })
+		return res.status(500).json({ message: 'Ha ocurrido un error inesperado, por favor inténtelo mas tarde' })
 	}
 };

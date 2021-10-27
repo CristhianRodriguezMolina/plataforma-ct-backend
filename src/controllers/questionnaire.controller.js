@@ -132,7 +132,6 @@ export const createQuestionByQuestionnaireId = async (req, res) => {
 
 		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
 	} catch (error) {
-		console.log(error)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
 	}
 }
@@ -159,7 +158,6 @@ export const deleteQuestionByQuestionnaireId = async (req, res) => {
 
 		return res.status(201).json({ message: 'Pregunta del cuestionario eliminada satisfactoriamente', updatedQuestionnaire });
 	} catch (error) {
-		console.log(error)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
 	}
 }
@@ -205,7 +203,6 @@ export const updateQuestionByQuestionnaireId = async (req, res) => {
 
 		return res.status(201).json({ message: 'Pregunta del cuestionario actualizada satisfactoriamente', updatedQuestionnaire });
 	} catch (error) {
-		console.log(error)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
 	}
 }
@@ -236,7 +233,6 @@ export const createOptionByQuestionnaireAndQuestionId = async (req, res) => {
 
 		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestion: question });
 	} catch (error) {
-		console.log(error)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
 	}
 }
@@ -268,7 +264,6 @@ export const deleteOptionByQuestionnaireAndQuestionId = async (req, res) => {
 
 		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestion: question });
 	} catch (error) {
-		console.log(error)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
 	}
 }
@@ -313,7 +308,6 @@ export const updateOptionByQuestionnaireAndQuestionId = async (req, res) => {
 
 		return res.status(201).json({ message: 'Pregunta del cuestionario actualizado satisfactoriamente', updatedQuestionnaire });
 	} catch (error) {
-		console.log(error)
 		return res.status(500).json({ message: "Unexpected error, please try again later!" });
 	}
 }

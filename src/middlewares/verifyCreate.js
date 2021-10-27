@@ -59,7 +59,7 @@ export const verifyFields = async (req, res, next) => {
     }
 
     if (!genre || genre.length <= 0 || genre === 'NA') {
-        return res.status(200).json({ message: 'Por favor, ingrese el genero' });
+        return res.status(200).json({ message: 'Por favor, ingrese el género' });
     }
 
     if (password && confirm_password) {
@@ -72,7 +72,7 @@ export const verifyFields = async (req, res, next) => {
     }
 
     if (!id || id.length <= 0) {
-        return res.status(200).json({ message: 'Por favor, ingrese el numero de identificación' });
+        return res.status(200).json({ message: 'Por favor, ingrese el número de identificación' });
     }
 
     if (!password || password.length < 4) {

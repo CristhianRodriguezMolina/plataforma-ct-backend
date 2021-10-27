@@ -171,7 +171,7 @@ describe('REQUEST /api/person', () => {
 				.set('x-access-token', userToken)
 				.expect(201)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, "Usuario actualizado con exito");
+					assert.strictEqual(res.body.message, "Usuario actualizado con éxito");
 				})
 				.end((err) => {
 					if (err) return done(err);
@@ -321,7 +321,7 @@ describe('REQUEST /api/person', () => {
 				.set('x-access-token', userToken)
 				.expect(200)
 				.expect((res) => {
-					assert.strictEqual(res.body.message, "Usuario borrado con exito");
+					assert.strictEqual(res.body.message, "Usuario borrado con éxito");
 				})
 				.end((err) => {
 					if (err) return done(err);

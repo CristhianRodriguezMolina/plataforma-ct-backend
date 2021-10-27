@@ -25,12 +25,12 @@
     },
     "homepage": "https://github.com/CristhianRodriguezMolina/plataforma-ct-backend#readme",
     "dependencies": {
-        "@babel/cli": "^7.14.8",
-        "@babel/core": "^7.15.0",
-        "@babel/node": "^7.14.9",
-        "@babel/plugin-transform-runtime": "^7.15.0",
+        "@babel/cli": "^7.15.7",
+        "@babel/core": "^7.15.8",
+        "@babel/node": "^7.15.8",
+        "@babel/plugin-transform-runtime": "^7.15.8",
         "@babel/polyfill": "^7.12.1",
-        "@babel/preset-env": "^7.15.0",
+        "@babel/preset-env": "^7.15.8",
         "@babel/register": "^7.15.3",
         "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
@@ -40,13 +40,13 @@
         "jsonwebtoken": "^8.5.1",
         "mkdirp": "^1.0.4",
         "mocha": "^8.4.0",
-        "mongoose": "^5.13.8",
+        "mongoose": "^5.13.10",
         "morgan": "^1.10.0",
         "multer": "^1.4.3",
         "supertest": "^6.1.6",
         "uuid": "^8.3.2"
     },
     "devDependencies": {
-        "nodemon": "^2.0.12"
+        "nodemon": "^2.0.13"
     }
 }
